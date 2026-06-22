@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Class1.cs" />
+    <Compile Remove="Class3.cs" />
+    <Compile Remove="Class4.cs" />
+  </ItemGroup>
+
 </Project>
