@@ -8,7 +8,7 @@ namespace Domain.Model
 {
     public class Pago
     {
-        public string IdPago { get; set; }
+        public int IdPago { get; set; }
         public DateOnly FechaPago { get; set; }
         public float Precio { get; set; }
         public string MetodoPago { get; set; }

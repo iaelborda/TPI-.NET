@@ -14,7 +14,7 @@ namespace Domain.Model
     }
     public class Alquiler
     {
-        public string IdAlquiler {  get; set; }
+        public int IdAlquiler {  get; set; }
         public DateOnly FechaAlquiler { get; set; }
         public DateOnly FechaDevolucion {  get; set; }
         public Estado Estado { get; set; }
