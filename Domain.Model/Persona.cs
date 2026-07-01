@@ -1,42 +1,64 @@
-﻿namespace Domain.Model
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace Domain.Model
 {
+    public enum TipoDocumento
+    {
+        DNI,
+        Pasaporte,
+        LC,
+        LE,
+        CI
+    }
     public abstract class Persona
     {
-        public string Dni { get; set; }
-        public string TipoDni { get; set; }
+        public string Documento { get; set; }
+        public TipoDocumento TipoDocumento { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Telefono { get; set; }
 
-        public Persona(string dni, string tipoDni, string nombre, string apellido, string telefono)
+        public Persona(string documento, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono)
         {
-            SetDni(dni);
-            SetTipoDni(tipoDni);
+            SetDocumento(documento);
+            SetTipoDocumento(tipoDocumento);
             SetNombre(nombre);
             SetApellido(apellido);
             SetTelefono(telefono);
         }
 
-        public void SetDni(string dni)
+        public void SetDocumento(string documento)
         {
-            
+            if (string.IsNullOrWhiteSpace(documento))
+                throw new ArgumentException("El documento no puede ser nulo o vacío", nameof(documento));
+            Documento = documento;
         }
-        public void SetTipoDni(string tipoDni)
+        public void SetTipoDocumento(TipoDocumento tipoDocumento)
         {
-
+            TipoDocumento = tipoDocumento;
         }
         public void SetNombre(string nombre)
         {
-
+            if (string.IsNullOrWhiteSpace(nombre))
+                throw new ArgumentException("El nombre no puede ser nulo o vacío", nameof(nombre));
+            Nombre = nombre;
         }
         public void SetApellido(string apellido)
         {
-
+            if (string.IsNullOrWhiteSpace(apellido))
+                throw new ArgumentException("El apellido no puede ser nulo o vacío", nameof(apellido));
+            Apellido = apellido;
         }
 
         public void SetTelefono(string telefono)
         {
-            
+            if (string.IsNullOrWhiteSpace(telefono))
+                throw new ArgumentException("El telefono no puede ser nulo o vacío", nameof(telefono));
+
+            if(telefono.Length > 15)
+                throw new ArgumentException("El telefono no puede tener más de 15 dígitos", nameof(telefono));
+
+            Telefono = telefono;
         }
     }
 }
