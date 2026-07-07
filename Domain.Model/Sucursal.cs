@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Domain.Model
 {
@@ -27,7 +28,7 @@ namespace Domain.Model
         {
             if (id < 0)
                 throw new ArgumentException("El id debe ser mayor que cero.", nameof(id));
-            Id=id
+            Id = id;
         }
 
         public void SetNombre(string nombre)
@@ -59,7 +60,7 @@ namespace Domain.Model
                 throw new ArgumentException("El telefono solo puede contener numero y guiones.", nameof(telefono));
 
             string soloNumeros = Regex.Replace(telefono, @"\D", "");
-            if (soloNumeros.length != 10)
+            if (soloNumeros.Length != 10)
             {
                 throw new ArgumentException("El telefono debe tener 10 digitos.", nameof(telefono));
             }

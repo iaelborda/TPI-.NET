@@ -1,6 +1,6 @@
 ﻿namespace DTOs
 {
-    public class SucursalDto
+    public class SucursalDTO
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
