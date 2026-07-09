@@ -1,4 +1,5 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Domain.Model
 {
@@ -53,11 +54,18 @@ namespace Domain.Model
         public void SetTelefono(string telefono)
         {
             if (string.IsNullOrWhiteSpace(telefono))
-                throw new ArgumentException("El telefono no puede ser nulo o vacío", nameof(telefono));
+            {
+                throw new ArgumentException("El telefono no puede ser nulo o vacio", nameof(telefono));
+            }
 
-            if(telefono.Length > 15)
-                throw new ArgumentException("El telefono no puede tener más de 15 dígitos", nameof(telefono));
+            if (!Regex.IsMatch(telefono, @"^[0-9\-]+$"))
+                throw new ArgumentException("El telefono solo puede contener numero y guiones.", nameof(telefono));
 
+            string soloNumeros = Regex.Replace(telefono, @"\D", "");
+            if (soloNumeros.Length != 10)
+            {
+                throw new ArgumentException("El telefono debe tener 10 digitos.", nameof(telefono));
+            }
             Telefono = telefono;
         }
     }

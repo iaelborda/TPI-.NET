@@ -10,7 +10,7 @@ namespace Domain.Model
     public class Cliente : Persona
     {
         public string Email { get; set; }
-        public DateOnly FechaAlta { get; set; }
+        public DateOnly FechaAlta { get; private set; }
 
         public Cliente(string documento, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono, string email, DateOnly fechaAlta)
             :base(documento, tipoDocumento, nombre, apellido, telefono)

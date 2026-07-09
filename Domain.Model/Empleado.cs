@@ -10,8 +10,8 @@ namespace Domain.Model
     {
         public string Legajo { get; set; }
 
-        public Empleado(string dni, string tipoDni, string nombre, string apellido, string telefono, string legajo)
-            :base(dni, tipoDni, nombre, apellido, telefono)
+        public Empleado(string dni, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono, string legajo)
+            :base(dni, tipoDocumento, nombre, apellido, telefono)
         {
             SetLegajo(legajo);
         }
