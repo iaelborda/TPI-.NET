@@ -9,7 +9,7 @@ namespace Domain.Model
     public class DetalleAlquiler
     {
         public TimeOnly HoraInicio { get; set; }
-        public TimeOnly HoraFin { get; set; }
+        public TimeOnly? HoraFin { get; set; }
 
         public DetalleAlquiler(TimeOnly horaInicio, TimeOnly horaFin)
         {
