@@ -31,6 +31,14 @@ namespace Domain.Model
             SetSubTotal();
         }
 
+        public void SetDetalleId(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("El id del detalle debe ser mayor que 0", nameof(id));
+            }
+            DetalleId = d = id;
+        }
         public void SetAlquilerId(int id)
         {
             if (id <= 0)

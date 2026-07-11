@@ -8,36 +8,72 @@ namespace Domain.Model
 {
     public class Pago
     {
-        public int IdPago { get; set; }
-        public DateOnly FechaPago { get; set; }
-        public float Precio { get; set; }
-        public string MetodoPago { get; set; }
 
+        public int IdAlquiler { get; private set; }
+        public int IdPago { get; private set; }
+        public DateTime FechaPago { get; private set; }
+        public float Monto { get; private set; }
+        public MetodoPago Metodo { get; private set; }
 
-        public Pago(string idPago, DateOnly fechaPago, float precio, string metodoPago)
+        public Pago(int idAlquiler, float monto, MetodoPago metodo)
         {
-            SetIdPago(idPago);
-            SetFechaPago(fechaPago);
-            SetPrecio(precio);
-            SetMetodoPago(metodoPago);
+            SetAlquilerId(idAlquiler);
+            SetFechaPago();
+            Monto = 0;
+            SetMetodoPago(metodo);
         }
 
-        public void SetIdPago(string idPago) 
+        public void SetId(int id)
         {
-            
+            if(id<= 0)
+            {
+                throw new ArgumentException("El id del pago debe ser mayor que 0", nameof(id));
+            }
+            IdPago = id;
         }
-        public void SetFechaPago(DateOnly fechaPago)
-        {
 
+        public void SetAlquilerId(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("El id del alquiler debe ser mayor que 0", nameof(id));
+            }
+            IdAlquiler = id;
         }
-        public void SetPrecio(float precio)
-        {
 
+        public void SetFechaPago()
+        {
+            FechaPago = DateTime.Now;
         }
-        public void SetMetodoPago(string metodoPago)
-        {
 
+        public void SetMetodoPago(MetodoPago metodo)
+        {
+            if(!Enum.IsDefined(typeof(MetodoPago), metodo))
+            {
+                throw new ArgumentException("El metodo de pago no es valido", nameof(metodo));
+            }
+            Metodo = metodo;
+        }
+
+        public void CalcularMonto(List<DetalleAlquiler> detalles)
+        {
+            if(detalles == null || detalles.Count == 0)
+            {
+                throw new ArgumentException("La lista de detalles no puede ser nula o vacia", nameof(detalles));
+            }
+
+            if(detalles.Any(d => d.HoraFin == null))
+            {
+                throw new InvalidOperationException("No se puede calcular el monto a pagar si hay bicicletas sin devolver");
+            }
+
+            Monto = detalles.Sum(d => d.SubTotal);
+            if (Monto<= 0)
+            {
+                throw new ArgumentException("El monto a pagar debe ser mayor que 0", nameof(Monto)); 
+            }
         }
     }
+
 
 }
