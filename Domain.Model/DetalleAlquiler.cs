@@ -14,11 +14,6 @@ namespace Domain.Model
         public DateTime HoraInicio { get; private set; }
         public DateTime? HoraFin { get; private set; }
         public EstadoDetalleAlquiler Estado { get; private set; }
-        public enum EstadoDetalleAlquiler
-        {
-            Activo,
-            Devuelto
-        }
         public float SubTotal { get; private set; }
 
         public DetalleAlquiler(int AlquilerId, int BicicletaId)

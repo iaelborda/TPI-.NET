@@ -7,19 +7,14 @@ using System.Threading.Tasks;
 
 namespace Domain.Model
 {
-    public enum Estado
-    {
-        Activo,
-        Finalizado,
-        Cancelado
-    }
+
     public class Alquiler
     {
 
         public int IdAlquiler { get; private set; }
         public DateTime FechaAlquiler { get; private set; }
         public DateTime FechaDevolucion { get; private set; }
-        public Estado EstadoAlquiler { get; private set; }
+        public EstadoDeAlquiler EstadoAlquiler { get; private set; }
         public int ClienteId { get; private set; }
         public int EmpleadoId { get; private set; }
 
@@ -29,7 +24,7 @@ namespace Domain.Model
         {
             SetClienteId(clienteId);
             SetEmpleadoId(EmpleadoId);
-            EstadoAlquiler = Estado.Activo;
+            EstadoAlquiler = EstadoDeAlquiler.Activo;
             FechaAlquiler = DateTime.Now;
         }
 
@@ -58,7 +53,7 @@ namespace Domain.Model
                 throw new ArgumentNullException(nameof(detalle));
             }
             
-            if(EstadoAlquiler != Estado.Activo)
+            if(EstadoAlquiler != EstadoDeAlquiler.Activo)
             {
                 throw new InvalidOperationException("No se pueden agregar detalles a un alquiler que no está activo.");
             }
@@ -68,7 +63,7 @@ namespace Domain.Model
 
         public void FinalizarAlquiler()
         {
-            if (EstadoAlquiler == Estado.Finalizado)
+            if (EstadoAlquiler == EstadoDeAlquiler.Finalizado)
             {
                 throw new InvalidOperationException("El alquiler ya ha sido finalizado.");
             }
@@ -78,7 +73,7 @@ namespace Domain.Model
                 throw new InvalidOperationException("No se puede finalizar el alquiler mientras haya bicicletas sin devolver.");
             }
 
-            EstadoAlquiler = Estado.Finalizado;
+            EstadoAlquiler = EstadoDeAlquiler.Finalizado;
         }
 
         public bool TieneBicicletasSinEntregar()

@@ -25,7 +25,7 @@ namespace Domain.Model
 
         public void SetId(int id)
         {
-            if(id<= 0)
+            if (id <= 0)
             {
                 throw new ArgumentException("El id del pago debe ser mayor que 0", nameof(id));
             }
@@ -48,7 +48,7 @@ namespace Domain.Model
 
         public void SetMetodoPago(MetodoPago metodo)
         {
-            if(!Enum.IsDefined(typeof(MetodoPago), metodo))
+            if (!Enum.IsDefined(typeof(MetodoPago), metodo))
             {
                 throw new ArgumentException("El metodo de pago no es valido", nameof(metodo));
             }
@@ -57,20 +57,20 @@ namespace Domain.Model
 
         public void CalcularMonto(List<DetalleAlquiler> detalles)
         {
-            if(detalles == null || detalles.Count == 0)
+            if (detalles == null || detalles.Count == 0)
             {
                 throw new ArgumentException("La lista de detalles no puede ser nula o vacia", nameof(detalles));
             }
 
-            if(detalles.Any(d => d.HoraFin == null))
+            if (detalles.Any(d => d.HoraFin == null))
             {
                 throw new InvalidOperationException("No se puede calcular el monto a pagar si hay bicicletas sin devolver");
             }
 
             Monto = detalles.Sum(d => d.SubTotal);
-            if (Monto<= 0)
+            if (Monto <= 0)
             {
-                throw new ArgumentException("El monto a pagar debe ser mayor que 0", nameof(Monto)); 
+                throw new ArgumentException("El monto a pagar debe ser mayor que 0", nameof(Monto));
             }
         }
     }
