@@ -19,7 +19,7 @@ namespace Domain.Model
             Activo,
             Devuelto
         }
-        public decimal SubTotal { get; private set; }
+        public float SubTotal { get; private set; }
 
         public DetalleAlquiler(int AlquilerId, int BicicletaId)
         {
@@ -94,7 +94,7 @@ namespace Domain.Model
 
             if (HoraFin == null)
             {
-                throw new InvalidOperationException("No se puede calcular el subtotal si la bicicleta no ha sido devuelta.")
+                throw new InvalidOperationException("No se puede calcular el subtotal si la bicicleta no ha sido devuelta.");
             }
 
             if (!bicicleta.Categoria.Tarifas.Any())
@@ -103,9 +103,9 @@ namespace Domain.Model
             }
 
             var tarifaVigente = bicicleta.Categoria.Tarifas
-                .Where(t => t.VigenciaDesde <= HoraInicio &&
-                (t.VigenciaHasta == null || t.VigenciaHasta >= DateTime.Now))
-                .OrderByDescending(t => t.VigenciaDesde)
+                .Where(t => t.FechaDesde <= HoraInicio &&
+                (t.FechaHasta == null || t.FechaHasta >= DateTime.Now))
+                .OrderByDescending(t => t.FechaDesde)
                 .FirstOrDefault();
 
             if (tarifaVigente == null)
@@ -113,10 +113,10 @@ namespace Domain.Model
                 throw new InvalidOperationException("No hay una tarifa vigente para esta bicicleta.");
             }
 
-            decimal precioHora = tarifaVigente.PrecioHora;
+            float precioHora = tarifaVigente.PrecioHora;
             TimeSpan duracion = HoraFin.Value - HoraInicio;
-            decimal horas = (decimal)duracion.TotalHours;
-            horas = Math.Ceiling(horas);
+            float horas = (float)duracion.TotalHours;
+            horas = (float)Math.Ceiling(horas);
             SubTotal = horas * precioHora;
         }
     }
