@@ -15,6 +15,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 
+builder.Services.AddScoped<IBicicletaRepository, BicicletaRepository>();
+builder.Services.AddScoped<IBicicletaService, BicicletaService>();
+
 builder.Services.AddScoped<ISucursalRepository, SucursalRepository>();
 builder.Services.AddScoped<ISucursalService, SucursalService>();
 
@@ -34,5 +37,6 @@ if(!app.Environment.IsDevelopment())
 
 // Map endpoints
 app.MapClienteEndpoints();
+app.MapBicicletaEndpoints();
 app.MapSucursalEndpoints();
 app.Run();
