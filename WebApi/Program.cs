@@ -1,6 +1,7 @@
-using WebApi;
 using Application.Services;
 using Data;
+using WebApi;
+using WebAPI;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add Dependency Injection
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
+
 builder.Services.AddScoped<ISucursalRepository, SucursalRepository>();
 builder.Services.AddScoped<ISucursalService, SucursalService>();
 
@@ -29,5 +33,6 @@ if(!app.Environment.IsDevelopment())
 }
 
 // Map endpoints
+app.MapClienteEndpoints();
 app.MapSucursalEndpoints();
 app.Run();
