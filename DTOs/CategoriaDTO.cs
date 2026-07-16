@@ -9,7 +9,7 @@ namespace DTOs
 {
     public class CategoriaDTO
     {
-        public int Id { get; private set; }
-        public string Descripcion { get; private set; }
+        public int Id { get; set; }
+        public string Descripcion { get; set; }
     }
 }
