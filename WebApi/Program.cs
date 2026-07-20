@@ -21,6 +21,9 @@ builder.Services.AddScoped<IBicicletaService, BicicletaService>();
 builder.Services.AddScoped<ISucursalRepository, SucursalRepository>();
 builder.Services.AddScoped<ISucursalService, SucursalService>();
 
+builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,4 +42,5 @@ if(!app.Environment.IsDevelopment())
 app.MapClienteEndpoints();
 app.MapBicicletaEndpoints();
 app.MapSucursalEndpoints();
+app.MapCategoriaEndpoints();
 app.Run();

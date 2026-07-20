@@ -32,7 +32,7 @@ namespace Domain.Model
             {
                 throw new ArgumentException("El id del detalle debe ser mayor que 0", nameof(id));
             }
-            DetalleId = d = id;
+            DetalleId  = id;
         }
         public void SetAlquilerId(int id)
         {
