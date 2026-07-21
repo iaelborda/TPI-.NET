@@ -24,7 +24,7 @@ namespace Application.Services
                 throw new ArgumentException($"Categoria con ID {dto.CategoriaId} no existe.");
             }
 
-            Bicicleta bicicleta = new Bicicleta(0, dto.Marca, dto.Modelo, dto.Estado, dto.CategoriaId);
+            Bicicleta bicicleta = new Bicicleta(dto.Marca, dto.Modelo, dto.Estado, dto.CategoriaId);
             await bicicletaRepository.AddAsync(bicicleta);
             dto.Id = bicicleta.Id;
             return dto;
@@ -78,12 +78,12 @@ namespace Application.Services
             }
 
             Bicicleta bicicleta = new Bicicleta(
-                dto.Id,
                 dto.Marca,
                 dto.Modelo,
                 dto.Estado,
                 dto.CategoriaId
                 );
+            bicicleta.SetId(dto.Id);
 
             return await bicicletaRepository.UpdateAsync(bicicleta);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Domain.Model;
 
 namespace Data
@@ -6,8 +7,11 @@ namespace Data
     public class BicicletaRepository : IBicicletaRepository
     {
         private static readonly List<Bicicleta> bicicletas = new List<Bicicleta>();
+        private static int nextId = 1;
         public Task AddAsync(Bicicleta bicicleta)
         {
+            bicicleta.SetId(nextId);
+            nextId++;
             bicicletas.Add(bicicleta);
             return Task.CompletedTask;
         }
