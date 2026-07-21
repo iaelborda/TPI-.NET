@@ -35,9 +35,8 @@
                 }
             }
         }
-        public Bicicleta(int id, string marca, string modelo, EstadoBicicleta estado, int categoriaId)
+        public Bicicleta(string marca, string modelo, EstadoBicicleta estado, int categoriaId)
         {
-            SetId(id);
             SetMarca(marca);
             SetModelo(modelo);
             SetEstado(estado);

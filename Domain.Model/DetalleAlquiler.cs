@@ -14,7 +14,7 @@ namespace Domain.Model
         public DateTime HoraInicio { get; private set; }
         public DateTime? HoraFin { get; private set; }
         public EstadoDetalleAlquiler Estado { get; private set; }
-        public float SubTotal { get; private set; }
+        public decimal SubTotal { get; private set; }
 
         public DetalleAlquiler(int AlquilerId, int BicicletaId)
         {
@@ -116,10 +116,10 @@ namespace Domain.Model
                 throw new InvalidOperationException("No hay una tarifa vigente para esta bicicleta.");
             }
 
-            float precioHora = tarifaVigente.PrecioHora;
+            decimal precioHora = tarifaVigente.PrecioHora;
             TimeSpan duracion = HoraFin.Value - HoraInicio;
-            float horas = (float)duracion.TotalHours;
-            horas = (float)Math.Ceiling(horas);
+            decimal horas = (decimal)duracion.TotalHours;
+            horas = Math.Ceiling(horas);
             SubTotal = horas * precioHora;
         }
     }
