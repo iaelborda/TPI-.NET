@@ -15,7 +15,7 @@ namespace Domain.Model
         public float Monto { get; private set; }
         public MetodoPago Metodo { get; private set; }
 
-        public Pago(int idAlquiler, float monto, MetodoPago metodo)
+        public Pago(int idAlquiler, MetodoPago metodo)
         {
             SetAlquilerId(idAlquiler);
             SetFechaPago();
