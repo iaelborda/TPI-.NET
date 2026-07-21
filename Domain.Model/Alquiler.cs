@@ -28,6 +28,14 @@ namespace Domain.Model
             FechaAlquiler = DateTime.Now;
         }
 
+        public void SetAlquilerId(int idAlquiler)
+        {
+            if (idAlquiler <= 0)
+            {
+                throw new ArgumentException("El id del alquiler debe ser mayor que cero.", nameof(idAlquiler));
+            }
+            IdAlquiler = idAlquiler;
+        }
         public void SetClienteId(int clienteId)
         {
             if (clienteId <= 0)
@@ -74,6 +82,7 @@ namespace Domain.Model
             }
 
             EstadoAlquiler = EstadoDeAlquiler.Finalizado;
+            FechaDevolucion = DateTime.Now;
         }
 
         public bool TieneBicicletasSinEntregar()
