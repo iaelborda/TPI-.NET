@@ -119,7 +119,7 @@ namespace Domain.Model
             decimal precioHora = tarifaVigente.PrecioHora;
             TimeSpan duracion = HoraFin.Value - HoraInicio;
             decimal horas = (decimal)duracion.TotalHours;
-            horas = (decimal)Math.Ceiling(horas);
+            horas = Math.Ceiling(horas);
             SubTotal = horas * precioHora;
         }
     }

@@ -10,7 +10,7 @@ namespace Domain.Model
     public class Tarifa
     {
         public int Id { get; private set; }
-        public float PrecioHora { get; set; }
+        public decimal PrecioHora { get; set; }
         public DateTime FechaDesde { get; set; }
         public DateTime FechaHasta { get; set; }
 
@@ -34,7 +34,7 @@ namespace Domain.Model
                 }
             }
         }
-        public Tarifa(float precioHora, DateTime fechaDesde, DateTime fechaHasta, int categoriaId)
+        public Tarifa(decimal precioHora, DateTime fechaDesde, DateTime fechaHasta, int categoriaId)
         {
             SetPrecioHora(precioHora);
             SetFechaDesde(fechaDesde);
@@ -49,7 +49,7 @@ namespace Domain.Model
             Id = id;
         }
 
-        public void SetPrecioHora(float precioHora)
+        public void SetPrecioHora(decimal precioHora)
         {
             if (precioHora <= 0)
                 throw new ArgumentException("El precio por hora debe ser mayor que 0.", nameof(precioHora));
