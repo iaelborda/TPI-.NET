@@ -9,16 +9,15 @@ namespace Domain.Model
     public class Categoria
     {
         public int Id { get; private set; }
-        public string Nombre { get; private set; }
-        public string TipoBicicleta { get; private set; }
+        public string Descripcion { get; private set; }
 
-        public List<Tarifa> Tarifas { get; private set; }
-        public Categoria(int id, string nombre, string tipoBicicleta)
+        public List<Tarifa> tarifas { get; private set; }
+        public IReadOnlyList<Tarifa> Tarifas => tarifas.AsReadOnly();
+
+        public Categoria(string descripcion)
         {
-            SetId(id);
-            SetNombre(nombre);
-            SetTipoBicicleta(tipoBicicleta);
-            Tarifas = new List<Tarifa>();
+            SetDescripcion(descripcion);
+            tarifas = new List<Tarifa>();
         }
         public void SetId(int id)
         {
@@ -28,33 +27,26 @@ namespace Domain.Model
             Id = id;
         }
 
-        public void SetNombre(string nombre)
+        public void SetDescripcion(string descripcion)
         {
-            if (string.IsNullOrWhiteSpace(nombre))
-                throw new ArgumentException("El nombre no puede ser nulo o vacío.", nameof(nombre));
-
-            Nombre = nombre;
-        }
-
-        public void SetTipoBicicleta(string tipoBicicleta)
-        {
-            if (string.IsNullOrWhiteSpace(tipoBicicleta))
-                throw new ArgumentException("El tipo de bicicleta no puede ser nulo o vacío.", nameof(tipoBicicleta));
-
-            TipoBicicleta = tipoBicicleta;
+            if (string.IsNullOrWhiteSpace(descripcion))
+            {
+                throw new ArgumentException("La descripcion no puede ser nula o vacia.", nameof(descripcion));
+            }
+            Descripcion = descripcion;
         }
         public void AgregarTarifa(Tarifa tarifa)
         {
             ArgumentNullException.ThrowIfNull(tarifa);
 
-            Tarifas.Add(tarifa);
+            tarifas.Add(tarifa);
         }
 
         public void EliminarTarifa(Tarifa tarifa)
         {
             ArgumentNullException.ThrowIfNull(tarifa);
 
-            Tarifas.Remove(tarifa);
+            tarifas.Remove(tarifa);
         }
     }
 }
