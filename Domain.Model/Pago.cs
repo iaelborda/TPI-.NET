@@ -12,7 +12,7 @@ namespace Domain.Model
         public int IdAlquiler { get; private set; }
         public int IdPago { get; private set; }
         public DateTime FechaPago { get; private set; }
-        public float Monto { get; private set; }
+        public decimal Monto { get; private set; }
         public MetodoPago Metodo { get; private set; }
 
         public Pago(int idAlquiler, MetodoPago metodo)
