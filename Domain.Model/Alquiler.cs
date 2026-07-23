@@ -7,13 +7,18 @@ using System.Threading.Tasks;
 
 namespace Domain.Model
 {
+    public enum EstadoDeAlquiler
+    {
+        Activo,
+        Finalizado,
+        Cancelado
+    }
 
     public class Alquiler
     {
 
         public int IdAlquiler { get; private set; }
         public DateTime FechaAlquiler { get; private set; }
-        public DateTime FechaDevolucion { get; private set; }
         public EstadoDeAlquiler EstadoAlquiler { get; private set; }
         public int ClienteId { get; private set; }
         public int EmpleadoId { get; private set; }
@@ -82,7 +87,6 @@ namespace Domain.Model
             }
 
             EstadoAlquiler = EstadoDeAlquiler.Finalizado;
-            FechaDevolucion = DateTime.Now;
         }
 
         public bool TieneBicicletasSinEntregar()

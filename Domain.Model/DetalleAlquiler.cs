@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Model
 {
+    public enum EstadoDetalleAlquiler
+    {
+        Activo,
+        Devuelto
+    }
     public class DetalleAlquiler
     {
         public int DetalleId { get; private set; }
@@ -20,10 +25,10 @@ namespace Domain.Model
         {
             SetAlquilerId(AlquilerId);
             SetBicicletaId(BicicletaId);
-            SetHoraInicio();
-            SetHoraFin();
-            SetEstado();
-            SetSubTotal();
+            HoraInicio = DateTime.Now;
+            HoraFin = null;
+            Estado = EstadoDetalleAlquiler.Activo;
+            SubTotal = 0;
         }
 
         public void SetDetalleId(int id)
@@ -50,26 +55,6 @@ namespace Domain.Model
                 throw new ArgumentException("El id de la bicicleta debe ser mayor que 0", nameof(id));
             }
             BicicletaId = id;
-        }
-
-        public void SetHoraInicio()
-        {
-            HoraInicio = DateTime.Now;
-        }
-
-        public void SetHoraFin()
-        {
-            HoraFin = null;
-        }
-
-        public void SetEstado()
-        {
-            Estado = EstadoDetalleAlquiler.Activo;
-        }
-
-        public void SetSubTotal()
-        {
-            SubTotal = 0;
         }
 
         public void DevolverBicicleta()

@@ -5,7 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.Model
+
 {
+    public enum MetodoPago
+    {
+        Efectivo,
+        TarjetaCredito,
+        TarjetaDebito,
+        Transferencia
+    }
     public class Pago
     {
 
