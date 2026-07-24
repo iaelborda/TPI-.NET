@@ -12,10 +12,12 @@ namespace Application.Services
     public class CategoriaService : ICategoriaService
     {
         private readonly ICategoriaRepository categoriaRepository;
+        private readonly IBicicletaRepository bicicletaRepository;
 
-        public CategoriaService(ICategoriaRepository categoriaRepository)
+        public CategoriaService(ICategoriaRepository categoriaRepository, IBicicletaRepository bicicletaRepository)
         {
             this.categoriaRepository = categoriaRepository;
+            this.bicicletaRepository = bicicletaRepository;
         }
 
         public async Task<CategoriaDTO> AddAsync(CategoriaDTO dto)
@@ -32,6 +34,16 @@ namespace Application.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
+            var categoria = await categoriaRepository.GetAsync(id);
+
+            if (categoria == null) return false;
+
+            var bicicletas = await bicicletaRepository.GetAllAsync();
+
+            if(bicicletas.Any(b => b.CategoriaId == id))
+            {
+                throw new InvalidOperationException("No se puede borrar la categoría porque tiene bicicletas asociadas");
+            }
             return await categoriaRepository.DeleteAsync(id);
         }
 
@@ -71,6 +83,7 @@ namespace Application.Services
                 throw new ArgumentException($"Ya existe una sucursal con la descripcion '{dto.Descripcion}'");
             }
             Categoria categoria = new Categoria(dto.Descripcion);
+            categoria.SetId(dto.Id);
             return await categoriaRepository.UpdateAsync(categoria);
         }
     }

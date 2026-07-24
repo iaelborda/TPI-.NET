@@ -57,7 +57,7 @@ namespace WebApi
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound);
 
-            app.MapPut("/sucursales/{id}", async (SucursalDTO dto, ISucursalService sucursalService) =>
+            app.MapPut("/sucursales", async (SucursalDTO dto, ISucursalService sucursalService) =>
             {
                 try
                 {

@@ -45,7 +45,7 @@ namespace WebApi
             .Produces<CategoriaDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest);
 
-            app.MapPut("/categorias/{id}", async (CategoriaDTO dto, ICategoriaService categoriaService) =>
+            app.MapPut("/categorias", async (CategoriaDTO dto, ICategoriaService categoriaService) =>
             {
                 try
                 {
@@ -68,16 +68,24 @@ namespace WebApi
 
             app.MapDelete("/categorias/{id}", async (int id, ICategoriaService categoriaService) =>
             {
-                var deleted = await categoriaService.DeleteAsync(id);
-                if (!deleted)
+                try
                 {
-                    return Results.NotFound();
+                    var deleted = await categoriaService.DeleteAsync(id);
+                    if (!deleted)
+                    {
+                        return Results.NotFound();
+                    }
+                    return Results.NoContent();
                 }
-                return Results.NoContent();
+                catch (InvalidOperationException ex)
+                {
+                    return Results.BadRequest(ex.Message);
+                }
             })
             .WithName("DeleteCategoria")
             .Produces(StatusCodes.Status204NoContent)
-            .Produces(StatusCodes.Status404NotFound);
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status400BadRequest);
         }
     }
 }
