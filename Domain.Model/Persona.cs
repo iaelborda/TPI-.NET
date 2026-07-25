@@ -32,6 +32,10 @@ namespace Domain.Model
         {
             if (string.IsNullOrWhiteSpace(documento))
                 throw new ArgumentException("El documento no puede ser nulo o vacío", nameof(documento));
+
+            if (documento.Length > 20)
+                throw new ArgumentException(
+                    "El documento debe tener menos de 20 caracteres", nameof(documento));
             Documento = documento;
         }
         public void SetTipoDocumento(TipoDocumento tipoDocumento)
