@@ -61,6 +61,10 @@ namespace Data
             }
             return Task.FromResult(busqueda.Any());
         }
+        internal IEnumerable<Categoria> GetAllSync()
+        {
+            return categorias.OrderBy(p => p.Descripcion).ToList();
+        }
 
     }
 }

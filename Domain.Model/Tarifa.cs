@@ -10,9 +10,9 @@ namespace Domain.Model
     public class Tarifa
     {
         public int Id { get; private set; }
-        public decimal PrecioHora { get; set; }
-        public DateTime FechaDesde { get; set; }
-        public DateTime FechaHasta { get; set; }
+        public decimal PrecioHora { get; private set; }
+        public DateTime FechaDesde { get; private set; }
+        public DateTime FechaHasta { get; private set; }
 
         private int _categoriaId;
         private Categoria? _categoria;

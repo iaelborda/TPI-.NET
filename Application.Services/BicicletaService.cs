@@ -27,6 +27,7 @@ namespace Application.Services
             Bicicleta bicicleta = new Bicicleta(dto.Marca, dto.Modelo, dto.Estado, dto.CategoriaId);
             await bicicletaRepository.AddAsync(bicicleta);
             dto.Id = bicicleta.Id;
+            dto.DescripcionCategoria = categoria.Descripcion;
             return dto;
         }
 
@@ -48,6 +49,7 @@ namespace Application.Services
                 Marca = bicicleta.Marca,
                 Modelo = bicicleta.Modelo,
                 CategoriaId = bicicleta.CategoriaId,
+                DescripcionCategoria = bicicleta.Categoria?.Descripcion,
                 Estado = bicicleta.Estado
             };
         }
@@ -62,6 +64,7 @@ namespace Application.Services
                 Marca = bicicleta.Marca,
                 Modelo = bicicleta.Modelo,
                 CategoriaId = bicicleta.CategoriaId,
+                DescripcionCategoria = bicicleta.Categoria?.Descripcion,
                 Estado = bicicleta.Estado
             }).ToList();
         }

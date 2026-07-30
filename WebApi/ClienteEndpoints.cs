@@ -7,9 +7,9 @@ namespace WebAPI
     {
         public static void MapClienteEndpoints(this WebApplication app)
         {
-            app.MapGet("/clientes/{documento}", async (string documento, IClienteService clienteService) =>
+            app.MapGet("/clientes/{id}", async (int id, IClienteService clienteService) =>
             {
-                ClienteDTO? dto = await clienteService.GetAsync(documento);
+                ClienteDTO? dto = await clienteService.GetAsync(id);
 
                 if (dto == null)
                 {
@@ -37,7 +37,7 @@ namespace WebAPI
                 {
                     ClienteDTO clienteDTO = await clienteService.AddAsync(dto);
 
-                    return Results.Created($"/clientes/{clienteDTO.Documento}", clienteDTO);
+                    return Results.Created($"/clientes/{clienteDTO.Id}", clienteDTO);
                 }
                 catch (ArgumentException ex)
                 {
@@ -70,9 +70,9 @@ namespace WebAPI
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest);
 
-            app.MapDelete("/clientes/{documento}", async (string documento, IClienteService clienteService) =>
+            app.MapDelete("/clientes/{id}", async (int id, IClienteService clienteService) =>
             {
-                var deleted = await clienteService.DeleteAsync(documento);
+                var deleted = await clienteService.DeleteAsync(id);
 
                 if (!deleted)
                 {

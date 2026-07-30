@@ -9,5 +9,6 @@ namespace DTOs
         public string Modelo { get; set; }
         public EstadoBicicleta Estado { get; set; }
         public int CategoriaId { get; set; }
+        public string? DescripcionCategoria { get; set; }
     }
 }

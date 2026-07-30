@@ -12,7 +12,15 @@ namespace Data
         {
             bicicleta.SetId(nextId);
             nextId++;
+
+            var categoriaRepo = new CategoriaRepository();
+            var categoria = categoriaRepo.GetAllSync().FirstOrDefault(c => c.Id == bicicleta.CategoriaId);
+
+            if (categoria != null)
+                bicicleta.SetCategoria(categoria);
+
             bicicletas.Add(bicicleta);
+
             return Task.CompletedTask;
         }
 
@@ -47,6 +55,13 @@ namespace Data
                 existing.SetModelo(bicicleta.Modelo);
                 existing.SetEstado(bicicleta.Estado);
                 existing.SetCategoriaId(bicicleta.CategoriaId);
+
+                var categoriaRepo = new CategoriaRepository();
+                var categoria = categoriaRepo.GetAllSync()
+                    .FirstOrDefault(c => c.Id == bicicleta.CategoriaId);
+
+                if (categoria != null)
+                    existing.SetCategoria(categoria);
 
                 return Task.FromResult(true);
             }

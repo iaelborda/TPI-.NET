@@ -6,15 +6,18 @@ namespace Data
     public class ClienteRepository : IClienteRepository
     {
         private static readonly List<Cliente> clientes = new List<Cliente>();
+        public static int nextId = 1;
+
         public Task AddAsync(Cliente cliente)
         {
+            cliente.SetId(nextId);
+            nextId++;
             clientes.Add(cliente);
             return Task.CompletedTask;
         }
-
-        public Task<bool> DeleteAsync(string documento) 
+        public Task<bool> DeleteAsync(int id) 
         { 
-            var cliente = clientes.FirstOrDefault(c => c.Documento == documento);
+            var cliente = clientes.FirstOrDefault(c => c.Id == id);
             if (cliente != null) 
             {
                 clientes.Remove(cliente);
@@ -24,9 +27,9 @@ namespace Data
             return Task.FromResult(false);
         }
 
-        public Task<Cliente?> GetAsync(string documento) 
+        public Task<Cliente?> GetAsync(int id) 
         {
-            return Task.FromResult(clientes.FirstOrDefault(c => c.Documento == documento));
+            return Task.FromResult(clientes.FirstOrDefault(c => c.Id == id));
         }
 
         public Task<IEnumerable<Cliente>> GetAllAsync()
@@ -36,7 +39,7 @@ namespace Data
 
         public Task<bool> UpdateAsync(Cliente cliente)
         {
-            var existing = clientes.FirstOrDefault(c => c.Documento == cliente.Documento);
+            var existing = clientes.FirstOrDefault(c => c.Id == cliente.Id);
 
             if (existing != null)
             {

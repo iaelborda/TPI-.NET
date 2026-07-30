@@ -9,11 +9,11 @@ namespace Domain.Model
 {
     public class Sucursal
     {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Direccion { get; set; }
-        public string Telefono { get; set; }
-        public int Capacidad { get; set; }
+        public int Id { get; private set; }
+        public string Nombre { get; private set; }
+        public string Direccion { get; private set; }
+        public string Telefono { get; private set; }
+        public int Capacidad { get; private set; }
 
         public Sucursal (int id, string nombre, string direccion, string telefono, int capacidad)
         {

@@ -8,7 +8,7 @@ namespace Domain.Model
 {
     public class Empleado : Persona
     {
-        public string Legajo { get; private set; }
+        public int Legajo { get; private set; }
 
         private int _sucursalId;
         private Sucursal? _sucursal;
@@ -32,16 +32,16 @@ namespace Domain.Model
             }
         }
 
-        public Empleado(string dni, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono, string legajo, int sucursalId)
+        public Empleado(string dni, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono, int legajo, int sucursalId)
             : base(dni, tipoDocumento, nombre, apellido, telefono)
         {
             SetLegajo(legajo);
             SetSucursalId(sucursalId);
         }
-        public void SetLegajo(string legajo)
+        public void SetLegajo(int legajo)
         {
-            if (string.IsNullOrWhiteSpace(legajo))
-                throw new ArgumentException("El legajo no puede ser nulo o vacío", nameof(legajo));
+            if (legajo <= 0)
+                throw new ArgumentException("El legajo debe ser mayor que 0.", nameof(legajo));
             Legajo = legajo;
         }
 
@@ -68,3 +68,93 @@ namespace Domain.Model
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

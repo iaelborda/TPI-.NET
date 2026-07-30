@@ -25,7 +25,7 @@ namespace Application.Services
             }
 
             var fechaAlta = DateOnly.FromDateTime(DateTime.Now);
-            Cliente cliente = new Cliente(dto.Documento, dto.TipoDocumento, dto.Nombre, dto.Apellido, dto.Telefono, dto.Email, fechaAlta);
+            Cliente cliente = new Cliente(dto.Id, dto.Documento, dto.TipoDocumento, dto.Nombre, dto.Apellido, dto.Telefono, dto.Email, fechaAlta);
 
             await clienteRepository.AddAsync(cliente);
 
@@ -33,20 +33,21 @@ namespace Application.Services
 
             return dto;
         }
-        public async Task<bool> DeleteAsync(string documento)
+        public async Task<bool> DeleteAsync(int id)
         {
-            return await clienteRepository.DeleteAsync(documento);
+            return await clienteRepository.DeleteAsync(id);
         }
 
-        public async Task<ClienteDTO?> GetAsync(string documento)
+        public async Task<ClienteDTO?> GetAsync(int id)
         {
-            Cliente? cliente = await clienteRepository.GetAsync(documento);
+            Cliente? cliente = await clienteRepository.GetAsync(id);
 
             if (cliente == null)
                 return null;
 
             return new ClienteDTO
             {
+                Id = cliente.Id,
                 Documento = cliente.Documento,
                 TipoDocumento = cliente.TipoDocumento,
                 Nombre = cliente.Nombre,
@@ -63,6 +64,7 @@ namespace Application.Services
 
             return clientes.Select(cliente => new ClienteDTO
             {
+                Id = cliente.Id, 
                 Documento = cliente.Documento,
                 TipoDocumento = cliente.TipoDocumento,
                 Nombre = cliente.Nombre,
@@ -76,17 +78,20 @@ namespace Application.Services
 
         public async Task<bool> UpdateAsync(ClienteDTO dto)
         {
-            if (await clienteRepository.EmailExistsAsync(dto.Email, dto.Documento))
-            {
-                throw new ArgumentException($"Ya existe otro cliente con el Email '{dto.Email}'.");
-            }
-
-            var existing = await clienteRepository.GetAsync(dto.Documento);
+            var existing = await clienteRepository.GetAsync(dto.Id);
 
             if (existing == null)
                 return false;
 
+            if (await clienteRepository.EmailExistsAsync(
+                dto.Email, existing.Documento))
+            {
+                throw new ArgumentException(
+                    $"Ya existe otro cliente con el Email '{dto.Email}'.");
+            }
+
             Cliente cliente = new Cliente(
+                dto.Id,
                 existing.Documento,
                 dto.TipoDocumento,
                 dto.Nombre,
@@ -95,6 +100,8 @@ namespace Application.Services
                 dto.Email,
                 existing.FechaAlta
             );
+
+            cliente.SetId(existing.Id);
 
             return await clienteRepository.UpdateAsync(cliente);
         }

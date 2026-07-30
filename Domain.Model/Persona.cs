@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Domain.Model
 {
@@ -13,11 +12,11 @@ namespace Domain.Model
     }
     public abstract class Persona
     {
-        public string Documento { get; set; }
-        public TipoDocumento TipoDocumento { get; set; }
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public string Telefono { get; set; }
+        public string Documento { get; private set; }
+        public TipoDocumento TipoDocumento { get; private set; }
+        public string Nombre { get; private set; }
+        public string Apellido { get; private set; }
+        public string Telefono { get; private set; }
 
         public Persona(string documento, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono)
         {
