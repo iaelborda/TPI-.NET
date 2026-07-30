@@ -20,7 +20,8 @@ namespace WebAPI
             })
             .WithName("GetCliente")
             .Produces<ClienteDTO>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status404NotFound);
+            .Produces(StatusCodes.Status404NotFound)
+            .WithOpenApi();
 
             app.MapGet("/clientes", async (IClienteService clienteService) =>
             {
@@ -29,7 +30,8 @@ namespace WebAPI
                 return Results.Ok(dtos);
             })
             .WithName("GetAllClientes")
-            .Produces<List<ClienteDTO>>(StatusCodes.Status200OK);
+            .Produces<List<ClienteDTO>>(StatusCodes.Status200OK)
+            .WithOpenApi();
 
             app.MapPost("/clientes", async (ClienteDTO dto, IClienteService clienteService) =>
             {
@@ -46,7 +48,8 @@ namespace WebAPI
             })
             .WithName("AddCliente")
             .Produces<ClienteDTO>(StatusCodes.Status201Created)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .WithOpenApi();
 
             app.MapPut("/clientes", async (ClienteDTO dto, IClienteService clienteService) =>
             {
@@ -68,7 +71,8 @@ namespace WebAPI
             })
             .WithName("UpdateCliente")
             .Produces(StatusCodes.Status404NotFound)
-            .Produces(StatusCodes.Status400BadRequest);
+            .Produces(StatusCodes.Status400BadRequest)
+            .WithOpenApi();
 
             app.MapDelete("/clientes/{id}", async (int id, IClienteService clienteService) =>
             {
@@ -83,7 +87,8 @@ namespace WebAPI
             })
             .WithName("DeleteCliente")
             .Produces(StatusCodes.Status204NoContent)
-            .Produces(StatusCodes.Status404NotFound);
+            .Produces(StatusCodes.Status404NotFound)
+            .WithOpenApi();
         }
     }
 }
