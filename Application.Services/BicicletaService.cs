@@ -10,10 +10,12 @@ namespace Application.Services
     {
         private readonly IBicicletaRepository bicicletaRepository;
         private readonly ICategoriaRepository categoriaRepository;
-        public BicicletaService(IBicicletaRepository bicicletaRepository, ICategoriaRepository categoriaRepository)
+        private readonly ISucursalRepository sucursalRepository;
+        public BicicletaService(IBicicletaRepository bicicletaRepository, ICategoriaRepository categoriaRepository, ISucursalRepository sucursalRepository)
         {
             this.bicicletaRepository = bicicletaRepository;
             this.categoriaRepository = categoriaRepository;
+            this.sucursalRepository = sucursalRepository;
         }
 
         public async Task<BicicletaDTO> AddAsync(BicicletaDTO dto)
@@ -24,10 +26,18 @@ namespace Application.Services
                 throw new ArgumentException($"Categoria con ID {dto.CategoriaId} no existe.");
             }
 
-            Bicicleta bicicleta = new Bicicleta(dto.Marca, dto.Modelo, dto.Estado, dto.CategoriaId);
+            var sucursal = await sucursalRepository.GetAsync(dto.SucursalId);
+
+            if (sucursal == null)
+            {
+                throw new ArgumentException($"Sucursal con ID {dto.SucursalId} no existe.");
+            }
+
+            Bicicleta bicicleta = new Bicicleta(dto.Marca, dto.Modelo, dto.Estado, dto.CategoriaId, dto.SucursalId);
             await bicicletaRepository.AddAsync(bicicleta);
             dto.Id = bicicleta.Id;
             dto.DescripcionCategoria = categoria.Descripcion;
+            dto.DireccionSucursal = sucursal.Direccion;
             return dto;
         }
 
@@ -49,7 +59,9 @@ namespace Application.Services
                 Marca = bicicleta.Marca,
                 Modelo = bicicleta.Modelo,
                 CategoriaId = bicicleta.CategoriaId,
+                SucursalId = bicicleta.SucursalId,
                 DescripcionCategoria = bicicleta.Categoria?.Descripcion,
+                DireccionSucursal = bicicleta.Sucursal?.Direccion,
                 Estado = bicicleta.Estado
             };
         }
@@ -64,7 +76,9 @@ namespace Application.Services
                 Marca = bicicleta.Marca,
                 Modelo = bicicleta.Modelo,
                 CategoriaId = bicicleta.CategoriaId,
+                SucursalId = bicicleta.SucursalId,
                 DescripcionCategoria = bicicleta.Categoria?.Descripcion,
+                DireccionSucursal = bicicleta.Sucursal?.Direccion,
                 Estado = bicicleta.Estado
             }).ToList();
         }
@@ -72,19 +86,27 @@ namespace Application.Services
         public async Task<bool> UpdateAsync(BicicletaDTO dto)
         {
             var existing = await bicicletaRepository.GetAsync(dto.Id);
+            var sucursal = await sucursalRepository.GetAsync(dto.SucursalId);
 
-            if(existing == null) return false;
+            if (existing == null) return false;
             var categoria = await categoriaRepository.GetAsync(dto.CategoriaId);
             if(categoria == null)
             {
                 throw new ArgumentException($"Categoria con ID {dto.CategoriaId} no existe.");
             }
 
+            if (sucursal == null)
+            {
+                throw new ArgumentException(
+                    $"Sucursal con ID {dto.SucursalId} no existe.");
+            }
+
             Bicicleta bicicleta = new Bicicleta(
                 dto.Marca,
                 dto.Modelo,
                 dto.Estado,
-                dto.CategoriaId
+                dto.CategoriaId,
+                dto.SucursalId
                 );
             bicicleta.SetId(dto.Id);
 

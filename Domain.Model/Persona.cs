@@ -12,14 +12,16 @@ namespace Domain.Model
     }
     public abstract class Persona
     {
+        public int Id { get; private set; }
         public string Documento { get; private set; }
         public TipoDocumento TipoDocumento { get; private set; }
         public string Nombre { get; private set; }
         public string Apellido { get; private set; }
         public string Telefono { get; private set; }
 
-        public Persona(string documento, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono)
+        public Persona(int id, string documento, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono)
         {
+            SetId(id);
             SetDocumento(documento);
             SetTipoDocumento(tipoDocumento);
             SetNombre(nombre);
@@ -27,6 +29,12 @@ namespace Domain.Model
             SetTelefono(telefono);
         }
 
+        public void SetId(int id)
+        {
+            if (id < 0)
+                throw new ArgumentException("El id debe ser mayor que cero.", nameof(id));
+            Id = id;
+        }
         public void SetDocumento(string documento)
         {
             if (string.IsNullOrWhiteSpace(documento))

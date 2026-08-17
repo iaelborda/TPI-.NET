@@ -12,7 +12,7 @@ namespace Domain.Model
         public int Id { get; private set; }
         public decimal PrecioHora { get; private set; }
         public DateTime FechaDesde { get; private set; }
-        public DateTime FechaHasta { get; private set; }
+        public DateTime? FechaHasta { get; private set; }
 
         private int _categoriaId;
         private Categoria? _categoria;
@@ -34,7 +34,7 @@ namespace Domain.Model
                 }
             }
         }
-        public Tarifa(decimal precioHora, DateTime fechaDesde, DateTime fechaHasta, int categoriaId)
+        public Tarifa(decimal precioHora, DateTime fechaDesde, DateTime? fechaHasta, int categoriaId)
         {
             SetPrecioHora(precioHora);
             SetFechaDesde(fechaDesde);
@@ -43,7 +43,7 @@ namespace Domain.Model
         }
         public void SetId(int id)
         {
-            if (id < 0)
+            if (id <= 0)
                 throw new ArgumentException("El Id debe ser mayor o igual a 0.", nameof(id));
 
             Id = id;
@@ -62,9 +62,9 @@ namespace Domain.Model
             FechaDesde = fechaDesde;
         }
 
-        public void SetFechaHasta(DateTime fechaHasta)
+        public void SetFechaHasta(DateTime? fechaHasta)
         {
-            if (fechaHasta < FechaDesde)
+            if (fechaHasta.HasValue && fechaHasta < FechaDesde)
                 throw new ArgumentException("La fecha hasta no puede ser anterior a la fecha desde.", nameof(fechaHasta));
 
             FechaHasta = fechaHasta;

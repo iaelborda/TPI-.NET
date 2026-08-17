@@ -85,6 +85,11 @@ namespace Domain.Model
                 throw new InvalidOperationException("No se puede calcular el subtotal si la bicicleta no ha sido devuelta.");
             }
 
+            if (bicicleta.Categoria == null)
+            {
+                throw new InvalidOperationException("La bicicleta no tiene una categoría asociada.");
+            }
+
             if (!bicicleta.Categoria.Tarifas.Any())
             {
                 throw new InvalidOperationException("La bicicleta no tiene tarifas asociadas.");
@@ -92,7 +97,7 @@ namespace Domain.Model
 
             var tarifaVigente = bicicleta.Categoria.Tarifas
                 .Where(t => t.FechaDesde <= HoraInicio &&
-                (t.FechaHasta == null || t.FechaHasta >= DateTime.Now))
+                (t.FechaHasta == null || t.FechaHasta >= HoraFin.Value))
                 .OrderByDescending(t => t.FechaDesde)
                 .FirstOrDefault();
 

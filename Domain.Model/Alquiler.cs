@@ -25,10 +25,10 @@ namespace Domain.Model
 
         private List<DetalleAlquiler> detalles = new List<DetalleAlquiler>();
         public IReadOnlyList<DetalleAlquiler> Detalles => detalles.AsReadOnly();
-        public Alquiler(int clienteId, int EmpleadoId)
+        public Alquiler(int clienteId, int empleadoId)
         {
             SetClienteId(clienteId);
-            SetEmpleadoId(EmpleadoId);
+            SetEmpleadoId(empleadoId);
             EstadoAlquiler = EstadoDeAlquiler.Activo;
             FechaAlquiler = DateTime.Now;
         }
@@ -74,6 +74,16 @@ namespace Domain.Model
             detalles.Add(detalle);
         }
 
+        public void CancelarAlquiler()
+        {
+            if (EstadoAlquiler != EstadoDeAlquiler.Activo)
+            {
+                throw new InvalidOperationException("Solo se puede cancelar un alquiler activo.");
+            }
+
+            EstadoAlquiler = EstadoDeAlquiler.Cancelado;
+        }
+
         public void FinalizarAlquiler()
         {
             if (EstadoAlquiler == EstadoDeAlquiler.Finalizado)
@@ -81,9 +91,20 @@ namespace Domain.Model
                 throw new InvalidOperationException("El alquiler ya ha sido finalizado.");
             }
 
+            if (EstadoAlquiler == EstadoDeAlquiler.Cancelado)
+            {
+                throw new InvalidOperationException("No se puede finalizar un alquiler que fue cancelado.");
+            }
+
+            if (detalles.Count == 0)
+            {
+                throw new InvalidOperationException("No se puede finalizar un alquiler sin detalles.");
+            }
+
             if (detalles.Any(d => d.HoraFin == null))
             {
-                throw new InvalidOperationException("No se puede finalizar el alquiler mientras haya bicicletas sin devolver.");
+                throw new InvalidOperationException(
+                    "No se puede finalizar el alquiler mientras haya bicicletas sin devolver.");
             }
 
             EstadoAlquiler = EstadoDeAlquiler.Finalizado;

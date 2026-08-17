@@ -32,8 +32,8 @@ namespace Domain.Model
             }
         }
 
-        public Empleado(string dni, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono, int legajo, int sucursalId)
-            : base(dni, tipoDocumento, nombre, apellido, telefono)
+        public Empleado(int id, string documento, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono, int legajo, int sucursalId)
+            : base(id, documento, tipoDocumento, nombre, apellido, telefono)
         {
             SetLegajo(legajo);
             SetSucursalId(sucursalId);
@@ -47,7 +47,7 @@ namespace Domain.Model
 
         public void SetSucursalId(int sucursalId)
         {
-            if (sucursalId < 0)
+            if (sucursalId <= 0)
             {
                 throw new ArgumentException("La sucursal es obligatoria. ", nameof(sucursalId));
             }
@@ -68,93 +68,3 @@ namespace Domain.Model
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -16,6 +16,9 @@
         private int _categoriaId;
         private Categoria? _categoria;
 
+        private int _sucursalId;
+        private Sucursal? _sucursal;
+
         public int CategoriaId
         {
             get => _categoria?.Id ?? _categoriaId;
@@ -35,16 +38,35 @@
                 }
             }
         }
-        public Bicicleta(string marca, string modelo, EstadoBicicleta estado, int categoriaId)
+        public int SucursalId
+        {
+            get => _sucursal?.Id ?? _sucursalId;
+            private set => _sucursalId = value;
+        }
+
+        public Sucursal? Sucursal
+        {
+            get => _sucursal;
+            private set
+            {
+                _sucursal = value;
+                if (value != null && _sucursalId != value.Id)
+                {
+                    _sucursalId = value.Id;
+                }
+            }
+        }
+        public Bicicleta(string marca, string modelo, EstadoBicicleta estado, int categoriaId, int sucursalId)
         {
             SetMarca(marca);
             SetModelo(modelo);
             SetEstado(estado);
             SetCategoriaId(categoriaId);
+            SetSucursalId(sucursalId);
         }
         public void SetId(int id)
         {
-            if (id < 0)
+            if (id <= 0)
                 throw new ArgumentException("El Id debe ser mayor que 0.", nameof(id));
             Id = id;
         }
@@ -88,6 +110,27 @@
             ArgumentNullException.ThrowIfNull(categoria);
             _categoria = categoria;
             _categoriaId = categoria.Id;
+        }
+        public void SetSucursalId(int sucursalId)
+        {
+            if (sucursalId <= 0)
+            {
+                throw new ArgumentException("La sucursal es obligatoria. ", nameof(sucursalId));
+            }
+            _sucursalId = sucursalId;
+
+            if (_sucursal != null && _sucursal.Id != sucursalId)
+            {
+                _sucursal = null;
+            }
+        }
+
+        public void SetSucursal(Sucursal sucursal)
+        {
+            ArgumentNullException.ThrowIfNull(sucursal);
+
+            _sucursal = sucursal;
+            _sucursalId = sucursal.Id;
         }
     }
 }

@@ -29,6 +29,7 @@ namespace Application.Services
 
             await clienteRepository.AddAsync(cliente);
 
+            dto.Id = cliente.Id;
             dto.FechaAlta = cliente.FechaAlta;
 
             return dto;
