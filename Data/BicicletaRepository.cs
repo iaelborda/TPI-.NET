@@ -1,71 +1,72 @@
-﻿using System;
-using System.Diagnostics;
+﻿using Microsoft.EntityFrameworkCore;
 using Domain.Model;
 
 namespace Data
 {
     public class BicicletaRepository : IBicicletaRepository
     {
-        private static readonly List<Bicicleta> bicicletas = new List<Bicicleta>();
-        private static int nextId = 1;
-        public Task AddAsync(Bicicleta bicicleta)
+        private readonly TPIContext context;
+
+        public BicicletaRepository(TPIContext context)
         {
-            bicicleta.SetId(nextId);
-            nextId++;
-
-            var categoriaRepo = new CategoriaRepository();
-            var categoria = categoriaRepo.GetAllSync().FirstOrDefault(c => c.Id == bicicleta.CategoriaId);
-
-            if (categoria != null)
-                bicicleta.SetCategoria(categoria);
-
-            bicicletas.Add(bicicleta);
-
-            return Task.CompletedTask;
+            this.context = context;
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task AddAsync(Bicicleta bicicleta)
         {
-            var bicicleta = bicicletas.FirstOrDefault(b => b.Id == id);
+            context.Bicicletas.Add(bicicleta);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var bicicleta = await context.Bicicletas.FindAsync(id);
+
             if (bicicleta != null)
             {
-                bicicletas.Remove(bicicleta);
-                return Task.FromResult(true);
+                context.Bicicletas.Remove(bicicleta);
+                await context.SaveChangesAsync();
+
+                return true;
             }
-            return Task.FromResult(false);
+
+            return false;
         }
 
-        public Task<Bicicleta?> GetAsync(int id)
+        public async Task<Bicicleta?> GetAsync(int id)
         {
-            return Task.FromResult(bicicletas.FirstOrDefault(b => b.Id == id));
+            return await context.Bicicletas
+                .Include(b => b.Categoria)
+                .Include(b => b.Sucursal)
+                .FirstOrDefaultAsync(b => b.Id == id);
         }
 
-        public Task<IEnumerable<Bicicleta>> GetAllAsync()
+        public async Task<IEnumerable<Bicicleta>> GetAllAsync()
         {
-            return Task.FromResult<IEnumerable<Bicicleta>>(bicicletas.ToList());
+            return await context.Bicicletas
+                .Include(b => b.Categoria)
+                .Include(b => b.Sucursal)
+                .ToListAsync();
         }
 
-        public Task<bool> UpdateAsync(Bicicleta bicicleta)
+        public async Task<bool> UpdateAsync(Bicicleta bicicleta)
         {
-            var existing = bicicletas.FirstOrDefault(b => bicicleta.Id == b.Id);
+            var existing = await context.Bicicletas.FirstOrDefaultAsync(b => b.Id == bicicleta.Id);
 
-            if(existing != null)
+            if (existing != null)
             {
                 existing.SetMarca(bicicleta.Marca);
                 existing.SetModelo(bicicleta.Modelo);
                 existing.SetEstado(bicicleta.Estado);
                 existing.SetCategoriaId(bicicleta.CategoriaId);
+                existing.SetSucursalId(bicicleta.SucursalId);
 
-                var categoriaRepo = new CategoriaRepository();
-                var categoria = categoriaRepo.GetAllSync()
-                    .FirstOrDefault(c => c.Id == bicicleta.CategoriaId);
+                await context.SaveChangesAsync();
 
-                if (categoria != null)
-                    existing.SetCategoria(categoria);
-
-                return Task.FromResult(true);
+                return true;
             }
-            return Task.FromResult(false);
+
+            return false;
         }
     }
 }

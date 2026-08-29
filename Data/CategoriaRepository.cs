@@ -1,69 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using Domain.Model;
 
 namespace Data
 {
     public class CategoriaRepository : ICategoriaRepository
     {
-        private static readonly List<Categoria> categorias = new List<Categoria>();
-        private static int nextId = 1;
+        private readonly TPIContext context;
 
-        public Task AddAsync(Categoria categoria)
+        public CategoriaRepository(TPIContext context)
         {
-            categoria.SetId(nextId);
-            nextId++;
-            categorias.Add(categoria);
-            return Task.CompletedTask;
+            this.context = context;
+        }
+        public async Task AddAsync(Categoria categoria)
+        {
+            context.Categorias.Add(categoria);
+            await context.SaveChangesAsync();
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var categoria = categorias.FirstOrDefault(c => c.Id == id);
-            if(categoria != null)
+            var categoria = await context.Categorias.FindAsync(id);
+
+            if (categoria != null)
             {
-                categorias.Remove(categoria);
-                return Task.FromResult(true);
+                context.Categorias.Remove(categoria);
+                await context.SaveChangesAsync();
+
+                return true;
             }
-            return Task.FromResult(false);
+            return false;
+        }
+        public async Task<Categoria?> GetAsync(int id)
+        {
+            return await context.Categorias.FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public Task<Categoria?> GetAsync(int id)
+        public async Task<IEnumerable<Categoria>> GetAllAsync()
         {
-            return Task.FromResult(categorias.FirstOrDefault(c => c.Id == id));
+            return await context.Categorias.ToListAsync();
         }
-
-        public Task<IEnumerable<Categoria>> GetAllAsync()
+        public async Task<bool> UpdateAsync(Categoria categoria)
         {
-            return Task.FromResult<IEnumerable<Categoria>>(categorias.ToList());
-        }
+            var existing = await context.Categorias.FindAsync(categoria.Id);
 
-        public Task<bool> UpdateAsync(Categoria categoria)
-        {
-            var busqueda = categorias.FirstOrDefault(c => c.Id == categoria.Id);
-            if (busqueda != null)
+            if (existing != null)
             {
-                busqueda.SetDescripcion(categoria.Descripcion);
-                return Task.FromResult(true);
-            }
-            return Task.FromResult(false);
-        }
+                existing.SetDescripcion(categoria.Descripcion);
 
-        public Task<bool> DescripcionExistsAsync (string descripcion, int? excludeId = null)
+                await context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+        public async Task<bool> DescripcionExistsAsync(string descripcion, int? excludeId = null)
         {
-            var busqueda = categorias.Where(c => c.Descripcion.ToLower() == descripcion.ToLower());
+            var query = context.Categorias.Where(c => c.Descripcion.ToLower() == descripcion.ToLower());
+
             if (excludeId.HasValue)
             {
-                busqueda = busqueda.Where(c => c.Id != excludeId.Value);
+                query = query.Where(c => c.Id != excludeId.Value);
             }
-            return Task.FromResult(busqueda.Any());
+            return await query.AnyAsync();
         }
         internal IEnumerable<Categoria> GetAllSync()
         {
-            return categorias.OrderBy(p => p.Descripcion).ToList();
+            return context.Categorias.OrderBy(p => p.Descripcion).ToList();
         }
 
     }
