@@ -71,6 +71,7 @@
             passwordTextBox.Name = "passwordTextBox";
             passwordTextBox.Size = new Size(125, 27);
             passwordTextBox.TabIndex = 3;
+            passwordTextBox.KeyPress += passwordTextBox_KeyPress;
             // 
             // loginButton
             // 
@@ -92,6 +93,7 @@
             cancelButton.TabIndex = 6;
             cancelButton.Text = "Cancelar";
             cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.Click += cancelButton_Click;
             // 
             // titleLabel
             // 
