@@ -1,6 +1,6 @@
 ﻿namespace WindowsForms
 {
-    partial class loginForm
+    partial class LoginForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -110,7 +110,7 @@
             // 
             errorProvider.ContainerControl = this;
             // 
-            // loginForm
+            // LoginForm
             // 
             AcceptButton = loginButton;
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -127,10 +127,9 @@
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "loginForm";
+            Name = "LoginForm";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Login";
-            Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
             PerformLayout();

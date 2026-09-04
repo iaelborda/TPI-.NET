@@ -3,16 +3,11 @@ using API.Auth.WindowsForms;
 
 namespace WindowsForms
 {
-    public partial class loginForm : Form
+    public partial class LoginForm : Form
     {
-        public loginForm()
+        public LoginForm()
         {
             InitializeComponent();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
 
         private async void loginButton_Click(object sender, EventArgs e)
@@ -65,7 +60,7 @@ namespace WindowsForms
                 errorProvider.SetError(usernameTextBox, "El nombre de usuario es obligatorio.");
                 isValid = false;
             }
-            if(string.IsNullOrWhiteSpace(passwordTextBox.Text))
+            if (string.IsNullOrWhiteSpace(passwordTextBox.Text))
             {
                 errorProvider.SetError(passwordTextBox, "La contraseña es obligatoria.");
                 isValid = false;
@@ -75,7 +70,7 @@ namespace WindowsForms
 
         private void passwordTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(e.KeyChar == (char)Keys.Enter)
+            if (e.KeyChar == (char)Keys.Enter)
             {
                 loginButton_Click(sender, EventArgs.Empty);
                 e.Handled = true;

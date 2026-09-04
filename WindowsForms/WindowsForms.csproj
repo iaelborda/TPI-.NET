@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\API.Auth.WindowsForms\API.Auth.WindowsForms.csproj" />
     <ProjectReference Include="..\API.Clients\API.Clients.csproj" />
   </ItemGroup>
 
