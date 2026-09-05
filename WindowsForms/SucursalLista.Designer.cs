@@ -32,8 +32,6 @@
             agregarButton = new Button();
             actualizarButton = new Button();
             eliminarButton = new Button();
-            buscarTextBox = new TextBox();
-            buscarButton = new Button();
             ((System.ComponentModel.ISupportInitialize)sucursalesDataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -43,15 +41,14 @@
             sucursalesDataGridView.AllowUserToDeleteRows = false;
             sucursalesDataGridView.AllowUserToOrderColumns = true;
             sucursalesDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            sucursalesDataGridView.Location = new Point(37, 81);
+            sucursalesDataGridView.Location = new Point(37, 37);
             sucursalesDataGridView.MultiSelect = false;
             sucursalesDataGridView.Name = "sucursalesDataGridView";
             sucursalesDataGridView.ReadOnly = true;
             sucursalesDataGridView.RowHeadersWidth = 62;
             sucursalesDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            sucursalesDataGridView.Size = new Size(978, 400);
+            sucursalesDataGridView.Size = new Size(978, 444);
             sucursalesDataGridView.TabIndex = 0;
-            sucursalesDataGridView.CellContentClick += dataGridView1_CellContentClick;
             // 
             // agregarButton
             // 
@@ -61,6 +58,7 @@
             agregarButton.TabIndex = 1;
             agregarButton.Text = "Agregar";
             agregarButton.UseVisualStyleBackColor = true;
+            agregarButton.Click += agregarButton_Click;
             // 
             // actualizarButton
             // 
@@ -70,7 +68,7 @@
             actualizarButton.TabIndex = 2;
             actualizarButton.Text = "Actualizar";
             actualizarButton.UseVisualStyleBackColor = true;
-            actualizarButton.Click += button2_Click;
+            actualizarButton.Click += actualizarButton_Click;
             // 
             // eliminarButton
             // 
@@ -80,42 +78,22 @@
             eliminarButton.TabIndex = 3;
             eliminarButton.Text = "Eliminar";
             eliminarButton.UseVisualStyleBackColor = true;
-            // 
-            // buscarTextBox
-            // 
-            buscarTextBox.Location = new Point(37, 33);
-            buscarTextBox.Name = "buscarTextBox";
-            buscarTextBox.PlaceholderText = "Buscar por id, nombre o dirección...";
-            buscarTextBox.Size = new Size(291, 31);
-            buscarTextBox.TabIndex = 4;
-            // 
-            // buscarButton
-            // 
-            buscarButton.Location = new Point(344, 33);
-            buscarButton.Name = "buscarButton";
-            buscarButton.Size = new Size(112, 34);
-            buscarButton.TabIndex = 5;
-            buscarButton.Text = "Buscar";
-            buscarButton.UseVisualStyleBackColor = true;
-            buscarButton.Click += button1_Click;
+            eliminarButton.Click += eliminarButton_Click;
             // 
             // SucursalLista
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1056, 566);
-            Controls.Add(buscarButton);
-            Controls.Add(buscarTextBox);
             Controls.Add(eliminarButton);
             Controls.Add(actualizarButton);
             Controls.Add(agregarButton);
             Controls.Add(sucursalesDataGridView);
             Name = "SucursalLista";
             Text = "Sucursales";
-            Load += SucursalLista_Load;
+            Load += Sucursales_Load;
             ((System.ComponentModel.ISupportInitialize)sucursalesDataGridView).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -124,7 +102,5 @@
         private Button agregarButton;
         private Button actualizarButton;
         private Button eliminarButton;
-        private TextBox buscarTextBox;
-        private Button buscarButton;
     }
 }

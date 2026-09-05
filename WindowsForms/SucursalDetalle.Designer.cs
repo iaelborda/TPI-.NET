@@ -40,7 +40,9 @@
             capacidadNumericUpDown = new NumericUpDown();
             aceptarButton = new Button();
             cancelarButton = new Button();
+            errorProvider = new ErrorProvider();
             ((System.ComponentModel.ISupportInitialize)capacidadNumericUpDown).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // idLabel
@@ -52,7 +54,6 @@
             idLabel.Size = new Size(28, 25);
             idLabel.TabIndex = 11;
             idLabel.Text = "Id";
-            idLabel.Click += label1_Click;
             // 
             // idTextBox
             // 
@@ -63,7 +64,6 @@
             idTextBox.Size = new Size(150, 31);
             idTextBox.TabIndex = 0;
             idTextBox.TabStop = false;
-            idTextBox.TextChanged += idTextBox_TextChanged;
             // 
             // nombreLabel
             // 
@@ -73,7 +73,6 @@
             nombreLabel.Size = new Size(78, 25);
             nombreLabel.TabIndex = 11;
             nombreLabel.Text = "Nombre";
-            nombreLabel.Click += label1_Click_1;
             // 
             // direccionLabel
             // 
@@ -83,7 +82,6 @@
             direccionLabel.Size = new Size(85, 25);
             direccionLabel.TabIndex = 11;
             direccionLabel.Text = "Dirección";
-            direccionLabel.Click += direccionLabel_Click;
             // 
             // telefonoLabel
             // 
@@ -109,7 +107,6 @@
             nombreTextBox.Name = "nombreTextBox";
             nombreTextBox.Size = new Size(150, 31);
             nombreTextBox.TabIndex = 0;
-            nombreTextBox.TextChanged += nombreTextBox_TextChanged;
             // 
             // direccionTextBox
             // 
@@ -142,7 +139,7 @@
             aceptarButton.TabIndex = 2;
             aceptarButton.Text = "Aceptar";
             aceptarButton.UseVisualStyleBackColor = true;
-            aceptarButton.Click += button1_Click;
+            aceptarButton.Click += aceptarButton_Click;
             // 
             // cancelarButton
             // 
@@ -152,6 +149,7 @@
             cancelarButton.TabIndex = 2;
             cancelarButton.Text = "Cancelar";
             cancelarButton.UseVisualStyleBackColor = true;
+            cancelarButton.Click += cancelarButton_Click;
             // 
             // SucursalDetalle
             // 
@@ -172,8 +170,8 @@
             Controls.Add(idLabel);
             Name = "SucursalDetalle";
             Text = "Sucursal";
-            Load += SucursalDetalle_Load;
             ((System.ComponentModel.ISupportInitialize)capacidadNumericUpDown).EndInit();
+            ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -184,6 +182,7 @@
         private TextBox idTextBox;
         private Label nombreLabel;
         private Label direccionLabel;
+        private ErrorProvider errorProvider;
         private Label telefonoLabel;
         private Label capacidadLabel;
         private TextBox nombreTextBox;

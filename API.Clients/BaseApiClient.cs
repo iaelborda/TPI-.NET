@@ -50,7 +50,7 @@ namespace API.Clients
             }
 
             // URL por defecto para Windows
-            string defaultUrl = "https://localhost:7111/";
+            string defaultUrl = "https://localhost:7261/";
             System.Diagnostics.Debug.WriteLine($"[DEBUG] Usando URL: {defaultUrl}");
             return defaultUrl;
         }
