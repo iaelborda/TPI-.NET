@@ -1,5 +1,6 @@
 ﻿using API.Clients;
 using DTOs;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace WindowsForms
@@ -155,10 +156,25 @@ namespace WindowsForms
                 errorProvider.SetError(direccionTextBox, "La Dirección es requerida");
             }
 
-            if (this.telefonoTextBox.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(telefonoTextBox.Text))
             {
                 isValid = false;
-                errorProvider.SetError(telefonoTextBox, "El Teléfono es requerido");
+                errorProvider.SetError(telefonoTextBox,"El Teléfono es requerido");
+            }
+            else
+            {
+                string soloNumeros = Regex.Replace(telefonoTextBox.Text, @"\D", "");
+
+                if (!Regex.IsMatch(telefonoTextBox.Text, @"^[0-9\-]+$"))
+                {
+                    isValid = false;
+                    errorProvider.SetError(telefonoTextBox,"El teléfono solo puede contener números y guiones");
+                }
+                else if (soloNumeros.Length != 10)
+                {
+                    isValid = false;
+                    errorProvider.SetError(telefonoTextBox,"El teléfono debe tener 10 dígitos");
+                }
             }
 
             if (this.capacidadNumericUpDown.Value <= 0)

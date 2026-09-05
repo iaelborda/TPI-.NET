@@ -80,7 +80,7 @@ namespace Application.Services
             }
             if (await categoriaRepository.DescripcionExistsAsync(dto.Descripcion, dto.Id))
             {
-                throw new ArgumentException($"Ya existe una sucursal con la descripcion '{dto.Descripcion}'");
+                throw new ArgumentException($"Ya existe una categoría con la descripcion '{dto.Descripcion}'");
             }
             Categoria categoria = new Categoria(dto.Descripcion);
             categoria.SetId(dto.Id);

@@ -150,13 +150,13 @@ namespace WindowsForms
 
                     await this.LoadSucursales();
                 }
+                catch (InvalidOperationException ex)
+                {
+                    MessageBox.Show(ex.Message,"No se puede eliminar",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Error al eliminar sucursal: {ex.Message}","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    HabilitarControles();
                 }
             }
         }

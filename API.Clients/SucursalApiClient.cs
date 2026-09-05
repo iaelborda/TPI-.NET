@@ -110,7 +110,7 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception($"Error al eliminar sucursal con Id {id}. Status: {response.StatusCode}");
+                    throw new Exception($"La sucursal {id} tiene bicicletas asociadas. Status: {response.StatusCode}");
                 }
             }
             catch (HttpRequestException ex)

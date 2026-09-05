@@ -12,9 +12,11 @@ namespace Application.Services
     public class SucursalService : ISucursalService
     {
         private readonly ISucursalRepository sucursalRepository;
-        public SucursalService(ISucursalRepository sucursalRepository)
+        private readonly IBicicletaRepository bicicletaRepository;
+        public SucursalService(ISucursalRepository sucursalRepository,IBicicletaRepository bicicletaRepository)
         {
             this.sucursalRepository = sucursalRepository;
+            this.bicicletaRepository = bicicletaRepository;
         }
 
         public async Task<SucursalDTO> AddAsync(SucursalDTO dto)
@@ -31,6 +33,18 @@ namespace Application.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
+            var sucursal = await sucursalRepository.GetAsync(id);
+
+            if (sucursal == null)
+                return false;
+
+            var bicicletas = await bicicletaRepository.GetAllAsync();
+
+            if (bicicletas.Any(b => b.SucursalId == id))
+            {
+                throw new InvalidOperationException("No se puede borrar la sucursal porque tiene bicicletas asociadas.");
+            }
+
             return await sucursalRepository.DeleteAsync(id);
         }
 
