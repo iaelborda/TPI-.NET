@@ -21,7 +21,9 @@ namespace Application.Services
         public async Task<BicicletaDTO> AddAsync(BicicletaDTO dto)
         {
             var categoria = await categoriaRepository.GetAsync(dto.CategoriaId);
-            if(categoria == null)
+            var bicicletas = await bicicletaRepository.GetAllAsync();
+
+            if (categoria == null)
             {
                 throw new ArgumentException($"Categoria con ID {dto.CategoriaId} no existe.");
             }
@@ -31,6 +33,11 @@ namespace Application.Services
             if (sucursal == null)
             {
                 throw new ArgumentException($"Sucursal con ID {dto.SucursalId} no existe.");
+            }
+
+            if (bicicletas.Count(b => b.SucursalId == dto.SucursalId) >= sucursal.Capacidad)
+            {
+                throw new InvalidOperationException("No se puede asignar la bicicleta porque la sucursal alcanzó su capacidad máxima.");
             }
 
             Bicicleta bicicleta = new Bicicleta(dto.Marca, dto.Modelo, dto.Estado, dto.CategoriaId, dto.SucursalId);
@@ -99,6 +106,16 @@ namespace Application.Services
             {
                 throw new ArgumentException(
                     $"Sucursal con ID {dto.SucursalId} no existe.");
+            }
+
+            if (existing.SucursalId != dto.SucursalId)
+            {
+                var bicicletas = await bicicletaRepository.GetAllAsync();
+
+                if (bicicletas.Count(b => b.SucursalId == dto.SucursalId) >= sucursal.Capacidad)
+                {
+                    throw new InvalidOperationException("No se puede asignar la bicicleta porque la sucursal alcanzó su capacidad máxima.");
+                }
             }
 
             Bicicleta bicicleta = new Bicicleta(

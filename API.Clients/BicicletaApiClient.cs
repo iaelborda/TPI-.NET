@@ -66,7 +66,7 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Error al crear bicicleta. Status: " + response.StatusCode);
+                    throw new Exception("No se puede asignar la bicicleta porque la sucursal alcanzó su capacidad máxima. Status: " + response.StatusCode);
                 }
             }
             catch (HttpRequestException ex)
@@ -88,7 +88,7 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Error al actualizar bicicleta. Status: " + response.StatusCode);
+                    throw new Exception("No se puede asignar la bicicleta porque la sucursal alcanzó su capacidad máxima. Status: " + response.StatusCode);
                 }
             }
             catch (HttpRequestException ex)
