@@ -142,8 +142,9 @@ namespace WindowsForms
         private bool ValidarCliente()
         {
             bool isValid = true;
+
             errorProvider.SetError(documentoTextBox, string.Empty);
-            this.cliente.TipoDocumento = (TipoDocumento)tipoDocumentoComboBox.SelectedItem;
+            errorProvider.SetError(tipoDocumentoComboBox, string.Empty);
             errorProvider.SetError(nombreTextBox, string.Empty);
             errorProvider.SetError(apellidoTextBox, string.Empty);
             errorProvider.SetError(emailTextBox, string.Empty);
@@ -154,12 +155,25 @@ namespace WindowsForms
                 isValid = false;
                 errorProvider.SetError(documentoTextBox, "El Documento es obligatorio");
             }
+            else if (!Regex.IsMatch(documentoTextBox.Text, @"^\d+$"))
+            {
+                isValid = false;
+                errorProvider.SetError(documentoTextBox, "El documento solo puede contener números");
+            }else if(documentoTextBox.Text.Length < 8)
+            {
+                isValid = false;
+                errorProvider.SetError(documentoTextBox, "El documento debe tener al menos 8 dígitos");
+            }
+            else if (documentoTextBox.Text.Length > 20)
+            {
+                isValid = false;
+                errorProvider.SetError(documentoTextBox, "El documento debe tener menos de 20 caracteres");
+            }
             if (tipoDocumentoComboBox.SelectedItem == null)
             {
                 isValid = false;
                 errorProvider.SetError(tipoDocumentoComboBox, "Debe seleccionar un Tipo de Documento");
             }
-
 
             if (string.IsNullOrWhiteSpace(nombreTextBox.Text))
             {
@@ -172,6 +186,7 @@ namespace WindowsForms
                 isValid = false;
                 errorProvider.SetError(apellidoTextBox, "El Apellido es obligatorio");
             }
+
             if (string.IsNullOrWhiteSpace(emailTextBox.Text))
             {
                 isValid = false;
@@ -182,14 +197,29 @@ namespace WindowsForms
                 isValid = false;
                 errorProvider.SetError(emailTextBox, "El formato del Email no es válido");
             }
+
             if (string.IsNullOrWhiteSpace(telefonoTextBox.Text))
             {
                 isValid = false;
                 errorProvider.SetError(telefonoTextBox, "El Teléfono es obligatorio");
             }
+            else if (!Regex.IsMatch(telefonoTextBox.Text, @"^[0-9\-]+$"))
+            {
+                isValid = false;
+                errorProvider.SetError(telefonoTextBox, "El teléfono solo puede contener números y guiones");
+            }
+            else
+            {
+                string soloNumeros = Regex.Replace(telefonoTextBox.Text, @"\D", "");
+                if (soloNumeros.Length != 10)
+                {
+                    isValid = false;
+                    errorProvider.SetError(telefonoTextBox, "El teléfono debe tener 10 dígitos");
+                }
+            }
+
             return isValid;
         }
-
         private static bool EsEmailValido(string email)
         {
             if (string.IsNullOrWhiteSpace(email))

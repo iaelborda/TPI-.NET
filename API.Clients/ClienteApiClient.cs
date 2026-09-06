@@ -74,7 +74,7 @@ namespace API.Clients
                 if (!response.IsSuccessStatusCode)
                 {
                     string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al crear cliente. Status: {response.StatusCode}");
+                    throw new Exception($"Error al crear cliente. Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
             }
             catch (HttpRequestException ex)
@@ -97,7 +97,7 @@ namespace API.Clients
                 if (!response.IsSuccessStatusCode)
                 {
                     string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al actualizar cliente. Status: {response.StatusCode}");
+                    throw new Exception($"Error al actualizar cliente. Status: {response.StatusCode}, Detalle: {response.Content}");
                 }
             }
             catch (HttpRequestException ex)
