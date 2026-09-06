@@ -22,10 +22,10 @@ cualquier momento.
 ## Cómo ejecutar el sistema
 
 1. Abrir la solución `*.sln` en Visual Studio.
-2. Establecer el proyecto `WebApi` como proyecto de inicio.
+2. Establecer los proyectos `WebApi` y `WindowsForms` como proyectos de inicio.
 3. Ejecutar la aplicación utilizando `Ctrl + F5` o `F5`.
-4. Una vez iniciada la aplicación, acceder a Swagger desde la URL indicada por la aplicación para probar los endpoints disponibles.
+4. Una vez iniciada la aplicación, acceder a Swagger desde la URL indicada por la aplicación, se creará la base de datos. Luego, probar formularios de las entidades.
 
 ### Prueba de la API
 
-Desde Swagger se pueden consultar y probar los distintos endpoints disponibles para las entidades del sistema, incluyendo operaciones de alta, consulta, modificación y eliminación.
+Desde WindowsForms se pueden consultar y probar los distintos CRUD disponibles para las entidades del sistema, incluyendo operaciones de alta, consulta, modificación y eliminación.
