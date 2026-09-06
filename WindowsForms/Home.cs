@@ -28,5 +28,18 @@ namespace WindowsForms
             CategoriaLista categoriasForm = new CategoriaLista();
             categoriasForm.ShowDialog();
         }
+
+        private void bicicletasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BicicletaLista bicicletasForm = new BicicletaLista();
+            bicicletasForm.ShowDialog();
+        }
+
+        private void sucursalesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SucursalLista sucursalForm = new SucursalLista();
+            sucursalForm.ShowDialog();
+
+        }
     }
 }

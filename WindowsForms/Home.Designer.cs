@@ -32,6 +32,8 @@
             administraciónToolStripMenuItem = new ToolStripMenuItem();
             clientesToolStripMenuItem = new ToolStripMenuItem();
             categoriasToolStripMenuItem = new ToolStripMenuItem();
+            bicicletasToolStripMenuItem = new ToolStripMenuItem();
+            sucursalesToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -47,7 +49,7 @@
             // 
             // administraciónToolStripMenuItem
             // 
-            administraciónToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clientesToolStripMenuItem, categoriasToolStripMenuItem });
+            administraciónToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clientesToolStripMenuItem, categoriasToolStripMenuItem, bicicletasToolStripMenuItem, sucursalesToolStripMenuItem });
             administraciónToolStripMenuItem.Name = "administraciónToolStripMenuItem";
             administraciónToolStripMenuItem.Size = new Size(123, 24);
             administraciónToolStripMenuItem.Text = "Administración";
@@ -65,6 +67,20 @@
             categoriasToolStripMenuItem.Size = new Size(224, 26);
             categoriasToolStripMenuItem.Text = "Categorias";
             categoriasToolStripMenuItem.Click += categoriasToolStripMenuItem_Click;
+            // 
+            // bicicletasToolStripMenuItem
+            // 
+            bicicletasToolStripMenuItem.Name = "bicicletasToolStripMenuItem";
+            bicicletasToolStripMenuItem.Size = new Size(224, 26);
+            bicicletasToolStripMenuItem.Text = "Bicicletas";
+            bicicletasToolStripMenuItem.Click += bicicletasToolStripMenuItem_Click;
+            // 
+            // sucursalesToolStripMenuItem
+            // 
+            sucursalesToolStripMenuItem.Name = "sucursalesToolStripMenuItem";
+            sucursalesToolStripMenuItem.Size = new Size(224, 26);
+            sucursalesToolStripMenuItem.Text = "Sucursales";
+            sucursalesToolStripMenuItem.Click += sucursalesToolStripMenuItem_Click;
             // 
             // Home
             // 
@@ -89,5 +105,7 @@
         private ToolStripMenuItem administraciónToolStripMenuItem;
         private ToolStripMenuItem clientesToolStripMenuItem;
         private ToolStripMenuItem categoriasToolStripMenuItem;
+        private ToolStripMenuItem bicicletasToolStripMenuItem;
+        private ToolStripMenuItem sucursalesToolStripMenuItem;
     }
 }
