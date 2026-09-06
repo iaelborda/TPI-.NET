@@ -117,6 +117,8 @@
             Controls.Add(clientesDataGridView);
             Controls.Add(buscarButton);
             Controls.Add(buscarTextBox);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "ClienteLista";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Clientes";
