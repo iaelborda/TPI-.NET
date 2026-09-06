@@ -69,6 +69,7 @@
             // 
             passwordTextBox.Location = new Point(31, 134);
             passwordTextBox.Name = "passwordTextBox";
+            passwordTextBox.PasswordChar = '*';
             passwordTextBox.Size = new Size(125, 27);
             passwordTextBox.TabIndex = 3;
             passwordTextBox.KeyPress += passwordTextBox_KeyPress;

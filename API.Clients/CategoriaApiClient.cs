@@ -66,16 +66,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Error al crear categoría. Status: " + response.StatusCode);
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error al crear categoría. Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al crear categoría: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout: {ex.Message}", ex);
+                throw new Exception($"Timeout al crear categoría: {ex.Message}", ex);
             }
         }
 
@@ -88,16 +89,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Error al actualizar categoría. Status: " + response.StatusCode);
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error al actualizar categoría con Id {categoria.Id}. Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al actualizar categoría: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout: {ex.Message}", ex);
+                throw new Exception($"Timeout al actualizar categoría: {ex.Message}", ex);
             }
         }
 
@@ -110,16 +112,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception($"Error al eliminar categoría con Id {id}. Status: {response.StatusCode}");
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error al eliminar categoría con Id {id}. Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al eliminar categoría: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout: {ex.Message}", ex);
+                throw new Exception($"Timeout al eliminar categoría: {ex.Message}", ex);
             }
         }
     }

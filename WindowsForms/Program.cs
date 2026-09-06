@@ -16,8 +16,7 @@ namespace WindowsForms
             var loginForm = new LoginForm();
             if (loginForm.ShowDialog() == DialogResult.OK)
             {
-                Application.Run(new SucursalLista());
-                Application.Run(new BicicletaLista());
+                Application.Run(new Home());
             }
         }
     }

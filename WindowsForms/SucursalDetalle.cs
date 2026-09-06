@@ -5,11 +5,7 @@ using System.Windows.Forms;
 
 namespace WindowsForms
 {
-    public enum FormMode
-    {
-        Add,
-        Update
-    }
+
 
     public partial class SucursalDetalle : Form
     {

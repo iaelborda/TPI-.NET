@@ -12,12 +12,22 @@ namespace Domain.Model
         public string Email { get; private set; }
         public DateOnly FechaAlta { get; private set; }
 
-        public Cliente(int id, string documento, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono, string email, DateOnly fechaAlta)
+        public Cliente(int id, string documento, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono, string email)
             :base(id, documento, tipoDocumento, nombre, apellido, telefono)
+        {
+            SetEmail(email);
+            FechaAlta = DateOnly.FromDateTime(DateTime.Now);
+        
+        }
+
+        public Cliente(int id, string documento, TipoDocumento tipoDocumento,
+               string nombre, string apellido, string telefono, string email, DateOnly fechaAlta)
+    : base(id, documento, tipoDocumento, nombre, apellido, telefono)
         {
             SetEmail(email);
             SetFechaAlta(fechaAlta);
         }
+
 
         public void SetEmail(string email)
         {
@@ -35,10 +45,12 @@ namespace Domain.Model
 
         public void SetFechaAlta(DateOnly fechaAlta)
         {
-            if(fechaAlta == default)
+            if (fechaAlta == default)
                 throw new ArgumentException("La fecha de alta no puede ser nula.", nameof(fechaAlta));
             FechaAlta = fechaAlta;
         }
+
+
 
     }
 }
