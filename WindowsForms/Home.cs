@@ -22,5 +22,11 @@ namespace WindowsForms
             ClienteLista clientesForm = new ClienteLista();
             clientesForm.ShowDialog();
         }
+
+        private void categoriasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CategoriaLista categoriasForm = new CategoriaLista();
+            categoriasForm.ShowDialog();
+        }
     }
 }

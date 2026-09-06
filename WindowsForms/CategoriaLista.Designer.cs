@@ -1,6 +1,6 @@
 ﻿namespace WindowsForms
 {
-    partial class ClienteLista
+    partial class CategoriaLista
     {
         /// <summary>
         /// Required designer variable.
@@ -28,21 +28,37 @@
         /// </summary>
         private void InitializeComponent()
         {
+            categoriasDataGridView = new DataGridView();
             buscarTextBox = new TextBox();
             buscarButton = new Button();
-            clientesDataGridView = new DataGridView();
             eliminarButton = new Button();
             actualizarButton = new Button();
             agregarButton = new Button();
-            ((System.ComponentModel.ISupportInitialize)clientesDataGridView).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)categoriasDataGridView).BeginInit();
             SuspendLayout();
+            // 
+            // categoriasDataGridView
+            // 
+            categoriasDataGridView.AllowUserToAddRows = false;
+            categoriasDataGridView.AllowUserToDeleteRows = false;
+            categoriasDataGridView.AllowUserToOrderColumns = true;
+            categoriasDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            categoriasDataGridView.Location = new Point(24, 56);
+            categoriasDataGridView.Margin = new Padding(2);
+            categoriasDataGridView.MultiSelect = false;
+            categoriasDataGridView.Name = "categoriasDataGridView";
+            categoriasDataGridView.ReadOnly = true;
+            categoriasDataGridView.RowHeadersWidth = 82;
+            categoriasDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            categoriasDataGridView.Size = new Size(858, 325);
+            categoriasDataGridView.TabIndex = 0;
             // 
             // buscarTextBox
             // 
             buscarTextBox.Location = new Point(24, 24);
             buscarTextBox.Margin = new Padding(2);
             buscarTextBox.Name = "buscarTextBox";
-            buscarTextBox.PlaceholderText = "Buscar por nombre, apellido o email...";
+            buscarTextBox.PlaceholderText = "Buscar por descripcion";
             buscarTextBox.Size = new Size(248, 27);
             buscarTextBox.TabIndex = 4;
             // 
@@ -56,22 +72,6 @@
             buscarButton.Text = "Buscar";
             buscarButton.UseVisualStyleBackColor = true;
             buscarButton.Click += buscarButton_Click;
-            // 
-            // clientesDataGridView
-            // 
-            clientesDataGridView.AllowUserToAddRows = false;
-            clientesDataGridView.AllowUserToDeleteRows = false;
-            clientesDataGridView.AllowUserToOrderColumns = true;
-            clientesDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            clientesDataGridView.Location = new Point(24, 56);
-            clientesDataGridView.Margin = new Padding(2);
-            clientesDataGridView.MultiSelect = false;
-            clientesDataGridView.Name = "clientesDataGridView";
-            clientesDataGridView.ReadOnly = true;
-            clientesDataGridView.RowHeadersWidth = 82;
-            clientesDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            clientesDataGridView.Size = new Size(858, 325);
-            clientesDataGridView.TabIndex = 3;
             // 
             // eliminarButton
             // 
@@ -90,7 +90,7 @@
             actualizarButton.Margin = new Padding(2);
             actualizarButton.Name = "actualizarButton";
             actualizarButton.Size = new Size(92, 29);
-            actualizarButton.TabIndex = 3;
+            actualizarButton.TabIndex = 7;
             actualizarButton.Text = "Actualizar";
             actualizarButton.UseVisualStyleBackColor = true;
             actualizarButton.Click += actualizarButton_Click;
@@ -106,7 +106,7 @@
             agregarButton.UseVisualStyleBackColor = true;
             agregarButton.Click += agregarButton_Click;
             // 
-            // ClienteLista
+            // CategoriaLista
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -114,24 +114,25 @@
             Controls.Add(agregarButton);
             Controls.Add(actualizarButton);
             Controls.Add(eliminarButton);
-            Controls.Add(clientesDataGridView);
             Controls.Add(buscarButton);
             Controls.Add(buscarTextBox);
+            Controls.Add(categoriasDataGridView);
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "ClienteLista";
+            Name = "CategoriaLista";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Clientes";
-            Load += ClienteLista_Load;
-            ((System.ComponentModel.ISupportInitialize)clientesDataGridView).EndInit();
+            Text = "Categorias";
+            Load += CategoriaLista_Load;
+            ((System.ComponentModel.ISupportInitialize)categoriasDataGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
+
+        private DataGridView categoriasDataGridView;
         private TextBox buscarTextBox;
         private Button buscarButton;
-        private DataGridView clientesDataGridView;
         private Button eliminarButton;
         private Button actualizarButton;
         private Button agregarButton;
