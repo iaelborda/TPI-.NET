@@ -30,6 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             idLabel = new Label();
             idTextBox = new TextBox();
             marcaLabel = new Label();
@@ -44,7 +45,7 @@
             sucursalComboBox = new ComboBox();
             aceptarButton = new Button();
             cancelarButton = new Button();
-            errorProvider = new ErrorProvider();
+            errorProvider = new ErrorProvider(components);
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
@@ -198,6 +199,7 @@
             Controls.Add(marcaLabel);
             Controls.Add(idLabel);
             Name = "BicicletaDetalle";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Bicicleta";
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ResumeLayout(false);

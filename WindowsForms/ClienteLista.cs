@@ -29,7 +29,7 @@ namespace WindowsForms
                 Name = "Id",
                 HeaderText = "Id",
                 DataPropertyName = "Id",
-                Width = 50
+                Width = 60
             });
 
             this.clientesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -37,7 +37,7 @@ namespace WindowsForms
                 Name = "Documento",
                 HeaderText = "Documento",
                 DataPropertyName = "Documento",
-                Width = 100
+                Width = 130
             });
 
             this.clientesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -61,7 +61,7 @@ namespace WindowsForms
                 Name = "Email",
                 HeaderText = "Email",
                 DataPropertyName = "Email",
-                Width = 200
+                Width = 250
             });
 
             this.clientesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -69,7 +69,7 @@ namespace WindowsForms
                 Name = "Telefono",
                 HeaderText = "Teléfono",
                 DataPropertyName = "Telefono",
-                Width = 120
+                Width = 140
             });
 
             this.clientesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -77,7 +77,7 @@ namespace WindowsForms
                 Name = "FechaAlta",
                 HeaderText = "Fecha Alta",
                 DataPropertyName = "FechaAlta",
-                Width = 150,
+                Width = 190,
                 DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy" }
             });
         }

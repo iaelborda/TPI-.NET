@@ -34,10 +34,8 @@
             eliminarButton = new Button();
             buscarTextBox = new TextBox();
             buscarButton = new Button();
-
             ((System.ComponentModel.ISupportInitialize)bicicletasDataGridView).BeginInit();
             SuspendLayout();
-
             // 
             // bicicletasDataGridView
             // 
@@ -53,7 +51,6 @@
             bicicletasDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             bicicletasDataGridView.Size = new Size(978, 393);
             bicicletasDataGridView.TabIndex = 0;
-
             // 
             // agregarButton
             // 
@@ -64,7 +61,6 @@
             agregarButton.Text = "Agregar";
             agregarButton.UseVisualStyleBackColor = true;
             agregarButton.Click += agregarButton_Click;
-
             // 
             // actualizarButton
             // 
@@ -75,7 +71,6 @@
             actualizarButton.Text = "Actualizar";
             actualizarButton.UseVisualStyleBackColor = true;
             actualizarButton.Click += actualizarButton_Click;
-
             // 
             // eliminarButton
             // 
@@ -86,7 +81,6 @@
             eliminarButton.Text = "Eliminar";
             eliminarButton.UseVisualStyleBackColor = true;
             eliminarButton.Click += eliminarButton_Click;
-
             // 
             // buscarTextBox
             // 
@@ -95,7 +89,6 @@
             buscarTextBox.PlaceholderText = "Buscar por marca, categoría o estado...";
             buscarTextBox.Size = new Size(319, 31);
             buscarTextBox.TabIndex = 4;
-
             // 
             // buscarButton
             // 
@@ -105,7 +98,6 @@
             buscarButton.TabIndex = 5;
             buscarButton.Text = "Buscar";
             buscarButton.UseVisualStyleBackColor = true;
-
             // 
             // BicicletaLista
             // 
@@ -119,9 +111,9 @@
             Controls.Add(actualizarButton);
             Controls.Add(bicicletasDataGridView);
             Name = "BicicletaLista";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Bicicletas";
             Load += Bicicletas_Load;
-
             ((System.ComponentModel.ISupportInitialize)bicicletasDataGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();

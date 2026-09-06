@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             idLabel = new Label();
             idTextBox = new TextBox();
             nombreLabel = new Label();
@@ -40,7 +41,7 @@
             capacidadNumericUpDown = new NumericUpDown();
             aceptarButton = new Button();
             cancelarButton = new Button();
-            errorProvider = new ErrorProvider();
+            errorProvider = new ErrorProvider(components);
             ((System.ComponentModel.ISupportInitialize)capacidadNumericUpDown).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
@@ -151,6 +152,10 @@
             cancelarButton.UseVisualStyleBackColor = true;
             cancelarButton.Click += cancelarButton_Click;
             // 
+            // errorProvider
+            // 
+            errorProvider.ContainerControl = this;
+            // 
             // SucursalDetalle
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -169,6 +174,7 @@
             Controls.Add(idTextBox);
             Controls.Add(idLabel);
             Name = "SucursalDetalle";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Sucursal";
             ((System.ComponentModel.ISupportInitialize)capacidadNumericUpDown).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();

@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using DTOs;
+﻿using DTOs;
 using API.Clients;
 
 namespace WindowsForms
@@ -29,14 +20,14 @@ namespace WindowsForms
                 Name = "Id",
                 HeaderText = "Id",
                 DataPropertyName = "Id",
-                Width = 50
+                Width = 150
             });
             this.categoriasDataGridView.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Descripcion",
                 HeaderText = "Descripcion",
                 DataPropertyName = "Descripcion",
-                Width = 100
+                Width = 922
             });
         }
 
@@ -54,7 +45,7 @@ namespace WindowsForms
             {
                 DeshabilitarControles();
                 int id = this.SelectedItem().Id;
-                CategoriaDTO categoria = CategoriaApiClient.GetAsync(id).Result;
+                CategoriaDTO categoria = await CategoriaApiClient.GetAsync(id);
                 CategoriaDetalle categoriaDetalle = new CategoriaDetalle(FormMode.Update, categoria);
                 categoriaDetalle.ShowDialog();
                 await this.CargarCategorias();
@@ -128,6 +119,8 @@ namespace WindowsForms
             buscarTextBox.Enabled = true;
             categoriasDataGridView.Enabled = true;
             agregarButton.Enabled = true;
+            actualizarButton.Enabled = true;
+            eliminarButton.Enabled = true;
         }
 
         private async Task CargarCategorias()

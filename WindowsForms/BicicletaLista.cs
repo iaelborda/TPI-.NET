@@ -106,11 +106,8 @@ namespace WindowsForms
         private async void agregarButton_Click(object sender, EventArgs e)
         {
             BicicletaDTO bicicletaNueva = new BicicletaDTO();
-
             BicicletaDetalle bicicletaDetalle = new BicicletaDetalle(FormMode.Add, bicicletaNueva);
-
             bicicletaDetalle.ShowDialog();
-
             await this.LoadBicicletas();
         }
 
@@ -119,15 +116,10 @@ namespace WindowsForms
             try
             {
                 DeshabilitarControles();
-
                 int id = this.SelectedItem().Id;
-
                 BicicletaDTO bicicleta = await BicicletaApiClient.GetAsync(id);
-
                 BicicletaDetalle bicicletaDetalle = new BicicletaDetalle(FormMode.Update, bicicleta);
-
                 bicicletaDetalle.ShowDialog();
-
                 await this.LoadBicicletas();
             }
             catch (Exception ex)
@@ -143,17 +135,13 @@ namespace WindowsForms
         private async void eliminarButton_Click(object sender, EventArgs e)
         {
             BicicletaDTO bicicleta = this.SelectedItem();
-
             var result = MessageBox.Show($"¿Está seguro que desea eliminar la bicicleta {bicicleta.Marca}, {bicicleta.Modelo} (ubicada en: {bicicleta.DireccionSucursal})?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
             if (result == DialogResult.Yes)
             {
                 try
                 {
                     DeshabilitarControles();
-
                     await BicicletaApiClient.DeleteAsync(bicicleta.Id);
-
                     await this.LoadBicicletas();
                 }
                 catch (Exception ex)
@@ -170,9 +158,7 @@ namespace WindowsForms
         private BicicletaDTO SelectedItem()
         {
             BicicletaDTO bicicleta;
-
             bicicleta = (BicicletaDTO)bicicletasDataGridView.SelectedRows[0].DataBoundItem;
-
             return bicicleta;
         }
 

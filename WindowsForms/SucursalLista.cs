@@ -66,18 +66,13 @@ namespace WindowsForms
             try
             {
                 DeshabilitarControles();
-
                 this.sucursalesDataGridView.DataSource = null;
-
                 IEnumerable<SucursalDTO> sucursales;
                 sucursales = await SucursalApiClient.GetAllAsync();
-
                 this.sucursalesDataGridView.DataSource = sucursales;
-
                 if (this.sucursalesDataGridView.Rows.Count > 0)
                 {
                     this.sucursalesDataGridView.Rows[0].Selected = true;
-
                     this.eliminarButton.Enabled = true;
                     this.actualizarButton.Enabled = true;
                 }
@@ -100,11 +95,8 @@ namespace WindowsForms
         private async void agregarButton_Click(object sender, EventArgs e)
         {
             SucursalDTO sucursalNuevo = new SucursalDTO();
-
             SucursalDetalle sucursalDetalle = new SucursalDetalle(FormMode.Add, sucursalNuevo);
-
             sucursalDetalle.ShowDialog();
-
             await this.LoadSucursales();
         }
 
@@ -113,15 +105,10 @@ namespace WindowsForms
             try
             {
                 DeshabilitarControles();
-
                 int id = this.SelectedItem().Id;
-
                 SucursalDTO sucursal = await SucursalApiClient.GetAsync(id);
-
                 SucursalDetalle sucursalDetalle = new SucursalDetalle(FormMode.Update, sucursal);
-
                 sucursalDetalle.ShowDialog();
-
                 await this.LoadSucursales();
             }
             catch (Exception ex)
@@ -137,17 +124,13 @@ namespace WindowsForms
         private async void eliminarButton_Click(object sender, EventArgs e)
         {
             SucursalDTO sucursal = this.SelectedItem();
-
             var result = MessageBox.Show($"¿Está seguro que desea eliminar la sucursal {sucursal.Nombre} ({sucursal.Direccion})?","Confirmar eliminación",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
-
             if (result == DialogResult.Yes)
             {
                 try
                 {
                     DeshabilitarControles();
-
                     await SucursalApiClient.DeleteAsync(sucursal.Id);
-
                     await this.LoadSucursales();
                 }
                 catch (InvalidOperationException ex)
@@ -164,9 +147,7 @@ namespace WindowsForms
         private SucursalDTO SelectedItem()
         {
             SucursalDTO sucursal;
-
             sucursal = (SucursalDTO)sucursalesDataGridView.SelectedRows[0].DataBoundItem;
-
             return sucursal;
         }
 

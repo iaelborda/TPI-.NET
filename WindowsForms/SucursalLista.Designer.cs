@@ -90,6 +90,7 @@
             Controls.Add(agregarButton);
             Controls.Add(sucursalesDataGridView);
             Name = "SucursalLista";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Sucursales";
             Load += Sucursales_Load;
             ((System.ComponentModel.ISupportInitialize)sucursalesDataGridView).EndInit();
