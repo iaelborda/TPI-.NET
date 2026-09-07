@@ -26,7 +26,6 @@ namespace API.Clients
             {
                 System.Diagnostics.Debug.WriteLine($"[DEBUG] Intentando leer configuración...");
 
-                // 1. Variable de entorno primero
                 string? envUrl = Environment.GetEnvironmentVariable("TPI_API_BASE_URL");
                 if (!string.IsNullOrEmpty(envUrl))
                 {
@@ -34,7 +33,6 @@ namespace API.Clients
                     return envUrl;
                 }
 
-                // 2. Detectar si estamos en Android
                 string runtimeInfo = System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier;
                 System.Diagnostics.Debug.WriteLine($"[DEBUG] Runtime: {runtimeInfo}");
 
@@ -49,7 +47,6 @@ namespace API.Clients
                 System.Diagnostics.Debug.WriteLine($"[DEBUG] Error: {ex.Message}");
             }
 
-            // URL por defecto para Windows
             string defaultUrl = "https://localhost:7261/";
             System.Diagnostics.Debug.WriteLine($"[DEBUG] Usando URL: {defaultUrl}");
             return defaultUrl;

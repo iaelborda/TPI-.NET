@@ -1,6 +1,5 @@
 ﻿using API.Clients;
 using DTOs;
-
 namespace WindowsForms
 {
     public partial class SucursalLista : Form
@@ -9,6 +8,17 @@ namespace WindowsForms
         {
             InitializeComponent();
             ConfigurarColumnas();
+            AplicarPermisos();
+        }
+
+        private async Task AplicarPermisos()
+        {
+            var rol = await AuthServiceProvider.Instance.GetRolAsync();
+            bool esAdmin = rol == RolUsuario.Administrador;
+
+            agregarButton.Enabled = esAdmin;
+            actualizarButton.Enabled = esAdmin;
+            eliminarButton.Enabled = esAdmin;
         }
 
         private void ConfigurarColumnas()
@@ -159,10 +169,18 @@ namespace WindowsForms
             sucursalesDataGridView.Enabled = false;
         }
 
-        private void HabilitarControles()
+        private async void HabilitarControles()
         {
-            agregarButton.Enabled = true;
+            bool esAdmin = await AuthServiceProvider.Instance.GetRolAsync() == RolUsuario.Administrador;
+
+            agregarButton.Enabled = esAdmin;
             sucursalesDataGridView.Enabled = true;
+
+            if (sucursalesDataGridView.Rows.Count > 0)
+            {
+                eliminarButton.Enabled = esAdmin;
+                actualizarButton.Enabled = esAdmin;
+            }
         }
     }
 }

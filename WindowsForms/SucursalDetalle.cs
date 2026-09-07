@@ -38,7 +38,7 @@ namespace WindowsForms
             Init(mode, sucursal);
         }
 
-        private async void Init(FormMode mode, SucursalDTO sucursal)
+        private void Init(FormMode mode, SucursalDTO sucursal)
         {
             try
             {
