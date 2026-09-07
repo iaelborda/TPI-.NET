@@ -169,9 +169,9 @@ namespace WindowsForms
             sucursalesDataGridView.Enabled = false;
         }
 
-        private void HabilitarControles()
+        private async void HabilitarControles()
         {
-            bool esAdmin = AuthServiceProvider.Instance.GetRolAsync().Result == RolUsuario.Administrador;
+            bool esAdmin = await AuthServiceProvider.Instance.GetRolAsync() == RolUsuario.Administrador;
 
             agregarButton.Enabled = esAdmin;
             sucursalesDataGridView.Enabled = true;
