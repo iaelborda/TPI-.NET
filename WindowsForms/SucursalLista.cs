@@ -11,7 +11,7 @@ namespace WindowsForms
             AplicarPermisos();
         }
 
-        private async Task AplicarPermisos()
+        private async void AplicarPermisos()
         {
             var rol = await AuthServiceProvider.Instance.GetRolAsync();
             bool esAdmin = rol == RolUsuario.Administrador;
