@@ -1,5 +1,6 @@
 ﻿using API.Clients;
 using DTOs;
+using Domain.Model;
 
 namespace WindowsForms
 {
@@ -9,6 +10,17 @@ namespace WindowsForms
         {
             InitializeComponent();
             ConfigurarColumnas();
+            AplicarPermisos();
+        }
+
+        private async Task AplicarPermisos()
+        {
+            var rol = await AuthServiceProvider.Instance.GetRolAsync();
+            bool esAdmin = rol == RolUsuario.Administrador;
+
+            agregarButton.Enabled = esAdmin;
+            actualizarButton.Enabled = esAdmin;
+            eliminarButton.Enabled = esAdmin;
         }
 
         private void ConfigurarColumnas()
@@ -161,8 +173,16 @@ namespace WindowsForms
 
         private void HabilitarControles()
         {
-            agregarButton.Enabled = true;
+            bool esAdmin = AuthServiceProvider.Instance.GetRolAsync().Result == RolUsuario.Administrador;
+
+            agregarButton.Enabled = esAdmin;
             sucursalesDataGridView.Enabled = true;
+
+            if (sucursalesDataGridView.Rows.Count > 0)
+            {
+                eliminarButton.Enabled = esAdmin;
+                actualizarButton.Enabled = esAdmin;
+            }
         }
     }
 }

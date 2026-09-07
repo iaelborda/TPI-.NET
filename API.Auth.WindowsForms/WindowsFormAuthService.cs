@@ -1,47 +1,51 @@
 ﻿using API.Clients;
+using Domain.Model;
 
 namespace API.Auth.WindowsForms
 {
     public class WindowsFormsAuthService : IAuthService
     {
-        private static string? _currentUsername;
-        private static bool _isAuthenticated;
+        private static readonly List<(string Username, string Password, RolUsuario Rol)> usuarios = new()
+        {
+            ("admin", "admin123", RolUsuario.Administrador),
+            ("empleado", "empleado123", RolUsuario.Usuario)
+        };
+        private static string? currentUsername;
+        private static RolUsuario? currentRol;
+        private static bool isAuthenticated;
 
         public async Task<bool> IsAuthenticatedAsync()
         {
-            return _isAuthenticated && !string.IsNullOrEmpty(_currentUsername);
+            return isAuthenticated;
         }
 
         public async Task<string?> GetUsernameAsync()
         {
-            if (await IsAuthenticatedAsync())
-            {
-                return _currentUsername;
-            }
-            return null;
+            return isAuthenticated ? currentUsername : null;
         }
 
         public async Task<bool> LoginAsync(string username, string password)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            var usuario = usuarios.FirstOrDefault(u =>
+            u.Username == username && u.Password == password);
+            if(usuario != default)
             {
-                return false;
-            }
-
-            if (username == "admin" && password == "admin")
-            {
-                _currentUsername = username;
-                _isAuthenticated = true;
+                currentUsername = usuario.Username;
+                currentRol = usuario.Rol;
+                isAuthenticated = true;
                 return true;
             }
-
             return false;
         }
-
+        public async Task<RolUsuario?> GetRolAsync()
+        {
+            return isAuthenticated ? currentRol : null;
+        }
         public async Task LogoutAsync()
         {
-            _currentUsername = null;
-            _isAuthenticated = false;
+            currentUsername = null;
+            currentRol = null;
+            isAuthenticated = false;
         }
     }
 }

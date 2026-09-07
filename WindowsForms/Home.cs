@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using API.Auth.WindowsForms;
+using Domain.Model;
+using API.Clients;
 
 namespace WindowsForms
 {
@@ -16,6 +19,8 @@ namespace WindowsForms
         {
             InitializeComponent();
         }
+
+
 
         private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -40,6 +45,19 @@ namespace WindowsForms
             SucursalLista sucursalForm = new SucursalLista();
             sucursalForm.ShowDialog();
 
+        }
+
+        private async void Home_Load(object sender, EventArgs e)
+        {
+            var username = await AuthServiceProvider.Instance.GetUsernameAsync();
+            var rol = await AuthServiceProvider.Instance.GetRolAsync();
+            usuarioTextBox.Text = $"Usuario: {username} ({rol})";
+        }
+
+        private async void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            await AuthServiceProvider.Instance.LogoutAsync();
+            this.Close();
         }
     }
 }
