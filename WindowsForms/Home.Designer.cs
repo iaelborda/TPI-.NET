@@ -34,9 +34,9 @@
             categoriasToolStripMenuItem = new ToolStripMenuItem();
             bicicletasToolStripMenuItem = new ToolStripMenuItem();
             sucursalesToolStripMenuItem = new ToolStripMenuItem();
-            usuarioTextBox = new ToolStripTextBox();
             toolStripMenuItem1 = new ToolStripSeparator();
             cerrarSesionToolStripMenuItem = new ToolStripMenuItem();
+            usuarioTextBox = new ToolStripTextBox();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -60,50 +60,50 @@
             // clientesToolStripMenuItem
             // 
             clientesToolStripMenuItem.Name = "clientesToolStripMenuItem";
-            clientesToolStripMenuItem.Size = new Size(224, 26);
+            clientesToolStripMenuItem.Size = new Size(179, 26);
             clientesToolStripMenuItem.Text = "Clientes";
             clientesToolStripMenuItem.Click += clientesToolStripMenuItem_Click;
             // 
             // categoriasToolStripMenuItem
             // 
             categoriasToolStripMenuItem.Name = "categoriasToolStripMenuItem";
-            categoriasToolStripMenuItem.Size = new Size(224, 26);
+            categoriasToolStripMenuItem.Size = new Size(179, 26);
             categoriasToolStripMenuItem.Text = "Categorias";
             categoriasToolStripMenuItem.Click += categoriasToolStripMenuItem_Click;
             // 
             // bicicletasToolStripMenuItem
             // 
             bicicletasToolStripMenuItem.Name = "bicicletasToolStripMenuItem";
-            bicicletasToolStripMenuItem.Size = new Size(224, 26);
+            bicicletasToolStripMenuItem.Size = new Size(179, 26);
             bicicletasToolStripMenuItem.Text = "Bicicletas";
             bicicletasToolStripMenuItem.Click += bicicletasToolStripMenuItem_Click;
             // 
             // sucursalesToolStripMenuItem
             // 
             sucursalesToolStripMenuItem.Name = "sucursalesToolStripMenuItem";
-            sucursalesToolStripMenuItem.Size = new Size(224, 26);
+            sucursalesToolStripMenuItem.Size = new Size(179, 26);
             sucursalesToolStripMenuItem.Text = "Sucursales";
             sucursalesToolStripMenuItem.Click += sucursalesToolStripMenuItem_Click;
+            // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(176, 6);
+            // 
+            // cerrarSesionToolStripMenuItem
+            // 
+            cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
+            cerrarSesionToolStripMenuItem.Size = new Size(179, 26);
+            cerrarSesionToolStripMenuItem.Text = "Cerrar Sesion";
+            cerrarSesionToolStripMenuItem.Click += cerrarSesionToolStripMenuItem_Click;
             // 
             // usuarioTextBox
             // 
             usuarioTextBox.Alignment = ToolStripItemAlignment.Right;
             usuarioTextBox.Name = "usuarioTextBox";
             usuarioTextBox.ReadOnly = true;
-            usuarioTextBox.Size = new Size(170, 27);
+            usuarioTextBox.Size = new Size(280, 27);
             usuarioTextBox.Text = "Usuario: ";
-            // 
-            // toolStripMenuItem1
-            // 
-            toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(221, 6);
-            // 
-            // cerrarSesionToolStripMenuItem
-            // 
-            cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
-            cerrarSesionToolStripMenuItem.Size = new Size(224, 26);
-            cerrarSesionToolStripMenuItem.Text = "Cerrar Sesion";
-            cerrarSesionToolStripMenuItem.Click += cerrarSesionToolStripMenuItem_Click;
             // 
             // Home
             // 
