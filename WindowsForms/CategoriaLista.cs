@@ -130,7 +130,7 @@ namespace WindowsForms
                 DeshabilitarControles();
                 this.categoriasDataGridView.DataSource = null;
                 IEnumerable<CategoriaDTO> categorias = await CategoriaApiClient.GetAllAsync();
-                this.categoriasDataGridView.DataSource = categorias.ToList();
+                this.categoriasDataGridView.DataSource = categorias.OrderBy(c => c.Id).ToList();
                 if (this.categoriasDataGridView.Rows.Count > 0)
                 {
                     this.categoriasDataGridView.Rows[0].Selected = true;

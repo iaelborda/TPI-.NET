@@ -62,10 +62,6 @@ namespace Data
             }
             return await query.AnyAsync();
         }
-        internal IEnumerable<Categoria> GetAllSync()
-        {
-            return context.Categorias.OrderBy(p => p.Descripcion).ToList();
-        }
 
     }
 }
