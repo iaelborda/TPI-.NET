@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Model
+namespace DTOs
 {
-    public class LoginResponse
-    {
-        public string Username { get; private set; } = string.Empty;
-        public RolUsuario Rol { get; private set; }
-    }
     public enum RolUsuario
     {
         Administrador,
         Usuario
+    }
+    public class LoginResponseDTO
+    {
+        public string Username { get; set; } = string.Empty;
+        public RolUsuario Rol { get; set; }
+
     }
 }

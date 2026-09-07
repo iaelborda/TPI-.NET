@@ -1,4 +1,4 @@
-﻿using Domain.Model;
+﻿using DTOs;
 
 namespace API.Clients
 {

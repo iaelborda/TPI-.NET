@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using API.Auth.WindowsForms;
-using Domain.Model;
+using DTOs;
 using API.Clients;
 
 namespace WindowsForms

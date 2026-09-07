@@ -1,5 +1,5 @@
 ﻿using API.Clients;
-using Domain.Model;
+using DTOs;
 
 namespace API.Auth.WindowsForms
 {
@@ -16,12 +16,12 @@ namespace API.Auth.WindowsForms
 
         public async Task<bool> IsAuthenticatedAsync()
         {
-            return isAuthenticated;
+            return await Task.Run(() => isAuthenticated);
         }
 
         public async Task<string?> GetUsernameAsync()
         {
-            return isAuthenticated ? currentUsername : null;
+            return await Task.Run(() => isAuthenticated ? currentUsername : null);
         }
 
         public async Task<bool> LoginAsync(string username, string password)
@@ -39,13 +39,16 @@ namespace API.Auth.WindowsForms
         }
         public async Task<RolUsuario?> GetRolAsync()
         {
-            return isAuthenticated ? currentRol : null;
+            return await Task.Run(() => isAuthenticated ? currentRol : null);
         }
         public async Task LogoutAsync()
         {
-            currentUsername = null;
-            currentRol = null;
-            isAuthenticated = false;
+            await Task.Run(() =>
+            {
+                currentUsername = null;
+                currentRol = null;
+                isAuthenticated = false;
+            });
         }
     }
 }

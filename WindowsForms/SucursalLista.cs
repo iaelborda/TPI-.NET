@@ -1,7 +1,5 @@
 ﻿using API.Clients;
 using DTOs;
-using Domain.Model;
-
 namespace WindowsForms
 {
     public partial class SucursalLista : Form
