@@ -48,4 +48,11 @@ app.MapClienteEndpoints();
 app.MapBicicletaEndpoints();
 app.MapSucursalEndpoints();
 app.MapCategoriaEndpoints();
-app.Run();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<TPIContext>();
+    db.Database.Migrate();
+}
+
+    app.Run();
