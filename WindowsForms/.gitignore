@@ -1,0 +1,10 @@
+﻿# Visual Studio
+*.user
+*.suo
+.vs/
+bin/
+obj/
+
+# Archivos locales de usuario
+*.csproj.user
+*.slnLaunch.user
