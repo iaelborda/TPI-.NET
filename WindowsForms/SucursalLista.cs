@@ -117,7 +117,12 @@ namespace WindowsForms
             try
             {
                 DeshabilitarControles();
-                SucursalDTO sucursalCompleta = await SucursalApiClient.GetAsync(sucursal.Id);
+                SucursalDTO? sucursalCompleta = await SucursalApiClient.GetAsync(sucursal.Id);
+                if (sucursalCompleta == null)
+                {
+                    MessageBox.Show("No se encontró la sucursal.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 SucursalDetalle sucursalDetalle = new SucursalDetalle(FormMode.Update, sucursalCompleta);
                 sucursalDetalle.ShowDialog();
                 await this.LoadSucursales();
