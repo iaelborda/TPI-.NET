@@ -84,16 +84,16 @@ namespace WindowsForms
 
         private async void eliminarButton_Click(object sender, EventArgs e)
         {
+            ClienteDTO? cliente = this.SelectedItem();
+            if (cliente == null) return;
             try
             {
-                ClienteDTO cliente = this.SelectedItem();
                 var result = MessageBox.Show($"¿Está seguro que desea eliminar al cliente {cliente.Nombre} {cliente.Apellido}({cliente.Id})?", "Confirmación eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
                     DeshabilitarControles();
                     await ClienteApiClient.DeleteAsync(cliente.Id);
                     await this.CargarClientes();
-
                 }
             }
             catch (Exception ex)
@@ -106,15 +106,16 @@ namespace WindowsForms
             }
         }
 
-        private ClienteDTO SelectedItem()
+        private ClienteDTO? SelectedItem()
         {
             if (clientesDataGridView.SelectedRows.Count == 0)
             {
                 MessageBox.Show("Por favor seleccione un cliente.", "Seleccionar Cliente");
-                throw new Exception("No hay cliente seleccionado.");
+                return null;
             }
             return (ClienteDTO)clientesDataGridView.SelectedRows[0].DataBoundItem;
         }
+
 
         private void DeshabilitarControles()
         {
@@ -171,12 +172,13 @@ namespace WindowsForms
 
         private async void actualizarButton_Click(object sender, EventArgs e)
         {
+            ClienteDTO? cliente = this.SelectedItem();
+            if (cliente == null) return;
             try
             {
                 DeshabilitarControles();
-                int id = this.SelectedItem().Id;
-                ClienteDTO cliente = await ClienteApiClient.GetAsync(id);
-                ClienteDetalle clienteDetalle = new ClienteDetalle(FormMode.Update, cliente);
+                ClienteDTO clienteCompleto = await ClienteApiClient.GetAsync(cliente.Id);
+                ClienteDetalle clienteDetalle = new ClienteDetalle(FormMode.Update, clienteCompleto);
                 clienteDetalle.ShowDialog();
                 await this.CargarClientes();
             }

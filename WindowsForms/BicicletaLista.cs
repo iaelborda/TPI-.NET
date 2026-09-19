@@ -113,12 +113,13 @@ namespace WindowsForms
 
         private async void actualizarButton_Click(object sender, EventArgs e)
         {
+            BicicletaDTO? bicicleta = this.SelectedItem();
+            if (bicicleta == null) return;
             try
             {
                 DeshabilitarControles();
-                int id = this.SelectedItem().Id;
-                BicicletaDTO bicicleta = await BicicletaApiClient.GetAsync(id);
-                BicicletaDetalle bicicletaDetalle = new BicicletaDetalle(FormMode.Update, bicicleta);
+                BicicletaDTO bicicletaCompleta = await BicicletaApiClient.GetAsync(bicicleta.Id);
+                BicicletaDetalle bicicletaDetalle = new BicicletaDetalle(FormMode.Update, bicicletaCompleta);
                 bicicletaDetalle.ShowDialog();
                 await this.LoadBicicletas();
             }
@@ -134,34 +135,37 @@ namespace WindowsForms
 
         private async void eliminarButton_Click(object sender, EventArgs e)
         {
-            BicicletaDTO bicicleta = this.SelectedItem();
-            var result = MessageBox.Show($"¿Está seguro que desea eliminar la bicicleta {bicicleta.Marca}, {bicicleta.Modelo} (ubicada en: {bicicleta.DireccionSucursal})?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
+            BicicletaDTO? bicicleta = this.SelectedItem();
+            if (bicicleta == null) return;
+            try
             {
-                try
+                var result = MessageBox.Show($"¿Está seguro que desea eliminar la bicicleta {bicicleta.Marca}, {bicicleta.Modelo} (ubicada en: {bicicleta.DireccionSucursal})?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
                 {
                     DeshabilitarControles();
                     await BicicletaApiClient.DeleteAsync(bicicleta.Id);
                     await this.LoadBicicletas();
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error al eliminar bicicleta: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    HabilitarControles();
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al eliminar bicicleta: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HabilitarControles();
             }
         }
 
-        private BicicletaDTO SelectedItem()
+        private BicicletaDTO? SelectedItem()
         {
-            BicicletaDTO bicicleta;
-            bicicleta = (BicicletaDTO)bicicletasDataGridView.SelectedRows[0].DataBoundItem;
-            return bicicleta;
+            if (bicicletasDataGridView.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Por favor seleccione una bicicleta.", "Seleccionar Bicicleta");
+                return null;
+            }
+            return (BicicletaDTO)bicicletasDataGridView.SelectedRows[0].DataBoundItem;
         }
-
         private void DeshabilitarControles()
         {
             agregarButton.Enabled = false;

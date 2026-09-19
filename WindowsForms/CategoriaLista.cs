@@ -41,16 +41,18 @@ namespace WindowsForms
 
         private async void actualizarButton_Click(object sender, EventArgs e)
         {
+            CategoriaDTO? categoria = this.SelectedItem();
+            if (categoria == null) return;
             try
             {
                 DeshabilitarControles();
-                int id = this.SelectedItem().Id;
-                CategoriaDTO categoria = await CategoriaApiClient.GetAsync(id);
-                CategoriaDetalle categoriaDetalle = new CategoriaDetalle(FormMode.Update, categoria);
+                CategoriaDTO categoriaCompleta = await CategoriaApiClient.GetAsync(categoria.Id);
+                CategoriaDetalle categoriaDetalle = new CategoriaDetalle(FormMode.Update, categoriaCompleta);
                 categoriaDetalle.ShowDialog();
                 await this.CargarCategorias();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show($"Error al actualizar categoria: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -61,9 +63,10 @@ namespace WindowsForms
 
         private async void eliminarButton_Click(object sender, EventArgs e)
         {
+            CategoriaDTO? categoria = this.SelectedItem();
+            if (categoria == null) return;
             try
             {
-                CategoriaDTO categoria = this.SelectedItem();
                 var result = MessageBox.Show($"¿Está seguro que desea eliminar la categoría {categoria.Descripcion}?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
@@ -79,7 +82,6 @@ namespace WindowsForms
             finally
             {
                 HabilitarControles();
-
             }
         }
 
@@ -93,15 +95,16 @@ namespace WindowsForms
             await this.CargarCategorias();
         }
 
-        private CategoriaDTO SelectedItem()
+        private CategoriaDTO? SelectedItem()
         {
             if (categoriasDataGridView.SelectedRows.Count == 0)
             {
                 MessageBox.Show("Por favor seleccione una categoría.", "Seleccionar Categoría");
-                throw new Exception("No hay categoría seleccionada.");
+                return null;
             }
             return (CategoriaDTO)categoriasDataGridView.SelectedRows[0].DataBoundItem;
         }
+
 
         private void DeshabilitarControles()
         {

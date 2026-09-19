@@ -112,18 +112,19 @@ namespace WindowsForms
 
         private async void actualizarButton_Click(object sender, EventArgs e)
         {
+            SucursalDTO? sucursal = this.SelectedItem();
+            if (sucursal == null) return;
             try
             {
                 DeshabilitarControles();
-                int id = this.SelectedItem().Id;
-                SucursalDTO sucursal = await SucursalApiClient.GetAsync(id);
-                SucursalDetalle sucursalDetalle = new SucursalDetalle(FormMode.Update, sucursal);
+                SucursalDTO sucursalCompleta = await SucursalApiClient.GetAsync(sucursal.Id);
+                SucursalDetalle sucursalDetalle = new SucursalDetalle(FormMode.Update, sucursalCompleta);
                 sucursalDetalle.ShowDialog();
                 await this.LoadSucursales();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al actualizar sucursal: {ex.Message}","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show($"Error al actualizar sucursal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -133,8 +134,9 @@ namespace WindowsForms
 
         private async void eliminarButton_Click(object sender, EventArgs e)
         {
-            SucursalDTO sucursal = this.SelectedItem();
-            var result = MessageBox.Show($"¿Está seguro que desea eliminar la sucursal {sucursal.Nombre} ({sucursal.Direccion})?","Confirmar eliminación",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+            SucursalDTO? sucursal = this.SelectedItem();
+            if (sucursal == null) return;
+            var result = MessageBox.Show($"¿Está seguro que desea eliminar la sucursal {sucursal.Nombre} ({sucursal.Direccion})?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
                 try
@@ -145,20 +147,23 @@ namespace WindowsForms
                 }
                 catch (InvalidOperationException ex)
                 {
-                    MessageBox.Show(ex.Message,"No se puede eliminar",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                    MessageBox.Show(ex.Message, "No se puede eliminar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al eliminar sucursal: {ex.Message}","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    MessageBox.Show($"Error al eliminar sucursal: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        private SucursalDTO SelectedItem()
+        private SucursalDTO? SelectedItem()
         {
-            SucursalDTO sucursal;
-            sucursal = (SucursalDTO)sucursalesDataGridView.SelectedRows[0].DataBoundItem;
-            return sucursal;
+            if (sucursalesDataGridView.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Por favor seleccione una sucursal.", "Seleccionar Sucursal");
+                return null;
+            }
+            return (SucursalDTO)sucursalesDataGridView.SelectedRows[0].DataBoundItem;
         }
 
         private void DeshabilitarControles()
