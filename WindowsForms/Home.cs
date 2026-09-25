@@ -25,7 +25,8 @@ namespace WindowsForms
         private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ClienteLista clientesForm = new ClienteLista();
-            clientesForm.ShowDialog();
+            clientesForm.MdiParent = this;
+            clientesForm.Show();
         }
 
         private void categoriasToolStripMenuItem_Click(object sender, EventArgs e)
@@ -37,13 +38,15 @@ namespace WindowsForms
         private void bicicletasToolStripMenuItem_Click(object sender, EventArgs e)
         {
             BicicletaLista bicicletasForm = new BicicletaLista();
-            bicicletasForm.ShowDialog();
+            bicicletasForm.MdiParent = this;  
+            bicicletasForm.Show();
         }
 
         private void sucursalesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SucursalLista sucursalForm = new SucursalLista();
-            sucursalForm.ShowDialog();
+            SucursalLista sucursalesForm = new SucursalLista();
+            sucursalesForm.MdiParent = this; 
+            sucursalesForm.Show();
 
         }
 
