@@ -10,6 +10,8 @@ namespace Data
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Bicicleta> Bicicletas { get; set; }
         public DbSet<Sucursal> Sucursales { get; set; }
+        public DbSet<Empleado> Empleados { get; set; }
+
         public TPIContext(DbContextOptions<TPIContext> options)
             : base(options)
         {
@@ -171,6 +173,55 @@ namespace Data
                     .IsUnique();
             });
             modelBuilder.Ignore<Tarifa>();
+
+            modelBuilder.Entity<Empleado>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Documento)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.TipoDocumento)
+                    .IsRequired();
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Apellido)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Telefono)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.Legajo)
+                    .IsRequired();
+
+                entity.HasIndex(e => e.Documento)
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Legajo)
+                    .IsUnique();
+
+                entity.Property(e => e.SucursalId)
+                    .IsRequired()
+                    .HasField("_sucursalId");
+
+                entity.Navigation(e => e.Sucursal)
+                    .HasField("_sucursal");
+
+                entity.HasOne(e => e.Sucursal)
+                    .WithMany()
+                    .HasForeignKey(e => e.SucursalId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
         }
     }
 }
