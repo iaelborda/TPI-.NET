@@ -1,7 +1,7 @@
 ﻿using Application.Services;
 using DTOs;
 
-namespace WebAPI
+namespace WebApi
 {
     public static class ClienteEndpoints
     {

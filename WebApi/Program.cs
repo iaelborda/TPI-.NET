@@ -1,7 +1,6 @@
 using Application.Services;
 using Data;
 using WebApi;
-using WebAPI;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -48,6 +47,7 @@ app.MapClienteEndpoints();
 app.MapBicicletaEndpoints();
 app.MapSucursalEndpoints();
 app.MapCategoriaEndpoints();
+app.MapAlquilerEndpoints();
 
 using (var scope = app.Services.CreateScope())
 {

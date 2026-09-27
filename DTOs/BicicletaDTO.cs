@@ -12,5 +12,7 @@ namespace DTOs
         public int SucursalId { get; set; }
         public string? DescripcionCategoria { get; set; }
         public string? DireccionSucursal { get; set; }
+        public string BicicletaDescripcion =>
+            $"{Marca} - {DescripcionCategoria}";
     }
 }
