@@ -21,8 +21,8 @@ namespace WebApi
             .WithName("GetAlquiler")
             .Produces<AlquilerDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi()
-            .RequireAuthorization("AlquileresLeer");
+            .WithOpenApi();
+            //.RequireAuthorization("AlquileresLeer");
 
             app.MapGet("/alquileres", async () =>
             {
@@ -33,8 +33,8 @@ namespace WebApi
             })
             .WithName("GetAllAquileres")
             .Produces<AlquilerDTO>(StatusCodes.Status200OK)
-            .WithOpenApi()
-            .RequireAuthorization("AlquileresLeer");
+            .WithOpenApi();
+            //.RequireAuthorization("AlquileresLeer");
 
             app.MapPost("/alquileres", async (AlquilerDTO dto) =>
             {
@@ -44,7 +44,7 @@ namespace WebApi
                     AlquilerDTO alquilerDTO = await alquilerService.AddAsync(dto);
                     return Results.Created($"/alquileres/{alquilerDTO.Id}", alquilerDTO);
                 }
-                catch(ArgumentException ex)
+                catch (ArgumentException ex)
                 {
                     return Results.BadRequest(new { error = ex.Message });
                 }
@@ -52,8 +52,8 @@ namespace WebApi
             .WithName("AddAquiler")
             .Produces<AlquilerDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi()
-            .RequireAuthorization("AlquileresAgregar");
+            .WithOpenApi();
+            //.RequireAuthorization("AlquileresAgregar");
 
             app.MapPut("/alquileres", async (AlquilerDTO dto) =>
             {
@@ -62,13 +62,13 @@ namespace WebApi
                     AlquilerService alquilerService = new AlquilerService();
                     var found = await alquilerService.UpdateAsync(dto);
 
-                    if(!found)
+                    if (!found)
                     {
                         return Results.NotFound();
                     }
                     return Results.NoContent();
                 }
-                catch(ArgumentException ex)
+                catch (ArgumentException ex)
                 {
                     return Results.BadRequest(new { error = ex.Message });
                 }
@@ -76,15 +76,15 @@ namespace WebApi
             .WithName("UpdateAquiler")
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi()
-            .RequireAuthorization("AlquileresActualizar");
+            .WithOpenApi();
+            //.RequireAuthorization("AlquileresActualizar");
 
             app.MapDelete("/alquileres/{id}", async (int id) =>
             {
                 AlquilerService alquilerService = new AlquilerService();
                 var deleted = await alquilerService.DeleteAsync(id);
 
-                if(!deleted)
+                if (!deleted)
                 {
                     return Results.NotFound();
                 }
@@ -94,8 +94,8 @@ namespace WebApi
             .WithName("DeleteAquiler")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi()
-            .RequireAuthorization("AlquileresEliminar");
+            .WithOpenApi();
+            //.RequireAuthorization("AlquileresEliminar");
         }
     }
 }

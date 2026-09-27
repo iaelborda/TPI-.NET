@@ -38,15 +38,22 @@ namespace WindowsForms
         private void bicicletasToolStripMenuItem_Click(object sender, EventArgs e)
         {
             BicicletaLista bicicletasForm = new BicicletaLista();
-            bicicletasForm.MdiParent = this;  
+            bicicletasForm.MdiParent = this;
             bicicletasForm.Show();
         }
 
         private void sucursalesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SucursalLista sucursalesForm = new SucursalLista();
-            sucursalesForm.MdiParent = this; 
+            sucursalesForm.MdiParent = this;
             sucursalesForm.Show();
+
+        }
+        private void alquileresToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AlquilerLista alquileresForm = new AlquilerLista();
+            alquileresForm.MdiParent = this;
+            alquileresForm.Show();
 
         }
 

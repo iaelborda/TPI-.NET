@@ -128,6 +128,7 @@
             aceptarButton.TabIndex = 6;
             aceptarButton.Text = "&Aceptar";
             aceptarButton.UseVisualStyleBackColor = true;
+            aceptarButton.Click += aceptarButton_Click;
             // 
             // cancelarButton
             // 
@@ -138,6 +139,7 @@
             cancelarButton.TabIndex = 9;
             cancelarButton.Text = "&Cancelar";
             cancelarButton.UseVisualStyleBackColor = true;
+            cancelarButton.Click += cancelarButton_Click;
             // 
             // estadoLabel
             // 

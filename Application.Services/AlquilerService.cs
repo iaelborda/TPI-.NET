@@ -32,7 +32,6 @@ namespace Application.Services
             var alquilerRepository = new AlquilerRepository();
             return await alquilerRepository.DeleteAsync(id);
         }
-
         public async Task<AlquilerDTO?> GetAsync(int id)
         {
             var alquilerRepository = new AlquilerRepository();
@@ -48,9 +47,11 @@ namespace Application.Services
                 ClienteId = alquiler.ClienteId,
                 ClienteNombre = alquiler.Cliente?.Nombre,
                 ClienteApellido = alquiler.Cliente?.Apellido,
+
                 EmpleadoId = alquiler.EmpleadoId,
                 EmpleadoApellido = alquiler.Empleado?.Apellido,
                 EmpleadoLegajo = alquiler.Empleado?.Legajo,
+
                 FechaAlquiler = alquiler.FechaAlquiler,
                 EstadoAlquiler = alquiler.EstadoAlquiler,
 
@@ -59,6 +60,7 @@ namespace Application.Services
                     AlquilerId = detalle.AlquilerId,
                     BicicletaId = detalle.BicicletaId,
                     BicicletaMarca = detalle.Bicicleta?.Marca,
+                    CategoriaDescripcion = detalle.Bicicleta?.Categoria?.Descripcion,
                     HoraInicio = detalle.HoraInicio,
                     HoraFin = detalle.HoraFin,
                     Estado = detalle.Estado,
@@ -90,6 +92,7 @@ namespace Application.Services
                     AlquilerId = detalle.AlquilerId,
                     BicicletaId = detalle.BicicletaId,
                     BicicletaMarca = detalle.Bicicleta?.Marca,
+                    CategoriaDescripcion = detalle.Bicicleta?.Categoria?.Descripcion,
                     HoraInicio = detalle.HoraInicio,
                     HoraFin = detalle.HoraFin,
                     Estado = detalle.Estado,

@@ -11,6 +11,8 @@ namespace Data
         public DbSet<Bicicleta> Bicicletas { get; set; }
         public DbSet<Sucursal> Sucursales { get; set; }
         public DbSet<Alquiler> Alquileres { get; set; }
+        public DbSet<Empleado> Empleados { get; set; }
+
         public TPIContext(DbContextOptions<TPIContext> options)
             : base(options)
         {
@@ -186,14 +188,12 @@ namespace Data
                 entity.Navigation(e => e.Cliente)
                     .HasField("_cliente");
 
-                /* Sacar comentario cuando este hecho empleado
-                 
                  entity.Property(e => e.EmpleadoId)
                     .IsRequired()
                     .HasField("_empleadoId");
 
                 entity.Navigation(e => e.Empleado)
-                    .HasField("_empleado"); */
+                    .HasField("_empleado"); 
 
                 entity.Property(e => e.FechaAlquiler)
                     .IsRequired();
@@ -202,9 +202,9 @@ namespace Data
                     .WithMany()
                     .HasForeignKey(e => e.ClienteId);
 
-                /* entity.HasOne(e => e.Empleado)
+                entity.HasOne(e => e.Empleado)
                     .WithMany()
-                    .HasForeignKey(e => e.EmpleadoId); */
+                    .HasForeignKey(e => e.EmpleadoId);
 
                 entity.OwnsMany(e => e.DetallesAlquiler, detalle =>
                 {
@@ -234,6 +234,55 @@ namespace Data
 
             });
             modelBuilder.Ignore<Tarifa>();
+
+            modelBuilder.Entity<Empleado>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Documento)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.TipoDocumento)
+                    .IsRequired();
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Apellido)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Telefono)
+                    .IsRequired()
+                    .HasMaxLength(20);
+
+                entity.Property(e => e.Legajo)
+                    .IsRequired();
+
+                entity.HasIndex(e => e.Documento)
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Legajo)
+                    .IsUnique();
+
+                entity.Property(e => e.SucursalId)
+                    .IsRequired()
+                    .HasField("_sucursalId");
+
+                entity.Navigation(e => e.Sucursal)
+                    .HasField("_sucursal");
+
+                entity.HasOne(e => e.Sucursal)
+                    .WithMany()
+                    .HasForeignKey(e => e.SucursalId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
         }
     }
 }

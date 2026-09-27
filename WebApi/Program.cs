@@ -28,6 +28,9 @@ builder.Services.AddScoped<ISucursalService, SucursalService>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 
+builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
+builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -47,6 +50,7 @@ app.MapClienteEndpoints();
 app.MapBicicletaEndpoints();
 app.MapSucursalEndpoints();
 app.MapCategoriaEndpoints();
+app.MapEmpleadoEndpoints();
 app.MapAlquilerEndpoints();
 
 using (var scope = app.Services.CreateScope())

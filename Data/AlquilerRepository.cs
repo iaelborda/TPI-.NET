@@ -40,9 +40,10 @@ namespace Data
 
             return await context.Alquileres
                 .Include(a => a.Cliente)
-                //.Include(a => a.Empleado)
+                .Include(a => a.Empleado)
                 .Include(a => a.DetallesAlquiler)
                     .ThenInclude(d => d.Bicicleta)
+                        .ThenInclude(b => b.Categoria)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
@@ -52,9 +53,10 @@ namespace Data
 
             return await context.Alquileres
                 .Include(a => a.Cliente)
-                //.Include(a => a.Empleado)
+                .Include(a => a.Empleado)
                 .Include(a => a.DetallesAlquiler)
                     .ThenInclude(d => d.Bicicleta)
+                         .ThenInclude(b => b.Categoria)
                 .ToListAsync();
         }
 
@@ -72,7 +74,7 @@ namespace Data
             }
 
             existingAlquiler.SetClienteId(alquiler.ClienteId);
-            // existingAlquiler.SetEmpleadoId(alquiler.EmpleadoId);
+            existingAlquiler.SetEmpleadoId(alquiler.EmpleadoId);
 
             existingAlquiler.SetFechaAlquiler(alquiler.FechaAlquiler);
             existingAlquiler.SetEstadoAlquiler(alquiler.EstadoAlquiler);

@@ -60,6 +60,7 @@
             eliminarButton.TabIndex = 2;
             eliminarButton.Text = "Eliminar";
             eliminarButton.UseVisualStyleBackColor = true;
+            eliminarButton.Click += eliminarButton_Click;
             // 
             // actualizarButton
             // 
@@ -71,6 +72,7 @@
             actualizarButton.TabIndex = 3;
             actualizarButton.Text = "Actualizar";
             actualizarButton.UseVisualStyleBackColor = true;
+            actualizarButton.Click += actualizarButton_Click;
             // 
             // agregarButton
             // 
@@ -81,6 +83,7 @@
             agregarButton.TabIndex = 3;
             agregarButton.Text = "Agregar";
             agregarButton.UseVisualStyleBackColor = true;
+            agregarButton.Click += agregarButton_Click;
             // 
             // AlquilerLista
             // 
@@ -94,6 +97,7 @@
             Name = "AlquilerLista";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Alquileres";
+            Load += Alquileres_Load;
             ((System.ComponentModel.ISupportInitialize)alquileresDataGridView).EndInit();
             ResumeLayout(false);
         }

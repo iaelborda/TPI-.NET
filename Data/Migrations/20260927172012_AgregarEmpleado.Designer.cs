@@ -4,6 +4,7 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(TPIContext))]
-    partial class TPIContextModelSnapshot : ModelSnapshot
+    [Migration("20260927172012_AgregarEmpleado")]
+    partial class AgregarEmpleado
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,35 +24,6 @@ namespace Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Domain.Model.Alquiler", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EmpleadoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EstadoAlquiler")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaAlquiler")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
-
-                    b.HasIndex("EmpleadoId");
-
-                    b.ToTable("Alquileres");
-                });
 
             modelBuilder.Entity("Domain.Model.Bicicleta", b =>
                 {
@@ -257,71 +231,6 @@ namespace Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Sucursales");
-                });
-
-            modelBuilder.Entity("Domain.Model.Alquiler", b =>
-                {
-                    b.HasOne("Domain.Model.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Model.Empleado", "Empleado")
-                        .WithMany()
-                        .HasForeignKey("EmpleadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsMany("Domain.Model.DetalleAlquiler", "DetallesAlquiler", b1 =>
-                        {
-                            b1.Property<int>("AlquilerId")
-                                .HasColumnType("int");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
-
-                            b1.Property<int>("BicicletaId")
-                                .HasColumnType("int");
-
-                            b1.Property<int>("Estado")
-                                .HasColumnType("int");
-
-                            b1.Property<DateTime?>("HoraFin")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<DateTime>("HoraInicio")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<decimal>("Subtotal")
-                                .HasColumnType("decimal(18,2)");
-
-                            b1.HasKey("AlquilerId", "Id");
-
-                            b1.HasIndex("BicicletaId");
-
-                            b1.ToTable("DetalleAlquiler");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AlquilerId");
-
-                            b1.HasOne("Domain.Model.Bicicleta", "Bicicleta")
-                                .WithMany()
-                                .HasForeignKey("BicicletaId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b1.Navigation("Bicicleta");
-                        });
-
-                    b.Navigation("Cliente");
-
-                    b.Navigation("DetallesAlquiler");
-
-                    b.Navigation("Empleado");
                 });
 
             modelBuilder.Entity("Domain.Model.Bicicleta", b =>

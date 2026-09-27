@@ -132,7 +132,7 @@
             detallesDataGridView.TabIndex = 8;
             // 
             // agregarButton
-            // 
+            //
             agregarButton.Location = new Point(431, 661);
             agregarButton.Margin = new Padding(5);
             agregarButton.Name = "agregarButton";
@@ -140,6 +140,7 @@
             agregarButton.TabIndex = 9;
             agregarButton.Text = "&Agregar";
             agregarButton.UseVisualStyleBackColor = true;
+            agregarButton.Click += agregarButton_Click;
             // 
             // modificarButton
             // 
@@ -150,6 +151,7 @@
             modificarButton.TabIndex = 10;
             modificarButton.Text = "&Modificar";
             modificarButton.UseVisualStyleBackColor = true;
+            modificarButton.Click += modificarButton_Click;
             // 
             // eliminarButton
             // 
@@ -160,6 +162,7 @@
             eliminarButton.TabIndex = 11;
             eliminarButton.Text = "&Eliminar";
             eliminarButton.UseVisualStyleBackColor = true;
+            eliminarButton.Click += eliminarButton_Click;
             // 
             // aceptarButton
             // 
@@ -169,6 +172,7 @@
             aceptarButton.TabIndex = 12;
             aceptarButton.Text = "&Aceptar";
             aceptarButton.UseVisualStyleBackColor = true;
+            aceptarButton.Click += aceptarButton_Click;
             // 
             // cancelarButton
             // 
@@ -178,6 +182,7 @@
             cancelarButton.TabIndex = 13;
             cancelarButton.Text = "&Cancelar";
             cancelarButton.UseVisualStyleBackColor = true;
+            cancelarButton.Click += cancelarButton_Click;
             // 
             // idTextBox
             // 
