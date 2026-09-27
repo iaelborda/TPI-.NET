@@ -75,7 +75,7 @@ namespace Domain.Model
                 throw new InvalidOperationException("No se puede calcular el monto a pagar si hay bicicletas sin devolver");
             }
 
-            Monto = detalles.Sum(d => d.SubTotal);
+            Monto = detalles.Sum(d => d.Subtotal);
             if (Monto <= 0)
             {
                 throw new ArgumentException("El monto a pagar debe ser mayor que 0", nameof(Monto));

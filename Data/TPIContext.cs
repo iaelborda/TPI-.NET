@@ -10,6 +10,7 @@ namespace Data
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Bicicleta> Bicicletas { get; set; }
         public DbSet<Sucursal> Sucursales { get; set; }
+        public DbSet<Alquiler> Alquileres { get; set; }
         public TPIContext(DbContextOptions<TPIContext> options)
             : base(options)
         {
@@ -169,6 +170,68 @@ namespace Data
 
                 entity.HasIndex(e => e.Nombre)
                     .IsUnique();
+            });
+
+            modelBuilder.Entity<Alquiler>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.ClienteId)
+                    .IsRequired()
+                    .HasField("_clienteId");
+
+                entity.Navigation(e => e.Cliente)
+                    .HasField("_cliente");
+
+                /* Sacar comentario cuando este hecho empleado
+                 
+                 entity.Property(e => e.EmpleadoId)
+                    .IsRequired()
+                    .HasField("_empleadoId");
+
+                entity.Navigation(e => e.Empleado)
+                    .HasField("_empleado"); */
+
+                entity.Property(e => e.FechaAlquiler)
+                    .IsRequired();
+
+                entity.HasOne(e => e.Cliente)
+                    .WithMany()
+                    .HasForeignKey(e => e.ClienteId);
+
+                /* entity.HasOne(e => e.Empleado)
+                    .WithMany()
+                    .HasForeignKey(e => e.EmpleadoId); */
+
+                entity.OwnsMany(e => e.DetallesAlquiler, detalle =>
+                {
+                    detalle.WithOwner().HasForeignKey(i => i.AlquilerId);
+
+                    detalle.Property(i => i.BicicletaId)
+                        .IsRequired()
+                        .HasField("_bicicletaId");
+
+                    detalle.Navigation(i => i.Bicicleta)
+                        .HasField("_bicicleta");
+
+                    detalle.Property(i => i.Subtotal)
+                        .IsRequired()
+                        .HasColumnType("decimal(18,2)");
+
+                    detalle.Property(i => i.HoraInicio)
+                        .IsRequired();
+
+                    detalle.Property(i => i.HoraFin)
+                        .IsRequired(false);
+
+                    detalle.HasOne(i => i.Bicicleta)
+                        .WithMany()
+                        .HasForeignKey(i => i.BicicletaId);
+                });
+
             });
             modelBuilder.Ignore<Tarifa>();
         }

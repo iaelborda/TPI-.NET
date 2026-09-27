@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Model
+﻿namespace Domain.Model
 {
     public enum EstadoDetalleAlquiler
     {
@@ -13,13 +7,34 @@ namespace Domain.Model
     }
     public class DetalleAlquiler
     {
-        public int DetalleId { get; private set; }
         public int AlquilerId { get; private set; }
-        public int BicicletaId { get; private set; }
+
+        private int _bicicletaId;
+        private Bicicleta? _bicicleta;
+
+        public int BicicletaId 
+        {
+            get => _bicicleta?.Id ?? _bicicletaId; 
+            private set => _bicicletaId = value; 
+        }
+
+        public Bicicleta? Bicicleta
+        {
+            get => _bicicleta;
+            private set
+            {
+                _bicicleta = value;
+                if(value != null && _bicicletaId != value.Id)
+                {
+                    _bicicletaId = value.Id;
+                }
+            }
+        }
+
         public DateTime HoraInicio { get; private set; }
         public DateTime? HoraFin { get; private set; }
         public EstadoDetalleAlquiler Estado { get; private set; }
-        public decimal SubTotal { get; private set; }
+        public decimal Subtotal { get; private set; }
 
         public DetalleAlquiler(int AlquilerId, int BicicletaId)
         {
@@ -28,33 +43,36 @@ namespace Domain.Model
             HoraInicio = DateTime.Now;
             HoraFin = null;
             Estado = EstadoDetalleAlquiler.Activo;
-            SubTotal = 0;
+            Subtotal = 0;
         }
-
-        public void SetDetalleId(int id)
-        {
-            if (id <= 0)
-            {
-                throw new ArgumentException("El id del detalle debe ser mayor que 0", nameof(id));
-            }
-            DetalleId  = id;
-        }
+   
         public void SetAlquilerId(int id)
         {
-            if (id <= 0)
+            if (id < 0)
             {
-                throw new ArgumentException("El id del alquiler debe ser mayor que 0", nameof(id));
+                throw new ArgumentException("El id del alquiler debe ser mayor o igual que 0", nameof(id));
             }
             AlquilerId = id;
         }
 
-        public void SetBicicletaId(int id)
+        public void SetBicicletaId(int bicicletaId)
         {
-            if (id <= 0)
+            if (bicicletaId <= 0)
             {
-                throw new ArgumentException("El id de la bicicleta debe ser mayor que 0", nameof(id));
+                throw new ArgumentException("El id de la bicicleta debe ser mayor que 0", nameof(bicicletaId));
             }
-            BicicletaId = id;
+
+            _bicicletaId = bicicletaId;
+            if(_bicicleta != null && _bicicleta.Id != bicicletaId)
+            {
+                _bicicleta = null;
+            }
+        }
+        public void SetBicicleta(Bicicleta bicicleta)
+        {
+            ArgumentNullException.ThrowIfNull(bicicleta);
+            _bicicleta = bicicleta;
+            _bicicletaId = bicicleta.Id;
         }
 
         public void DevolverBicicleta()
@@ -110,7 +128,7 @@ namespace Domain.Model
             TimeSpan duracion = HoraFin.Value - HoraInicio;
             decimal horas = (decimal)duracion.TotalHours;
             horas = Math.Ceiling(horas);
-            SubTotal = horas * precioHora;
+            Subtotal = horas * precioHora;
         }
     }
 

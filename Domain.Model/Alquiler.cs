@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Model
+﻿namespace Domain.Model
 {
     public enum EstadoDeAlquiler
     {
@@ -17,61 +10,134 @@ namespace Domain.Model
     public class Alquiler
     {
 
-        public int IdAlquiler { get; private set; }
+        public int Id { get; private set; }
         public DateTime FechaAlquiler { get; private set; }
         public EstadoDeAlquiler EstadoAlquiler { get; private set; }
-        public int ClienteId { get; private set; }
-        public int EmpleadoId { get; private set; }
-
-        private List<DetalleAlquiler> detalles = new List<DetalleAlquiler>();
-        public IReadOnlyList<DetalleAlquiler> Detalles => detalles.AsReadOnly();
-        public Alquiler(int clienteId, int empleadoId)
+        
+        private int _clienteId;
+        private Cliente? _cliente;
+        public int ClienteId 
         {
+            get => _cliente?.Id ?? _clienteId; 
+            private set => _clienteId = value; 
+        }
+
+        public Cliente? Cliente
+        {
+            get => _cliente;
+            private set
+            {
+                _cliente = value;
+                if(value != null && _clienteId != value.Id)
+                {
+                    _clienteId = value.Id;
+                }
+            }
+        }
+
+        private int _empleadoId;
+        private Empleado? _empleado;
+        public int EmpleadoId 
+        { 
+            get => _empleado?.Id ?? _empleadoId;
+            private set => _empleadoId = value; 
+        }
+        public Empleado? Empleado
+        {
+            get => _empleado;
+            private set
+            {
+                _empleado = value;
+                if (value != null && _empleadoId != value.Id)
+                {
+                    _empleadoId = value.Id;
+                }
+            }
+        }
+
+        private readonly List<DetalleAlquiler> _detallesAlquiler = new();
+        public IReadOnlyList<DetalleAlquiler> DetallesAlquiler => _detallesAlquiler.AsReadOnly();
+        public Alquiler(int id, int clienteId, int empleadoId, DateTime fechaAlquiler)
+        {
+            SetId(id);
             SetClienteId(clienteId);
             SetEmpleadoId(empleadoId);
             EstadoAlquiler = EstadoDeAlquiler.Activo;
             FechaAlquiler = DateTime.Now;
+      
         }
 
-        public void SetAlquilerId(int idAlquiler)
+        public void SetId(int id)
         {
-            if (idAlquiler <= 0)
+            if (id < 0)
             {
-                throw new ArgumentException("El id del alquiler debe ser mayor que cero.", nameof(idAlquiler));
+                throw new ArgumentException("El id del alquiler debe ser mayor que cero.", nameof(id));
             }
-            IdAlquiler = idAlquiler;
+            Id = id;
         }
         public void SetClienteId(int clienteId)
         {
             if (clienteId <= 0)
-            {
                 throw new ArgumentException("El id del cliente debe ser mayor que cero.", nameof(clienteId));
+
+            _clienteId = clienteId;
+
+            if(_cliente != null && _cliente.Id != clienteId)
+            {
+                _cliente = null;
             }
-            ClienteId = clienteId;
+        }
+
+        public void SetCliente(Cliente cliente)
+        {
+            ArgumentNullException.ThrowIfNull(cliente);
+            _cliente = cliente;
+            _clienteId = cliente.Id;
         }
 
         public void SetEmpleadoId(int empleadoId)
         {
             if(empleadoId <= 0)
-            {
                 throw new ArgumentException("El id del empleado debe ser mayor que cero.", nameof(empleadoId));
+
+            _empleadoId = empleadoId;
+
+            if(_empleado != null && _empleado.Id != empleadoId)
+            {
+                _empleado = null;
             }
-            EmpleadoId = empleadoId;
+        }
+        public void SetEmpleado(Empleado empleado)
+        {
+            ArgumentNullException.ThrowIfNull(empleado);
+            _empleado = empleado;
+            _empleadoId = empleado.Id;
+        }
+        public void SetFechaAlquiler(DateTime fechaAlquiler)
+        {
+            FechaAlquiler = fechaAlquiler;
         }
 
-        public void AgregarDetalle(DetalleAlquiler detalle)
+        public void SetEstadoAlquiler(EstadoDeAlquiler estado)
         {
-            if (detalle == null)
-            {
-                throw new ArgumentNullException(nameof(detalle));
-            }
-            
-            if(EstadoAlquiler != EstadoDeAlquiler.Activo)
-            {
-                throw new InvalidOperationException("No se pueden agregar detalles a un alquiler que no está activo.");
-            }
+            EstadoAlquiler = estado;
+        }
 
-            detalles.Add(detalle);
+        public void AddDetalle(DetalleAlquiler detalle)
+        {
+            ArgumentNullException.ThrowIfNull(detalle);
+            _detallesAlquiler.Add(detalle);
+        }
+
+        public void RemoveDetalle(DetalleAlquiler detalle)
+        {
+            ArgumentNullException.ThrowIfNull(detalle);
+            _detallesAlquiler.Remove(detalle);
+        }
+
+        public void ClearDetalles()
+        {
+            _detallesAlquiler.Clear();
         }
 
         public void CancelarAlquiler()
@@ -96,15 +162,14 @@ namespace Domain.Model
                 throw new InvalidOperationException("No se puede finalizar un alquiler que fue cancelado.");
             }
 
-            if (detalles.Count == 0)
+            if (_detallesAlquiler.Count == 0)
             {
                 throw new InvalidOperationException("No se puede finalizar un alquiler sin detalles.");
             }
 
-            if (detalles.Any(d => d.HoraFin == null))
+            if (_detallesAlquiler.Any(d => d.HoraFin == null))
             {
-                throw new InvalidOperationException(
-                    "No se puede finalizar el alquiler mientras haya bicicletas sin devolver.");
+                throw new InvalidOperationException("No se puede finalizar el alquiler mientras haya bicicletas sin devolver.");
             }
 
             EstadoAlquiler = EstadoDeAlquiler.Finalizado;
@@ -112,7 +177,7 @@ namespace Domain.Model
 
         public bool TieneBicicletasSinEntregar()
         {
-            return detalles.Any(d => d.HoraFin == null);
+            return _detallesAlquiler.Any(d => d.HoraFin == null);
         }
     }
 }
