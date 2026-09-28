@@ -152,48 +152,40 @@ namespace WindowsForms
 
         private async void aceptarButton_Click(object sender, EventArgs e)
         {
-            if (this.ValidateAlquiler())
+            if (!this.ValidateAlquiler())
             {
-                try
+                return;
+            }
+
+            try
+            {
+                this.ActiveControl = null;
+
+                DeshabilitarControles();
+
+                this.Alquiler.ClienteId = (int)clienteComboBox.SelectedValue;
+                this.Alquiler.EmpleadoId = (int)empleadoComboBox.SelectedValue;
+                this.Alquiler.Detalles = detallesLocales.ToList();
+
+                if (this.Mode == FormMode.Update)
                 {
-                    DeshabilitarControles();
-
-                    if (clienteComboBox.SelectedIndex < 0)
-                    {
-                        MessageBox.Show("No hay un cliente seleccionado.");
-                        return;
-                    }
-
-                    if (empleadoComboBox.SelectedIndex < 0)
-                    {
-                        MessageBox.Show("No hay un empleado seleccionado.");
-                        return;
-                    }
-
-                    this.Alquiler.ClienteId = (int)clienteComboBox.SelectedValue;
-                    this.Alquiler.EmpleadoId = (int)empleadoComboBox.SelectedValue;
-                    this.Alquiler.Detalles = detallesLocales.ToList();
-
-                    if (this.Mode == FormMode.Update)
-                    {
-                        await AlquilerApiClient.UpdateAsync(this.Alquiler);
-                    }
-                    else
-                    {
-                        await AlquilerApiClient.AddAsync(this.Alquiler);
-                    }
-
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
+                    await AlquilerApiClient.UpdateAsync(this.Alquiler);
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    await AlquilerApiClient.AddAsync(this.Alquiler);
                 }
-                finally
-                {
-                    HabilitarControles();
-                }
+
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error al guardar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HabilitarControles();
             }
         }
         private void cancelarButton_Click(object sender, EventArgs e)

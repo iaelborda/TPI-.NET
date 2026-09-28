@@ -52,7 +52,6 @@
             // 
             // eliminarButton
             // 
-            eliminarButton.Enabled = false;
             eliminarButton.Location = new Point(723, 472);
             eliminarButton.Margin = new Padding(2);
             eliminarButton.Name = "eliminarButton";
@@ -64,7 +63,6 @@
             // 
             // actualizarButton
             // 
-            actualizarButton.Enabled = false;
             actualizarButton.Location = new Point(855, 472);
             actualizarButton.Margin = new Padding(2);
             actualizarButton.Name = "actualizarButton";

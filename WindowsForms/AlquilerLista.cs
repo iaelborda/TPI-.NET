@@ -76,26 +76,25 @@ namespace WindowsForms
 
         private async void Alquileres_Load(object sender, EventArgs e)
         {
-            //await ConfigureButtonPermissions();
+            await ConfigureButtonPermissions();
             await this.LoadAlquileres();
         }
 
-        /*private async Task ConfigureButtonPermissions()
+        private async Task ConfigureButtonPermissions()
         {
             var authService = AuthServiceProvider.Instance;
+            var rol = await authService.GetRolAsync();
 
-            bool canAdd = await authService.HasPermissionAsync("alquileres.agregar");
-            bool canUpdate = await authService.HasPermissionAsync("alquileres.actualizar");
-            bool canDelete = await authService.HasPermissionAsync("alquileres.eliminar");
+            bool esAdministrador = rol == RolUsuario.Administrador;
 
-            agregarButton.Visible = canAdd;
-            actualizarButton.Visible = canUpdate;
-            eliminarButton.Visible = canDelete;
+            agregarButton.Visible = true;
+            actualizarButton.Visible = true;
+            eliminarButton.Visible = esAdministrador;
 
-            agregarButton.Tag = canAdd;
-            actualizarButton.Tag = canUpdate;
-            eliminarButton.Tag = canDelete;
-        }*/
+            agregarButton.Tag = true;
+            actualizarButton.Tag = true;
+            eliminarButton.Tag = esAdministrador;
+        }
 
         private async void agregarButton_Click(object sender, EventArgs e)
         {
