@@ -104,15 +104,20 @@ namespace Application.Services
         public async Task<bool> UpdateAsync(AlquilerDTO dto)
         {
             var alquilerRepository = new AlquilerRepository();
+            var alquiler = new Alquiler(dto.Id, dto.ClienteId, dto.EmpleadoId, dto.FechaAlquiler);
 
-            var alquiler = new Alquiler(dto.Id,dto.ClienteId,dto.EmpleadoId,dto.FechaAlquiler
-            );
+            if (dto.EstadoAlquiler == EstadoDeAlquiler.Cancelado)
+            {
+                alquiler.CancelarAlquiler();
+            }
+            else
+            {
+                alquiler.SetEstadoAlquiler(dto.EstadoAlquiler);
+            }
 
             foreach (var detalleDto in dto.Detalles)
             {
-                var detalle = new DetalleAlquiler(dto.Id,detalleDto.BicicletaId
-                );
-
+                var detalle = new DetalleAlquiler(dto.Id, detalleDto.BicicletaId);
                 alquiler.AddDetalle(detalle);
             }
 

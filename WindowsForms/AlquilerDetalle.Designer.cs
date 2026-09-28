@@ -47,6 +47,7 @@
             empleadoComboBox = new ComboBox();
             fechaAlquilerTextBox = new TextBox();
             errorProvider = new ErrorProvider(components);
+            cancelarAlquilerButton = new Button();
             ((System.ComponentModel.ISupportInitialize)detallesDataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
@@ -222,11 +223,23 @@
             // 
             errorProvider.ContainerControl = this;
             // 
+            // cancelarAlquilerButton
+            // 
+            cancelarAlquilerButton.BackColor = Color.IndianRed;
+            cancelarAlquilerButton.Location = new Point(431, 740);
+            cancelarAlquilerButton.Name = "cancelarAlquilerButton";
+            cancelarAlquilerButton.Size = new Size(170, 50);
+            cancelarAlquilerButton.TabIndex = 18;
+            cancelarAlquilerButton.Text = "Cancelar Alquiler";
+            cancelarAlquilerButton.UseVisualStyleBackColor = false;
+            cancelarAlquilerButton.Click += cancelarAlquilerButton_Click;
+            // 
             // AlquilerDetalle
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(935, 813);
+            Controls.Add(cancelarAlquilerButton);
             Controls.Add(fechaAlquilerTextBox);
             Controls.Add(empleadoComboBox);
             Controls.Add(clienteComboBox);
@@ -276,5 +289,6 @@
         private ComboBox empleadoComboBox;
         private TextBox fechaAlquilerTextBox;
         private ErrorProvider errorProvider;
+        private Button cancelarAlquilerButton;
     }
 }

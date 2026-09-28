@@ -194,6 +194,33 @@ namespace WindowsForms
             this.Close();
         }
 
+        private async void cancelarAlquilerButton_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("¿Está seguro que desea cancelar este alquiler?","Cancelar alquiler",MessageBoxButtons.YesNo,MessageBoxIcon.Warning);
+
+            if (result != DialogResult.Yes)
+            {
+                return;
+            }
+
+            try
+            {
+                this.Alquiler.EstadoAlquiler = EstadoDeAlquiler.Cancelado;
+                DeshabilitarControles();
+                await AlquilerApiClient.UpdateAsync(this.Alquiler);
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error al cancelar el alquiler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HabilitarControles();
+            }
+        }
+
         private void SetAlquiler()
         {
             this.idTextBox.Text = this.Alquiler.Id.ToString();
@@ -219,7 +246,17 @@ namespace WindowsForms
                 Subtotal = detalle.Subtotal
             }).ToList();
 
+            bool alquilerActivo = this.Alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo;
+
+            cancelarAlquilerButton.Visible = this.Mode == FormMode.Update && alquilerActivo;
+            agregarButton.Enabled = alquilerActivo;
+            modificarButton.Enabled = alquilerActivo && detallesLocales.Count > 0;
+            eliminarButton.Enabled = alquilerActivo && detallesLocales.Count > 0;
+            clienteComboBox.Enabled = alquilerActivo;
+            empleadoComboBox.Enabled = alquilerActivo;
+
             RefreshDetallesGrid();
+
         }
 
         private void SetFormMode(FormMode value)
@@ -232,6 +269,7 @@ namespace WindowsForms
                 idTextBox.Visible = false;
                 fechaAlquilerLabel.Visible = true;
                 fechaAlquilerTextBox.Visible = true;
+                cancelarAlquilerButton.Visible = false;
             }
 
             if (Mode == FormMode.Update)
@@ -240,6 +278,7 @@ namespace WindowsForms
                 idTextBox.Visible = true;
                 fechaAlquilerLabel.Visible = true;
                 fechaAlquilerTextBox.Visible = true;
+                cancelarAlquilerButton.Visible = false;
             }
         }
 
@@ -344,8 +383,11 @@ namespace WindowsForms
             detallesDataGridView.DataSource = detallesLocales;
 
             bool hasDetalles = detallesLocales.Count > 0;
-            modificarButton.Enabled = hasDetalles;
-            eliminarButton.Enabled = hasDetalles;
+            bool alquilerActivo = this.Alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo;
+
+            modificarButton.Enabled = alquilerActivo && hasDetalles;
+            eliminarButton.Enabled = alquilerActivo && hasDetalles;
+            agregarButton.Enabled = alquilerActivo;
 
             if (hasDetalles)
             {
@@ -375,14 +417,17 @@ namespace WindowsForms
 
         private void HabilitarControles()
         {
-            aceptarButton.Enabled = true;
+            bool alquilerActivo = this.Mode == FormMode.Add || this.Alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo;
+
+            aceptarButton.Enabled = alquilerActivo;
             cancelarButton.Enabled = true;
-            clienteComboBox.Enabled = true;
-            empleadoComboBox.Enabled = true;
+            clienteComboBox.Enabled = alquilerActivo;
+            empleadoComboBox.Enabled = alquilerActivo;
             fechaAlquilerTextBox.Enabled = true;
-            agregarButton.Enabled = true;
-            modificarButton.Enabled = true;
-            eliminarButton.Enabled = true;
+            agregarButton.Enabled = alquilerActivo;
+            modificarButton.Enabled = alquilerActivo && detallesLocales.Count > 0;
+            eliminarButton.Enabled = alquilerActivo && detallesLocales.Count > 0;
+            cancelarAlquilerButton.Enabled = alquilerActivo;
         }
     }
 }
