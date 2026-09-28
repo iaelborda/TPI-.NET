@@ -20,7 +20,8 @@ namespace WebApi
             .WithName("GetBicicleta")
             .Produces<BicicletaDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("BicicletasLeer"); 
 
             app.MapGet("/bicicletas", async (IBicicletaService bicicletaService) =>
             {
@@ -30,7 +31,8 @@ namespace WebApi
             })
             .WithName("GetAllBicicletas")
             .Produces<List<BicicletaDTO>>(StatusCodes.Status200OK)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("BicicletasLeer"); 
 
             app.MapPost("/bicicletas", async (BicicletaDTO dto, IBicicletaService bicicletaService) =>
             {
@@ -48,7 +50,8 @@ namespace WebApi
             .WithName("AddBicicleta")
             .Produces<BicicletaDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("BicicletasAgregar"); 
 
             app.MapPut("/bicicletas", async (BicicletaDTO dto, IBicicletaService bicicletaService) =>
             {
@@ -70,7 +73,8 @@ namespace WebApi
             .WithName("UpdateBicicleta")
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("BicicletasActualizar"); 
 
             app.MapDelete("/bicicletas/{id}", async (int id, IBicicletaService bicicletaService) =>
             {
@@ -85,7 +89,8 @@ namespace WebApi
             .WithName("DeleteBicicleta")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("BicicletasEliminar"); 
         }
     }
 }

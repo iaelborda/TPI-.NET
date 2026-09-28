@@ -86,6 +86,8 @@ namespace WindowsForms
 
                 this.Detalle.BicicletaId = bicicleta.Id;
                 this.Detalle.BicicletaMarca = bicicleta.Marca;
+                this.Detalle.CategoriaDescripcion = bicicleta.DescripcionCategoria;
+                this.Detalle.HoraInicio = DateTime.Now;
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
@@ -102,7 +104,15 @@ namespace WindowsForms
             if (this.Detalle == null)
                 return;
 
-            this.bicicletaComboBox.SelectedValue = this.Detalle.BicicletaId;
+            if (this.Mode == FormMode.Update)
+            {
+                this.bicicletaComboBox.SelectedValue = this.Detalle.BicicletaId;
+            }
+
+            this.horaInicioTextBox.Text = this.Detalle.HoraInicio.ToString("HH:mm");
+            this.horaFinTextBox.Text = this.Detalle.HoraFin?.ToString("HH:mm") ?? "";
+            this.subtotalTextBox.Text = this.Detalle.Subtotal.ToString("C2");
+            this.estadoTextBox.Text = this.Detalle.Estado.ToString();
         }
 
         private void SetFormMode(FormMode value)
@@ -125,10 +135,10 @@ namespace WindowsForms
 
             errorProvider.SetError(bicicletaComboBox, string.Empty);
 
-            if (this.bicicletaComboBox.SelectedValue == null)
+            if (bicicletaComboBox.SelectedIndex < 0)
             {
                 isValid = false;
-                errorProvider.SetError(bicicletaComboBox,"Debe seleccionar una bicicleta");
+                errorProvider.SetError(bicicletaComboBox, "Debe seleccionar una bicicleta");
             }
 
             return isValid;

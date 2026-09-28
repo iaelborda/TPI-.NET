@@ -18,6 +18,8 @@ namespace API.Clients
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
+
+            await AddAuthorizationHeaderAsync(client);
         }
 
         private static string GetBaseUrlFromConfig()
@@ -50,6 +52,21 @@ namespace API.Clients
             string defaultUrl = "https://localhost:7261/";
             System.Diagnostics.Debug.WriteLine($"[DEBUG] Usando URL: {defaultUrl}");
             return defaultUrl;
+        }
+
+        protected static async Task AddAuthorizationHeaderAsync(HttpClient client)
+        {
+            var authService = AuthServiceProvider.Instance;
+
+            await authService.CheckTokenExpirationAsync();
+
+            var token = await authService.GetTokenAsync();
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+            }
         }
     }
 }

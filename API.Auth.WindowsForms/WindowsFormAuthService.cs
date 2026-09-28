@@ -5,50 +5,79 @@ namespace API.Auth.WindowsForms
 {
     public class WindowsFormsAuthService : IAuthService
     {
-        private static readonly List<(string Username, string Password, RolUsuario Rol)> usuarios = new()
-        {
-            ("admin", "admin123", RolUsuario.Administrador),
-            ("empleado", "empleado123", RolUsuario.Usuario)
-        };
+        private static string? currentToken;
         private static string? currentUsername;
         private static RolUsuario? currentRol;
-        private static bool isAuthenticated;
+        private static DateTime tokenExpiration;
 
         public async Task<bool> IsAuthenticatedAsync()
         {
-            return await Task.Run(() => isAuthenticated);
+            return !string.IsNullOrEmpty(currentToken) &&
+                   DateTime.UtcNow < tokenExpiration;
         }
 
         public async Task<string?> GetUsernameAsync()
         {
-            return await Task.Run(() => isAuthenticated ? currentUsername : null);
+            return await IsAuthenticatedAsync()
+                ? currentUsername
+                : null;
+        }
+
+        public async Task<string?> GetTokenAsync()
+        {
+            return await IsAuthenticatedAsync()
+                ? currentToken
+                : null;
         }
 
         public async Task<bool> LoginAsync(string username, string password)
         {
-            var usuario = usuarios.FirstOrDefault(u =>
-            u.Username == username && u.Password == password);
-            if(usuario != default)
+            var request = new LoginRequestDTO
             {
-                currentUsername = usuario.Username;
-                currentRol = usuario.Rol;
-                isAuthenticated = true;
+                Username = username,
+                Password = password
+            };
+
+            var authClient = new AuthApiClient();
+            var response = await authClient.LoginAsync(request);
+
+            if (response != null)
+            {
+                currentToken = response.Token;
+                currentUsername = response.Username;
+                currentRol = response.Rol;
+                tokenExpiration = response.ExpiresAt;
+
                 return true;
             }
+
             return false;
         }
+
         public async Task<RolUsuario?> GetRolAsync()
         {
-            return await Task.Run(() => isAuthenticated ? currentRol : null);
+            return await IsAuthenticatedAsync()
+                ? currentRol
+                : null;
         }
+
         public async Task LogoutAsync()
         {
-            await Task.Run(() =>
+            currentToken = null;
+            currentUsername = null;
+            currentRol = null;
+            tokenExpiration = default;
+
+            await Task.CompletedTask;
+        }
+
+        public async Task CheckTokenExpirationAsync()
+        {
+            if (!string.IsNullOrEmpty(currentToken) &&
+                DateTime.UtcNow >= tokenExpiration)
             {
-                currentUsername = null;
-                currentRol = null;
-                isAuthenticated = false;
-            });
+                await LogoutAsync();
+            }
         }
     }
 }

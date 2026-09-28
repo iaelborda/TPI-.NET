@@ -129,10 +129,10 @@
             detallesDataGridView.RowHeadersWidth = 62;
             detallesDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             detallesDataGridView.Size = new Size(826, 369);
-            detallesDataGridView.TabIndex = 8;
+            detallesDataGridView.TabIndex = 0;
             // 
             // agregarButton
-            //
+            // 
             agregarButton.Location = new Point(431, 661);
             agregarButton.Margin = new Padding(5);
             agregarButton.Name = "agregarButton";

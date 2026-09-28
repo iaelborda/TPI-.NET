@@ -63,8 +63,8 @@
             SetClienteId(clienteId);
             SetEmpleadoId(empleadoId);
             EstadoAlquiler = EstadoDeAlquiler.Activo;
-            FechaAlquiler = DateTime.Now;
-      
+            FechaAlquiler = fechaAlquiler;
+
         }
 
         public void SetId(int id)

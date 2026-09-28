@@ -21,7 +21,8 @@ namespace WebApi
             .WithName("GetEmpleado")
             .Produces<EmpleadoDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("EmpleadosLeer"); 
 
             app.MapGet("/empleados", async (IEmpleadoService empleadoService) =>
             {
@@ -30,7 +31,8 @@ namespace WebApi
             })
             .WithName("GetAllEmpleados")
             .Produces<List<EmpleadoDTO>>(StatusCodes.Status200OK)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("EmpleadosLeer");
 
             app.MapPost("/empleados", async (EmpleadoDTO dto, IEmpleadoService empleadoService) =>
             {
@@ -47,7 +49,8 @@ namespace WebApi
             .WithName("AddEmpleado")
             .Produces<EmpleadoDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("EmpleadosAgregar"); 
 
             app.MapPut("/empleados", async (EmpleadoDTO dto, IEmpleadoService empleadoService) =>
             {
@@ -70,7 +73,8 @@ namespace WebApi
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("EmpleadosModificar"); 
 
             app.MapDelete("/empleados/{id}", async (int id, IEmpleadoService empleadoService) =>
             {
@@ -85,7 +89,8 @@ namespace WebApi
             .WithName("DeleteEmpleado")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("EmpleadosEliminar"); 
         }
     }
 }

@@ -20,7 +20,8 @@ namespace WebApi
             .WithName("GetSucursal")
             .Produces<SucursalDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("SucursalesLeer"); 
 
             app.MapGet("/sucursales", async (ISucursalService sucursalService) =>
             {
@@ -28,7 +29,8 @@ namespace WebApi
                 return Results.Ok(dtos);
             }).WithName("GetAllSucursales")
               .Produces<List<SucursalDTO>>(StatusCodes.Status200OK)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("SucursalesLeer"); 
 
             app.MapPost("/sucursales", async (SucursalDTO dto, ISucursalService sucursalService) =>
             {
@@ -45,7 +47,8 @@ namespace WebApi
             .WithName("AddSucursal")
             .Produces<SucursalDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("SucursalesAgregar"); 
 
             app.MapDelete("/sucursales/{id}", async (int id, ISucursalService sucursalService) =>
             {
@@ -59,7 +62,8 @@ namespace WebApi
             .WithName("DeleteSucursales")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("SucursalesModificar"); 
 
             app.MapPut("/sucursales", async (SucursalDTO dto, ISucursalService sucursalService) =>
             {
@@ -80,7 +84,8 @@ namespace WebApi
             .WithName("UpdateSucursal")
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization("SucursalesEliminar"); 
         }
     }
 }

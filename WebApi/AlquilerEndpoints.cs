@@ -21,8 +21,8 @@ namespace WebApi
             .WithName("GetAlquiler")
             .Produces<AlquilerDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi();
-            //.RequireAuthorization("AlquileresLeer");
+            .WithOpenApi()
+            .RequireAuthorization("AlquileresLeer");
 
             app.MapGet("/alquileres", async () =>
             {
@@ -33,8 +33,8 @@ namespace WebApi
             })
             .WithName("GetAllAquileres")
             .Produces<AlquilerDTO>(StatusCodes.Status200OK)
-            .WithOpenApi();
-            //.RequireAuthorization("AlquileresLeer");
+            .WithOpenApi()
+            .RequireAuthorization("AlquileresLeer");
 
             app.MapPost("/alquileres", async (AlquilerDTO dto) =>
             {
@@ -52,8 +52,8 @@ namespace WebApi
             .WithName("AddAquiler")
             .Produces<AlquilerDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi();
-            //.RequireAuthorization("AlquileresAgregar");
+            .WithOpenApi()
+            .RequireAuthorization("AlquileresAgregar");
 
             app.MapPut("/alquileres", async (AlquilerDTO dto) =>
             {
@@ -76,8 +76,8 @@ namespace WebApi
             .WithName("UpdateAquiler")
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
-            .WithOpenApi();
-            //.RequireAuthorization("AlquileresActualizar");
+            .WithOpenApi()
+            .RequireAuthorization("AlquileresActualizar");
 
             app.MapDelete("/alquileres/{id}", async (int id) =>
             {
@@ -94,8 +94,8 @@ namespace WebApi
             .WithName("DeleteAquiler")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
-            .WithOpenApi();
-            //.RequireAuthorization("AlquileresEliminar");
+            .WithOpenApi()
+            .RequireAuthorization("AlquileresEliminar");
         }
     }
 }

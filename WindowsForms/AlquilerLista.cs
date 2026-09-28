@@ -61,7 +61,7 @@ namespace WindowsForms
                 Name = "FechaAlquiler",
                 HeaderText = "Fecha Alquiler",
                 DataPropertyName = "FechaAlquiler",
-                Width = 150,
+                Width = 200,
                 DefaultCellStyle = { Format = "dd/MM/yyyy HH:mm" }
             });
 
@@ -111,25 +111,22 @@ namespace WindowsForms
 
         private async void actualizarButton_Click(object sender, EventArgs e)
         {
+            AlquilerDTO? alquiler = this.SelectedItem();
+            if (alquiler == null) return;
+
             try
             {
                 DeshabilitarControles();
 
-                int id = this.SelectedItem().Id;
-
-                AlquilerDTO alquiler =
-                    await AlquilerApiClient.GetAsync(id);
-
-                AlquilerDetalle alquilerDetalle =
-                    new AlquilerDetalle(FormMode.Update, alquiler);
-
+                AlquilerDTO alquilerCompleto = await AlquilerApiClient.GetAsync(alquiler.Id);
+                AlquilerDetalle alquilerDetalle = new AlquilerDetalle(FormMode.Update, alquilerCompleto);
                 alquilerDetalle.ShowDialog();
 
                 await this.LoadAlquileres();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al actualizar alquiler: {ex.Message}","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show($"Error al actualizar alquiler: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -139,23 +136,22 @@ namespace WindowsForms
 
         private async void eliminarButton_Click(object sender, EventArgs e)
         {
-            AlquilerDTO alquiler = this.SelectedItem();
+            AlquilerDTO? alquiler = this.SelectedItem();
+            if (alquiler == null) return;
 
-            var result = MessageBox.Show($"¿Está seguro que desea eliminar el alquiler #{alquiler.Id}?","Confirmar eliminación",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+            var result = MessageBox.Show($"¿Está seguro que desea eliminar el alquiler #{alquiler.Id}?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
                 try
                 {
                     DeshabilitarControles();
-
                     await AlquilerApiClient.DeleteAsync(alquiler.Id);
-
                     await this.LoadAlquileres();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al eliminar alquiler: {ex.Message}","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    MessageBox.Show($"Error al eliminar alquiler: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {
@@ -213,12 +209,15 @@ namespace WindowsForms
             }
         }
 
-        private AlquilerDTO SelectedItem()
+        private AlquilerDTO? SelectedItem()
         {
-            AlquilerDTO alquiler =
-                (AlquilerDTO)alquileresDataGridView.SelectedRows[0].DataBoundItem;
+            if (alquileresDataGridView.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Seleccione un alquiler.", "Seleccionar Alquiler");
+                return null;
+            }
 
-            return alquiler;
+            return (AlquilerDTO)alquileresDataGridView.SelectedRows[0].DataBoundItem;
         }
 
         private void DeshabilitarControles()

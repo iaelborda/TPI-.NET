@@ -6,9 +6,10 @@ namespace API.Clients
     {
         Task<bool> IsAuthenticatedAsync();
         Task<string?> GetUsernameAsync();
+        Task<string?> GetTokenAsync();
         Task<bool> LoginAsync(string username, string password);
         Task LogoutAsync();
         Task<RolUsuario?> GetRolAsync();
-
+        Task CheckTokenExpirationAsync();
     }
 }

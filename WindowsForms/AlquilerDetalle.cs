@@ -1,5 +1,6 @@
-﻿using DTOs;
-using API.Clients;
+﻿using API.Clients;
+using Domain.Model;
+using DTOs;
 
 namespace WindowsForms
 {
@@ -66,6 +67,14 @@ namespace WindowsForms
         private void ConfigurarColumnas()
         {
             this.detallesDataGridView.AutoGenerateColumns = false;
+
+            this.detallesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "BicicletaId",
+                HeaderText = "Id Bicicleta",
+                DataPropertyName = "BicicletaId",
+                Width = 100
+            });
 
             this.detallesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
             {
@@ -149,6 +158,18 @@ namespace WindowsForms
                 {
                     DeshabilitarControles();
 
+                    if (clienteComboBox.SelectedIndex < 0)
+                    {
+                        MessageBox.Show("No hay un cliente seleccionado.");
+                        return;
+                    }
+
+                    if (empleadoComboBox.SelectedIndex < 0)
+                    {
+                        MessageBox.Show("No hay un empleado seleccionado.");
+                        return;
+                    }
+
                     this.Alquiler.ClienteId = (int)clienteComboBox.SelectedValue;
                     this.Alquiler.EmpleadoId = (int)empleadoComboBox.SelectedValue;
                     this.Alquiler.Detalles = detallesLocales.ToList();
@@ -167,7 +188,7 @@ namespace WindowsForms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al guardar alquiler: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {
@@ -175,7 +196,6 @@ namespace WindowsForms
                 }
             }
         }
-
         private void cancelarButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
@@ -191,7 +211,7 @@ namespace WindowsForms
                 this.Alquiler.FechaAlquiler = DateTime.Now;
             }
 
-            this.fechaAlquilerTextBox.Text = this.Alquiler.FechaAlquiler.ToString("dd/MM/yyyy HH:mm");
+            this.fechaAlquilerTextBox.Text = this.Alquiler.FechaAlquiler.ToString("dd/MM/yyyy");
             this.clienteComboBox.SelectedValue = this.Alquiler.ClienteId;
             this.empleadoComboBox.SelectedValue = this.Alquiler.EmpleadoId;
 
@@ -239,13 +259,13 @@ namespace WindowsForms
             errorProvider.SetError(empleadoComboBox, string.Empty);
             errorProvider.SetError(detallesDataGridView, string.Empty);
 
-            if (this.clienteComboBox.SelectedValue == null)
+            if (clienteComboBox.SelectedIndex < 0)
             {
                 isValid = false;
                 errorProvider.SetError(clienteComboBox, "Debe seleccionar un cliente");
             }
 
-            if (this.empleadoComboBox.SelectedValue == null)
+            if (empleadoComboBox.SelectedIndex < 0)
             {
                 isValid = false;
                 errorProvider.SetError(empleadoComboBox, "Debe seleccionar un empleado");
@@ -262,7 +282,12 @@ namespace WindowsForms
 
         private void agregarButton_Click(object sender, EventArgs e)
         {
-            DetalleAlquilerDTO nuevoDetalle = new DetalleAlquilerDTO();
+            DetalleAlquilerDTO nuevoDetalle = new DetalleAlquilerDTO
+            {
+                HoraInicio = DateTime.Now,
+                Estado = EstadoDetalleAlquiler.Activo,
+                Subtotal = 0
+            };
             DetalleAlquilerDetalle detalleForm = new DetalleAlquilerDetalle(FormMode.Add, nuevoDetalle);
 
             if (detalleForm.ShowDialog() == DialogResult.OK)
@@ -354,9 +379,6 @@ namespace WindowsForms
             clienteComboBox.Enabled = false;
             empleadoComboBox.Enabled = false;
             fechaAlquilerTextBox.Enabled = false;
-            agregarButton.Enabled = false;
-            modificarButton.Enabled = false;
-            eliminarButton.Enabled = false;
         }
 
         private void HabilitarControles()
