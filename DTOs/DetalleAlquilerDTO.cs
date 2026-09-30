@@ -1,4 +1,5 @@
 ﻿using Domain.Model;
+
 namespace DTOs
 {
     public class DetalleAlquilerDTO
@@ -8,8 +9,9 @@ namespace DTOs
         public string? BicicletaMarca { get; set; }
         public string? CategoriaDescripcion { get; set; }
         public DateTime HoraInicio { get; set; }
-        public DateTime ? HoraFin {  get; set; }
+        public DateTime? HoraFin { get; set; }
         public EstadoDetalleAlquiler Estado { get; set; }
+        public decimal PrecioHora { get; set; }
         public decimal Subtotal { get; set; }
     }
 }

@@ -48,6 +48,7 @@
             fechaAlquilerTextBox = new TextBox();
             errorProvider = new ErrorProvider(components);
             cancelarAlquilerButton = new Button();
+            finalizarAlquilerButton = new Button();
             ((System.ComponentModel.ISupportInitialize)detallesDataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
@@ -226,7 +227,7 @@
             // cancelarAlquilerButton
             // 
             cancelarAlquilerButton.BackColor = Color.IndianRed;
-            cancelarAlquilerButton.Location = new Point(431, 740);
+            cancelarAlquilerButton.Location = new Point(255, 740);
             cancelarAlquilerButton.Name = "cancelarAlquilerButton";
             cancelarAlquilerButton.Size = new Size(170, 50);
             cancelarAlquilerButton.TabIndex = 18;
@@ -234,11 +235,23 @@
             cancelarAlquilerButton.UseVisualStyleBackColor = false;
             cancelarAlquilerButton.Click += cancelarAlquilerButton_Click;
             // 
+            // finalizarAlquilerButton
+            // 
+            finalizarAlquilerButton.BackColor = Color.YellowGreen;
+            finalizarAlquilerButton.Location = new Point(445, 740);
+            finalizarAlquilerButton.Name = "finalizarAlquilerButton";
+            finalizarAlquilerButton.Size = new Size(161, 50);
+            finalizarAlquilerButton.TabIndex = 19;
+            finalizarAlquilerButton.Text = "Finalizar Alquiler";
+            finalizarAlquilerButton.UseVisualStyleBackColor = false;
+            finalizarAlquilerButton.Click += finalizarAlquilerButton_Click;
+            // 
             // AlquilerDetalle
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(935, 813);
+            Controls.Add(finalizarAlquilerButton);
             Controls.Add(cancelarAlquilerButton);
             Controls.Add(fechaAlquilerTextBox);
             Controls.Add(empleadoComboBox);
@@ -290,5 +303,6 @@
         private TextBox fechaAlquilerTextBox;
         private ErrorProvider errorProvider;
         private Button cancelarAlquilerButton;
+        private Button finalizarAlquilerButton;
     }
 }

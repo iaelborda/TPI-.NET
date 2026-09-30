@@ -5,6 +5,7 @@
         Activo,
         Devuelto
     }
+
     public class DetalleAlquiler
     {
         public int AlquilerId { get; private set; }
@@ -12,10 +13,10 @@
         private int _bicicletaId;
         private Bicicleta? _bicicleta;
 
-        public int BicicletaId 
+        public int BicicletaId
         {
-            get => _bicicleta?.Id ?? _bicicletaId; 
-            private set => _bicicletaId = value; 
+            get => _bicicleta?.Id ?? _bicicletaId;
+            private set => _bicicletaId = value;
         }
 
         public Bicicleta? Bicicleta
@@ -24,7 +25,7 @@
             private set
             {
                 _bicicleta = value;
-                if(value != null && _bicicletaId != value.Id)
+                if (value != null && _bicicletaId != value.Id)
                 {
                     _bicicletaId = value.Id;
                 }
@@ -34,6 +35,7 @@
         public DateTime HoraInicio { get; private set; }
         public DateTime? HoraFin { get; private set; }
         public EstadoDetalleAlquiler Estado { get; private set; }
+        public decimal PrecioHora { get; private set; }
         public decimal Subtotal { get; private set; }
 
         public DetalleAlquiler(int AlquilerId, int BicicletaId)
@@ -43,9 +45,10 @@
             HoraInicio = DateTime.Now;
             HoraFin = null;
             Estado = EstadoDetalleAlquiler.Activo;
+            PrecioHora = 0;
             Subtotal = 0;
         }
-   
+
         public void SetAlquilerId(int id)
         {
             if (id < 0)
@@ -63,16 +66,53 @@
             }
 
             _bicicletaId = bicicletaId;
-            if(_bicicleta != null && _bicicleta.Id != bicicletaId)
+
+            if (_bicicleta != null && _bicicleta.Id != bicicletaId)
             {
                 _bicicleta = null;
             }
         }
+
         public void SetBicicleta(Bicicleta bicicleta)
         {
             ArgumentNullException.ThrowIfNull(bicicleta);
             _bicicleta = bicicleta;
             _bicicletaId = bicicleta.Id;
+        }
+
+        public void SetHoraInicio(DateTime horaInicio)
+        {
+            HoraInicio = horaInicio;
+        }
+
+        public void SetHoraFin(DateTime? horaFin)
+        {
+            HoraFin = horaFin;
+        }
+
+        public void SetEstado(EstadoDetalleAlquiler estado)
+        {
+            Estado = estado;
+        }
+
+        public void SetPrecioHora(decimal precioHora)
+        {
+            if (precioHora <= 0)
+            {
+                throw new ArgumentException("El precio por hora debe ser mayor que 0", nameof(precioHora));
+            }
+
+            PrecioHora = precioHora;
+        }
+
+        public void SetSubtotal(decimal subtotal)
+        {
+            if (subtotal < 0)
+            {
+                throw new ArgumentException("El subtotal no puede ser menor que 0", nameof(subtotal));
+            }
+
+            Subtotal = subtotal;
         }
 
         public void DevolverBicicleta()
@@ -91,46 +131,25 @@
             Estado = EstadoDetalleAlquiler.Devuelto;
         }
 
-        public void CalcularSubTotal(Bicicleta bicicleta)
+        public void CalcularSubTotal(decimal precioHora)
         {
-            if (bicicleta == null)
-            {
-                throw new ArgumentNullException(nameof(bicicleta));
-            }
-
             if (HoraFin == null)
             {
                 throw new InvalidOperationException("No se puede calcular el subtotal si la bicicleta no ha sido devuelta.");
             }
 
-            if (bicicleta.Categoria == null)
+            if (precioHora <= 0)
             {
-                throw new InvalidOperationException("La bicicleta no tiene una categoría asociada.");
+                throw new InvalidOperationException("La tarifa debe tener un precio por hora válido.");
             }
 
-            if (!bicicleta.Categoria.Tarifas.Any())
-            {
-                throw new InvalidOperationException("La bicicleta no tiene tarifas asociadas.");
-            }
+            SetPrecioHora(precioHora);
 
-            var tarifaVigente = bicicleta.Categoria.Tarifas
-                .Where(t => t.FechaDesde <= HoraInicio &&
-                       (t.FechaHasta == null || t.FechaHasta >= HoraInicio))
-                .OrderByDescending(t => t.FechaDesde)
-                .FirstOrDefault();
-
-
-            if (tarifaVigente == null)
-            {
-                throw new InvalidOperationException("No hay una tarifa vigente para esta bicicleta.");
-            }
-
-            decimal precioHora = tarifaVigente.PrecioHora;
             TimeSpan duracion = HoraFin.Value - HoraInicio;
             decimal horas = (decimal)duracion.TotalHours;
             horas = Math.Ceiling(horas);
-            Subtotal = horas * precioHora;
+
+            Subtotal = horas * PrecioHora;
         }
     }
-
 }

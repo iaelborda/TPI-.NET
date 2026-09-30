@@ -218,6 +218,10 @@ namespace Data
                     detalle.Navigation(i => i.Bicicleta)
                         .HasField("_bicicleta");
 
+                    detalle.Property(i => i.PrecioHora)
+                        .IsRequired()
+                        .HasColumnType("decimal(18,2)");
+
                     detalle.Property(i => i.Subtotal)
                         .IsRequired()
                         .HasColumnType("decimal(18,2)");

@@ -97,6 +97,14 @@ namespace Data
                 {
                     existingAlquiler.AddDetalle(nuevoDetalle);
                 }
+                else
+                {
+                    existingDetalle.SetHoraInicio(nuevoDetalle.HoraInicio);
+                    existingDetalle.SetHoraFin(nuevoDetalle.HoraFin);
+                    existingDetalle.SetEstado(nuevoDetalle.Estado);
+                    existingDetalle.SetPrecioHora(nuevoDetalle.PrecioHora);
+                    existingDetalle.SetSubtotal(nuevoDetalle.Subtotal);
+                }
             }
 
             await context.SaveChangesAsync();

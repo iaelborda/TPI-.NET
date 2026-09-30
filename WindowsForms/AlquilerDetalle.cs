@@ -1,7 +1,6 @@
 ﻿using API.Clients;
 using Domain.Model;
 using DTOs;
-
 namespace WindowsForms
 {
     public partial class AlquilerDetalle : Form
@@ -22,14 +21,8 @@ namespace WindowsForms
 
         public FormMode Mode
         {
-            get
-            {
-                return mode;
-            }
-            set
-            {
-                SetFormMode(value);
-            }
+            get { return mode; }
+            set { SetFormMode(value); }
         }
 
         public AlquilerDetalle()
@@ -67,13 +60,14 @@ namespace WindowsForms
         private void ConfigurarColumnas()
         {
             this.detallesDataGridView.AutoGenerateColumns = false;
+            this.detallesDataGridView.Columns.Clear();
 
             this.detallesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "BicicletaId",
                 HeaderText = "Id Bicicleta",
                 DataPropertyName = "BicicletaId",
-                Width = 100
+                Width = 90
             });
 
             this.detallesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -81,7 +75,7 @@ namespace WindowsForms
                 Name = "BicicletaMarca",
                 HeaderText = "Bicicleta",
                 DataPropertyName = "BicicletaMarca",
-                Width = 200
+                Width = 180
             });
 
             this.detallesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -89,7 +83,7 @@ namespace WindowsForms
                 Name = "CategoriaDescripcion",
                 HeaderText = "Categoría",
                 DataPropertyName = "CategoriaDescripcion",
-                Width = 200
+                Width = 150
             });
 
             this.detallesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -97,7 +91,7 @@ namespace WindowsForms
                 Name = "HoraInicio",
                 HeaderText = "Hora Inicio",
                 DataPropertyName = "HoraInicio",
-                Width = 180,
+                Width = 140,
                 DefaultCellStyle = { Format = "dd/MM/yyyy HH:mm" }
             });
 
@@ -106,8 +100,17 @@ namespace WindowsForms
                 Name = "HoraFin",
                 HeaderText = "Hora Fin",
                 DataPropertyName = "HoraFin",
-                Width = 180,
-                DefaultCellStyle = { Format = "dd/MM/yyyy HH:mm" }
+                Width = 140,
+                DefaultCellStyle = { Format = "dd/MM/yyyy HH:mm", NullValue = "-" }
+            });
+
+            this.detallesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "PrecioHora",
+                HeaderText = "Tarifa/Hora",
+                DataPropertyName = "PrecioHora",
+                Width = 110,
+                DefaultCellStyle = { Format = "C2" }
             });
 
             this.detallesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
@@ -115,8 +118,16 @@ namespace WindowsForms
                 Name = "Subtotal",
                 HeaderText = "Subtotal",
                 DataPropertyName = "Subtotal",
-                Width = 120,
+                Width = 110,
                 DefaultCellStyle = { Format = "C2" }
+            });
+
+            this.detallesDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Estado",
+                HeaderText = "Estado",
+                DataPropertyName = "Estado",
+                Width = 100
             });
         }
 
@@ -160,7 +171,6 @@ namespace WindowsForms
             try
             {
                 this.ActiveControl = null;
-
                 DeshabilitarControles();
 
                 this.Alquiler.ClienteId = (int)clienteComboBox.SelectedValue;
@@ -173,6 +183,7 @@ namespace WindowsForms
                 }
                 else
                 {
+                    this.Alquiler.EstadoAlquiler = EstadoDeAlquiler.Activo;
                     await AlquilerApiClient.AddAsync(this.Alquiler);
                 }
 
@@ -188,6 +199,7 @@ namespace WindowsForms
                 HabilitarControles();
             }
         }
+
         private void cancelarButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
@@ -196,12 +208,9 @@ namespace WindowsForms
 
         private async void cancelarAlquilerButton_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show("¿Está seguro que desea cancelar este alquiler?","Cancelar alquiler",MessageBoxButtons.YesNo,MessageBoxIcon.Warning);
+            var result = MessageBox.Show("¿Está seguro que desea cancelar este alquiler?", "Cancelar alquiler", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-            if (result != DialogResult.Yes)
-            {
-                return;
-            }
+            if (result != DialogResult.Yes) return;
 
             try
             {
@@ -220,6 +229,64 @@ namespace WindowsForms
                 HabilitarControles();
             }
         }
+        private async void finalizarAlquilerButton_Click(object sender, EventArgs e)
+        {
+            if (detallesLocales.Count == 0)
+            {
+                MessageBox.Show("No hay bicicletas registradas en este alquiler.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var confirm = MessageBox.Show("¿Desea registrar la devolución de las bicicletas y finalizar este alquiler?", "Finalizar Alquiler", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (confirm != DialogResult.Yes) return;
+
+            try
+            {
+                DateTime fechaFin = DateTime.Now;
+
+                foreach (var detalle in detallesLocales)
+                {
+                    if (detalle.Estado == EstadoDetalleAlquiler.Activo || !detalle.HoraFin.HasValue)
+                    {
+                        detalle.HoraFin = fechaFin;
+                        detalle.Subtotal = CalcularSubtotal(detalle.HoraInicio, fechaFin, detalle.PrecioHora);
+                        detalle.Estado = EstadoDetalleAlquiler.Devuelto;
+                    }
+                }
+
+                this.Alquiler.EstadoAlquiler = EstadoDeAlquiler.Finalizado;
+                this.Alquiler.ClienteId = (int)clienteComboBox.SelectedValue;
+                this.Alquiler.EmpleadoId = (int)empleadoComboBox.SelectedValue;
+                this.Alquiler.Detalles = detallesLocales.ToList();
+
+                DeshabilitarControles();
+                await AlquilerApiClient.UpdateAsync(this.Alquiler);
+
+                RefreshDetallesGrid();
+                MessageBox.Show("El alquiler se ha finalizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al finalizar alquiler: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HabilitarControles();
+            }
+        }
+
+        private decimal CalcularSubtotal(DateTime inicio, DateTime fin, decimal precioHora)
+        {
+            TimeSpan duracion = fin - inicio;
+            double horas = Math.Ceiling(duracion.TotalHours);
+            if (horas < 1) horas = 1;
+
+            return (decimal)horas * precioHora;
+        }
 
         private void SetAlquiler()
         {
@@ -228,35 +295,34 @@ namespace WindowsForms
             if (this.Mode == FormMode.Add)
             {
                 this.Alquiler.FechaAlquiler = DateTime.Now;
+                this.Alquiler.EstadoAlquiler = EstadoDeAlquiler.Activo;
             }
 
-            this.fechaAlquilerTextBox.Text = this.Alquiler.FechaAlquiler.ToString("dd/MM/yyyy");
-            this.clienteComboBox.SelectedValue = this.Alquiler.ClienteId;
-            this.empleadoComboBox.SelectedValue = this.Alquiler.EmpleadoId;
+            this.fechaAlquilerTextBox.Text = this.Alquiler.FechaAlquiler.ToString("dd/MM/yyyy HH:mm");
 
-            detallesLocales = this.Alquiler.Detalles.Select(detalle => new DetalleAlquilerDTO
-            {
-                AlquilerId = detalle.AlquilerId,
-                BicicletaId = detalle.BicicletaId,
-                BicicletaMarca = detalle.BicicletaMarca,
-                CategoriaDescripcion = detalle.CategoriaDescripcion,
-                HoraInicio = detalle.HoraInicio,
-                HoraFin = detalle.HoraFin,
-                Estado = detalle.Estado,
-                Subtotal = detalle.Subtotal
-            }).ToList();
+            if (this.Alquiler.ClienteId > 0)
+                this.clienteComboBox.SelectedValue = this.Alquiler.ClienteId;
 
-            bool alquilerActivo = this.Alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo;
+            if (this.Alquiler.EmpleadoId > 0)
+                this.empleadoComboBox.SelectedValue = this.Alquiler.EmpleadoId;
 
-            cancelarAlquilerButton.Visible = this.Mode == FormMode.Update && alquilerActivo;
-            agregarButton.Enabled = alquilerActivo;
-            modificarButton.Enabled = alquilerActivo && detallesLocales.Count > 0;
-            eliminarButton.Enabled = alquilerActivo && detallesLocales.Count > 0;
-            clienteComboBox.Enabled = alquilerActivo;
-            empleadoComboBox.Enabled = alquilerActivo;
+            detallesLocales = this.Alquiler.Detalles != null
+                ? this.Alquiler.Detalles.Select(detalle => new DetalleAlquilerDTO
+                {
+                    AlquilerId = detalle.AlquilerId,
+                    BicicletaId = detalle.BicicletaId,
+                    BicicletaMarca = detalle.BicicletaMarca,
+                    CategoriaDescripcion = detalle.CategoriaDescripcion,
+                    HoraInicio = detalle.HoraInicio,
+                    HoraFin = detalle.HoraFin,
+                    Estado = detalle.Estado,
+                    PrecioHora = detalle.PrecioHora,
+                    Subtotal = detalle.Subtotal
+                }).ToList()
+                : new List<DetalleAlquilerDTO>();
 
+            ActualizarEstadoBotones();
             RefreshDetallesGrid();
-
         }
 
         private void SetFormMode(FormMode value)
@@ -270,15 +336,14 @@ namespace WindowsForms
                 fechaAlquilerLabel.Visible = true;
                 fechaAlquilerTextBox.Visible = true;
                 cancelarAlquilerButton.Visible = false;
+                finalizarAlquilerButton.Visible = false; 
             }
-
-            if (Mode == FormMode.Update)
+            else if (Mode == FormMode.Update)
             {
                 idLabel.Visible = true;
                 idTextBox.Visible = true;
                 fechaAlquilerLabel.Visible = true;
                 fechaAlquilerTextBox.Visible = true;
-                cancelarAlquilerButton.Visible = false;
             }
         }
 
@@ -316,13 +381,18 @@ namespace WindowsForms
             DetalleAlquilerDTO nuevoDetalle = new DetalleAlquilerDTO
             {
                 HoraInicio = DateTime.Now,
+                HoraFin = null,
                 Estado = EstadoDetalleAlquiler.Activo,
-                Subtotal = 0
+                Subtotal = 0 
             };
+
             DetalleAlquilerDetalle detalleForm = new DetalleAlquilerDetalle(FormMode.Add, nuevoDetalle);
 
             if (detalleForm.ShowDialog() == DialogResult.OK)
             {
+                detalleForm.Detalle.Subtotal = 0;
+                detalleForm.Detalle.HoraFin = null;
+
                 detallesLocales.Add(detalleForm.Detalle);
                 RefreshDetallesGrid();
             }
@@ -343,6 +413,7 @@ namespace WindowsForms
                     HoraInicio = selectedDetalle.HoraInicio,
                     HoraFin = selectedDetalle.HoraFin,
                     Estado = selectedDetalle.Estado,
+                    PrecioHora = selectedDetalle.PrecioHora,
                     Subtotal = selectedDetalle.Subtotal
                 };
 
@@ -382,18 +453,12 @@ namespace WindowsForms
             detallesDataGridView.DataSource = null;
             detallesDataGridView.DataSource = detallesLocales;
 
-            bool hasDetalles = detallesLocales.Count > 0;
-            bool alquilerActivo = this.Alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo;
-
-            modificarButton.Enabled = alquilerActivo && hasDetalles;
-            eliminarButton.Enabled = alquilerActivo && hasDetalles;
-            agregarButton.Enabled = alquilerActivo;
-
-            if (hasDetalles)
+            if (detallesLocales.Count > 0 && detallesDataGridView.Rows.Count > 0)
             {
                 detallesDataGridView.Rows[0].Selected = true;
             }
 
+            ActualizarEstadoBotones();
             UpdateTotales();
         }
 
@@ -406,6 +471,26 @@ namespace WindowsForms
             totalPrecioLabel.Text = $"Total Precio: {totalPrecio:C2}";
         }
 
+        private void ActualizarEstadoBotones()
+        {
+            bool alquilerActivo = this.Alquiler != null && this.Alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo;
+            bool esEdicion = this.Mode == FormMode.Update;
+            bool hasDetalles = detallesLocales.Count > 0;
+
+            finalizarAlquilerButton.Visible = esEdicion && alquilerActivo;
+            finalizarAlquilerButton.Enabled = esEdicion && alquilerActivo && hasDetalles;
+
+            cancelarAlquilerButton.Visible = esEdicion && alquilerActivo;
+            cancelarAlquilerButton.Enabled = esEdicion && alquilerActivo;
+
+            agregarButton.Enabled = alquilerActivo;
+            modificarButton.Enabled = alquilerActivo && hasDetalles;
+            eliminarButton.Enabled = alquilerActivo && hasDetalles;
+
+            clienteComboBox.Enabled = alquilerActivo;
+            empleadoComboBox.Enabled = alquilerActivo;
+        }
+
         private void DeshabilitarControles()
         {
             aceptarButton.Enabled = false;
@@ -413,21 +498,22 @@ namespace WindowsForms
             clienteComboBox.Enabled = false;
             empleadoComboBox.Enabled = false;
             fechaAlquilerTextBox.Enabled = false;
+            agregarButton.Enabled = false;
+            modificarButton.Enabled = false;
+            eliminarButton.Enabled = false;
+            finalizarAlquilerButton.Enabled = false;
+            cancelarAlquilerButton.Enabled = false;
         }
 
         private void HabilitarControles()
         {
-            bool alquilerActivo = this.Mode == FormMode.Add || this.Alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo;
+            bool alquilerActivo = this.Mode == FormMode.Add || (this.Alquiler != null && this.Alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo);
 
             aceptarButton.Enabled = alquilerActivo;
             cancelarButton.Enabled = true;
-            clienteComboBox.Enabled = alquilerActivo;
-            empleadoComboBox.Enabled = alquilerActivo;
-            fechaAlquilerTextBox.Enabled = true;
-            agregarButton.Enabled = alquilerActivo;
-            modificarButton.Enabled = alquilerActivo && detallesLocales.Count > 0;
-            eliminarButton.Enabled = alquilerActivo && detallesLocales.Count > 0;
-            cancelarAlquilerButton.Enabled = alquilerActivo;
+            fechaAlquilerTextBox.Enabled = false;
+
+            ActualizarEstadoBotones();
         }
     }
 }

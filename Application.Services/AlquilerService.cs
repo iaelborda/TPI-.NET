@@ -14,7 +14,13 @@ namespace Application.Services
 
             foreach (var detalleDto in dto.Detalles)
             {
-                var detalle = new DetalleAlquiler(0,detalleDto.BicicletaId);
+                var detalle = new DetalleAlquiler(0, detalleDto.BicicletaId);
+
+                detalle.SetHoraInicio(detalleDto.HoraInicio);
+                detalle.SetHoraFin(detalleDto.HoraFin);
+                detalle.SetEstado(detalleDto.Estado);
+                detalle.SetPrecioHora(detalleDto.PrecioHora);
+                detalle.SetSubtotal(detalleDto.Subtotal);
 
                 alquiler.AddDetalle(detalle);
             }
@@ -64,6 +70,7 @@ namespace Application.Services
                     HoraInicio = detalle.HoraInicio,
                     HoraFin = detalle.HoraFin,
                     Estado = detalle.Estado,
+                    PrecioHora = detalle.PrecioHora,
                     Subtotal = detalle.Subtotal
                 }).ToList()
             };
@@ -96,6 +103,7 @@ namespace Application.Services
                     HoraInicio = detalle.HoraInicio,
                     HoraFin = detalle.HoraFin,
                     Estado = detalle.Estado,
+                    PrecioHora = detalle.PrecioHora,
                     Subtotal = detalle.Subtotal
                 }).ToList()
             }).ToList();
@@ -118,10 +126,25 @@ namespace Application.Services
             foreach (var detalleDto in dto.Detalles)
             {
                 var detalle = new DetalleAlquiler(dto.Id, detalleDto.BicicletaId);
+
+                detalle.SetHoraInicio(detalleDto.HoraInicio);
+                detalle.SetHoraFin(detalleDto.HoraFin);
+                detalle.SetEstado(detalleDto.Estado);
+                detalle.SetPrecioHora(detalleDto.PrecioHora);
+
+                if (detalleDto.HoraFin.HasValue)
+                {
+                    detalle.CalcularSubTotal(detalleDto.PrecioHora);
+                }
+                else
+                {
+                    detalle.SetSubtotal(0);
+                }
                 alquiler.AddDetalle(detalle);
             }
 
             return await alquilerRepository.UpdateAsync(alquiler);
         }
+
     }
 }

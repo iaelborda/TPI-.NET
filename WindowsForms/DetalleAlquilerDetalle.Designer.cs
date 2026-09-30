@@ -32,16 +32,16 @@
             bicicletaLabel = new Label();
             horaInicioLabel = new Label();
             horaFinLabel = new Label();
-            subtotalLabel = new Label();
+            precioPorHoraLabel = new Label();
             bicicletaComboBox = new ComboBox();
             horaInicioTextBox = new TextBox();
             horaFinTextBox = new TextBox();
-            subtotalTextBox = new TextBox();
+            precioPorHoraTextBox = new TextBox();
             aceptarButton = new Button();
             cancelarButton = new Button();
             estadoLabel = new Label();
-            estadoTextBox = new TextBox();
             errorProvider = new ErrorProvider(components);
+            estadoComboBox = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
@@ -73,14 +73,14 @@
             horaFinLabel.TabIndex = 2;
             horaFinLabel.Text = "Hora Fin";
             // 
-            // subtotalLabel
+            // precioPorHoraLabel
             // 
-            subtotalLabel.AutoSize = true;
-            subtotalLabel.Location = new Point(66, 310);
-            subtotalLabel.Name = "subtotalLabel";
-            subtotalLabel.Size = new Size(79, 25);
-            subtotalLabel.TabIndex = 3;
-            subtotalLabel.Text = "Subtotal";
+            precioPorHoraLabel.AutoSize = true;
+            precioPorHoraLabel.Location = new Point(66, 310);
+            precioPorHoraLabel.Name = "precioPorHoraLabel";
+            precioPorHoraLabel.Size = new Size(134, 25);
+            precioPorHoraLabel.TabIndex = 3;
+            precioPorHoraLabel.Text = "Precio por hora";
             // 
             // bicicletaComboBox
             // 
@@ -110,14 +110,14 @@
             horaFinTextBox.TabIndex = 0;
             horaFinTextBox.TabStop = false;
             // 
-            // subtotalTextBox
+            // precioPorHoraTextBox
             // 
-            subtotalTextBox.Location = new Point(219, 304);
-            subtotalTextBox.Name = "subtotalTextBox";
-            subtotalTextBox.ReadOnly = true;
-            subtotalTextBox.Size = new Size(255, 31);
-            subtotalTextBox.TabIndex = 0;
-            subtotalTextBox.TabStop = false;
+            precioPorHoraTextBox.Location = new Point(219, 304);
+            precioPorHoraTextBox.Name = "precioPorHoraTextBox";
+            precioPorHoraTextBox.ReadOnly = true;
+            precioPorHoraTextBox.Size = new Size(255, 31);
+            precioPorHoraTextBox.TabIndex = 0;
+            precioPorHoraTextBox.TabStop = false;
             // 
             // aceptarButton
             // 
@@ -150,33 +150,33 @@
             estadoLabel.TabIndex = 10;
             estadoLabel.Text = "Estado";
             // 
-            // estadoTextBox
-            // 
-            estadoTextBox.Location = new Point(219, 243);
-            estadoTextBox.Name = "estadoTextBox";
-            estadoTextBox.ReadOnly = true;
-            estadoTextBox.Size = new Size(255, 31);
-            estadoTextBox.TabIndex = 0;
-            estadoTextBox.TabStop = false;
-            // 
             // errorProvider
             // 
             errorProvider.ContainerControl = this;
+            // 
+            // estadoComboBox
+            // 
+            estadoComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            estadoComboBox.FormattingEnabled = true;
+            estadoComboBox.Location = new Point(219, 246);
+            estadoComboBox.Name = "estadoComboBox";
+            estadoComboBox.Size = new Size(255, 33);
+            estadoComboBox.TabIndex = 11;
             // 
             // DetalleAlquilerDetalle
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(estadoTextBox);
+            Controls.Add(estadoComboBox);
             Controls.Add(estadoLabel);
             Controls.Add(cancelarButton);
             Controls.Add(aceptarButton);
-            Controls.Add(subtotalTextBox);
+            Controls.Add(precioPorHoraTextBox);
             Controls.Add(horaFinTextBox);
             Controls.Add(horaInicioTextBox);
             Controls.Add(bicicletaComboBox);
-            Controls.Add(subtotalLabel);
+            Controls.Add(precioPorHoraLabel);
             Controls.Add(horaFinLabel);
             Controls.Add(horaInicioLabel);
             Controls.Add(bicicletaLabel);
@@ -196,15 +196,15 @@
         private Label bicicletaLabel;
         private Label horaInicioLabel;
         private Label horaFinLabel;
-        private Label subtotalLabel;
+        private Label precioPorHoraLabel;
         private ComboBox bicicletaComboBox;
         private TextBox horaInicioTextBox;
         private TextBox horaFinTextBox;
-        private TextBox subtotalTextBox;
+        private TextBox precioPorHoraTextBox;
         private Button aceptarButton;
         private Button cancelarButton;
         private Label estadoLabel;
-        private TextBox estadoTextBox;
         private ErrorProvider errorProvider;
+        private ComboBox estadoComboBox;
     }
 }
