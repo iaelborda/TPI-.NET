@@ -27,7 +27,20 @@ namespace WindowsForms
                 Name = "Descripcion",
                 HeaderText = "Descripcion",
                 DataPropertyName = "Descripcion",
-                Width = 922
+                Width = 500
+            });
+            this.categoriasDataGridView.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "PrecioHoraVigente",
+                HeaderText = "Tarifa Vigente ($/h)",
+                DataPropertyName = "PrecioHoraVigente",
+                Width = 200,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Format = "N2",              
+                    NullValue = "Sin tarifa",   
+                    Alignment = DataGridViewContentAlignment.MiddleRight
+                }
             });
         }
 
