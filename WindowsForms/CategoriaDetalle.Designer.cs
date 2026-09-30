@@ -36,13 +36,15 @@
             aceptarButton = new Button();
             cancelarButton = new Button();
             errorProvider = new ErrorProvider(components);
+            precioHoraTextBox = new TextBox();
+            precioHoraLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
             // 
             // idTextBox
             // 
             idTextBox.BackColor = Color.LightGray;
-            idTextBox.Location = new Point(129, 112);
+            idTextBox.Location = new Point(129, 79);
             idTextBox.Name = "idTextBox";
             idTextBox.ReadOnly = true;
             idTextBox.Size = new Size(188, 27);
@@ -51,7 +53,7 @@
             // idLabel
             // 
             idLabel.AutoSize = true;
-            idLabel.Location = new Point(76, 115);
+            idLabel.Location = new Point(79, 82);
             idLabel.Name = "idLabel";
             idLabel.Size = new Size(24, 20);
             idLabel.TabIndex = 1;
@@ -59,7 +61,7 @@
             // 
             // descripcionTextBox
             // 
-            descripcionTextBox.Location = new Point(129, 181);
+            descripcionTextBox.Location = new Point(129, 145);
             descripcionTextBox.Name = "descripcionTextBox";
             descripcionTextBox.Size = new Size(188, 27);
             descripcionTextBox.TabIndex = 2;
@@ -67,7 +69,7 @@
             // descripcionLabel
             // 
             descripcionLabel.AutoSize = true;
-            descripcionLabel.Location = new Point(16, 184);
+            descripcionLabel.Location = new Point(16, 148);
             descripcionLabel.Name = "descripcionLabel";
             descripcionLabel.Size = new Size(87, 20);
             descripcionLabel.TabIndex = 3;
@@ -97,11 +99,29 @@
             // 
             errorProvider.ContainerControl = this;
             // 
+            // precioHoraTextBox
+            // 
+            precioHoraTextBox.Location = new Point(129, 206);
+            precioHoraTextBox.Name = "precioHoraTextBox";
+            precioHoraTextBox.Size = new Size(188, 27);
+            precioHoraTextBox.TabIndex = 6;
+            // 
+            // precioHoraLabel
+            // 
+            precioHoraLabel.AutoSize = true;
+            precioHoraLabel.Location = new Point(16, 209);
+            precioHoraLabel.Name = "precioHoraLabel";
+            precioHoraLabel.Size = new Size(87, 20);
+            precioHoraLabel.TabIndex = 7;
+            precioHoraLabel.Text = "Precio Hora";
+            // 
             // CategoriaDetalle
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(343, 388);
+            Controls.Add(precioHoraLabel);
+            Controls.Add(precioHoraTextBox);
             Controls.Add(cancelarButton);
             Controls.Add(aceptarButton);
             Controls.Add(descripcionLabel);
@@ -126,5 +146,7 @@
         private Button aceptarButton;
         private Button cancelarButton;
         private ErrorProvider errorProvider;
+        private Label precioHoraLabel;
+        private TextBox precioHoraTextBox;
     }
 }

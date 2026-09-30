@@ -97,7 +97,8 @@ namespace Application.Services
             "sucursales",
             "categorias",
             "empleados",
-            "alquileres"
+            "alquileres",
+            "tarifas"
         };
 
                 var acciones = new List<string>
@@ -124,6 +125,7 @@ namespace Application.Services
                 permisos.Add("alquileres.leer");
                 permisos.Add("alquileres.agregar");
                 permisos.Add("alquileres.actualizar");
+                permisos.Add("tarifas.leer");
             }
 
             return permisos;

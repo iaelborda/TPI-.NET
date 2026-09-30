@@ -59,6 +59,9 @@ builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
 builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 
+builder.Services.AddScoped<ITarifaRepository, TarifaRepository>();
+builder.Services.AddScoped<ITarifaService, TarifaService>();
+
 // Add JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings["SecretKey"];
@@ -120,6 +123,12 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AlquileresAgregar", policy => policy.RequireClaim("permission", "alquileres.agregar"));
     options.AddPolicy("AlquileresActualizar", policy => policy.RequireClaim("permission", "alquileres.actualizar"));
     options.AddPolicy("AlquileresEliminar", policy => policy.RequireClaim("permission", "alquileres.eliminar"));
+
+    //Politicas para Tarifas
+    options.AddPolicy("TarifasLeer", policy => policy.RequireClaim("permission", "tarifas.leer"));
+    options.AddPolicy("TarifasAgregar", policy => policy.RequireClaim("permission", "tarifas.agregar"));
+    options.AddPolicy("TarifasActualizar", policy => policy.RequireClaim("permission", "tarifas.actualizar"));
+    options.AddPolicy("TarifasEliminar", policy => policy.RequireClaim("permission", "tarifas.eliminar"));
 });
 
 // Configure the HTTP request pipeline.
@@ -148,6 +157,7 @@ app.MapSucursalEndpoints();
 app.MapCategoriaEndpoints();
 app.MapEmpleadoEndpoints();
 app.MapAlquilerEndpoints();
+app.MapTarifaEndpoints();
 
 using (var scope = app.Services.CreateScope())
 {

@@ -52,6 +52,8 @@ namespace WindowsForms
             {
                 idLabel.Visible = false;
                 idTextBox.Visible = false;
+                precioHoraLabel.Visible = true;
+                precioHoraTextBox.Visible = true;
                 this.Text = "Agregar Categoria";
             }
 
@@ -59,6 +61,8 @@ namespace WindowsForms
             {
                 idLabel.Visible = true;
                 idTextBox.Visible = true;
+                precioHoraLabel.Visible = false;
+                precioHoraTextBox.Visible = false;
                 this.Text = "Actualizar Categoria";
             }
         }
@@ -70,8 +74,11 @@ namespace WindowsForms
                 try
                 {
                     DeshabilitarControles();
-                    this.categoria.Descripcion = descripcionTextBox.Text;
-
+                    this.categoria.Descripcion = descripcionTextBox.Text.Trim();
+                    if (this.Mode == FormMode.Add && decimal.TryParse(precioHoraTextBox.Text, out decimal precio))
+                    {
+                        this.categoria.PrecioHoraInicial = precio;
+                    }
                     if (this.Mode == FormMode.Update)
                     {
                         await CategoriaApiClient.UpdateAsync(this.categoria);
@@ -84,7 +91,7 @@ namespace WindowsForms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al guardar categoria: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error al guardar categoría: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {
@@ -107,14 +114,30 @@ namespace WindowsForms
             if (string.IsNullOrWhiteSpace(descripcionTextBox.Text))
             {
                 isValid = false;
-                errorProvider.SetError(descripcionTextBox, "La descripcion es obligatoria");
+                errorProvider.SetError(descripcionTextBox, "La descripción es obligatoria.");
+            }
+            if (this.Mode == FormMode.Add)
+            {
+                errorProvider.SetError(precioHoraTextBox, string.Empty);
+                if (string.IsNullOrWhiteSpace(precioHoraTextBox.Text))
+                {
+                    isValid = false;
+                    errorProvider.SetError(precioHoraTextBox, "La tarifa inicial es obligatoria.");
+                }
+                else if (!decimal.TryParse(precioHoraTextBox.Text, out decimal precio) || precio <= 0)
+                {
+                    isValid = false;
+                    errorProvider.SetError(precioHoraTextBox, "Debe ingresar una tarifa válida mayor a 0.");
+                }
             }
             return isValid;
         }
 
+
         private void DeshabilitarControles()
         {
             this.descripcionTextBox.Enabled = false;
+            this.precioHoraTextBox.Enabled = false;
             this.aceptarButton.Enabled = false;
             this.cancelarButton.Enabled = false;
         }
@@ -122,8 +145,10 @@ namespace WindowsForms
         private void HabilitarControles()
         {
             this.descripcionTextBox.Enabled = true;
+            this.precioHoraTextBox.Enabled = true;
             this.aceptarButton.Enabled = true;
             this.cancelarButton.Enabled = true;
         }
+
     }
 }

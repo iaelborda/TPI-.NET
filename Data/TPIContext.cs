@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Domain.Model;
 
@@ -12,6 +12,7 @@ namespace Data
         public DbSet<Sucursal> Sucursales { get; set; }
         public DbSet<Alquiler> Alquileres { get; set; }
         public DbSet<Empleado> Empleados { get; set; }
+        public DbSet<Tarifa> Tarifas { get; set; }
 
         public TPIContext(DbContextOptions<TPIContext> options)
             : base(options)
@@ -233,7 +234,6 @@ namespace Data
                 });
 
             });
-            modelBuilder.Ignore<Tarifa>();
 
             modelBuilder.Entity<Empleado>(entity =>
             {
@@ -282,6 +282,19 @@ namespace Data
                     .HasForeignKey(e => e.SucursalId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
+
+            modelBuilder.Entity<Tarifa>(entity =>
+            {
+                entity.HasKey(t => t.Id);
+                entity.Property(t => t.Id).ValueGeneratedOnAdd();
+                entity.Property(t => t.PrecioHora).IsRequired().HasColumnType("decimal(18,2)");
+                entity.Property(t => t.FechaDesde).IsRequired();
+                entity.Property(t => t.FechaHasta).IsRequired(false);
+                entity.Property(t => t.CategoriaId).IsRequired().HasField("_categoriaId");
+                entity.HasOne(t => t.Categoria).WithMany(c => c.tarifas).HasForeignKey(t => t.CategoriaId).OnDelete(DeleteBehavior.Restrict);
+                entity.Navigation(t => t.Categoria).HasField("_categoria");
+            });
+
 
         }
     }

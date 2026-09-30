@@ -13,11 +13,13 @@ namespace Application.Services
     {
         private readonly ICategoriaRepository categoriaRepository;
         private readonly IBicicletaRepository bicicletaRepository;
+        private readonly ITarifaRepository tarifaRepository;
 
-        public CategoriaService(ICategoriaRepository categoriaRepository, IBicicletaRepository bicicletaRepository)
+        public CategoriaService(ICategoriaRepository categoriaRepository, IBicicletaRepository bicicletaRepository, ITarifaRepository tarifaRepository)
         {
             this.categoriaRepository = categoriaRepository;
             this.bicicletaRepository = bicicletaRepository;
+            this.tarifaRepository = tarifaRepository;
         }
 
         public async Task<CategoriaDTO> AddAsync(CategoriaDTO dto)
@@ -26,9 +28,21 @@ namespace Application.Services
             {
                 throw new ArgumentException($"La descripcion '{dto.Descripcion}' ya existe");
             }
+            if (!dto.PrecioHoraInicial.HasValue || dto.PrecioHoraInicial.Value <= 0)
+            {
+                throw new ArgumentException("Debe ingresar un precio por hora inicial mayor a cero para la categoría.");
+            }
             Categoria categoria = new Categoria(dto.Descripcion);
             await categoriaRepository.AddAsync(categoria);
+            var tarifaInicial = new Tarifa(
+                dto.PrecioHoraInicial.Value,
+                DateTime.Now,
+                null,
+                categoria.Id
+            );
+            await tarifaRepository.AddAsync(tarifaInicial);
             dto.Id = categoria.Id;
+            dto.PrecioHoraVigente = tarifaInicial.PrecioHora;
             return dto;
         }
 
@@ -54,20 +68,27 @@ namespace Application.Services
             {
                 return null;
             }
+            var tarifaVigente = categoria.tarifas?.FirstOrDefault(t => t.FechaHasta == null);
             return new CategoriaDTO
             {
                 Id = categoria.Id,
-                Descripcion = categoria.Descripcion
+                Descripcion = categoria.Descripcion,
+                PrecioHoraVigente = tarifaVigente?.PrecioHora,
             };
         }
 
         public async Task<IEnumerable<CategoriaDTO>> GetAllAsync()
         {
             var categorias = await categoriaRepository.GetAllAsync();
-            return categorias.Select(c => new CategoriaDTO
+            return categorias.Select(c =>
             {
-                Id = c.Id,
-                Descripcion = c.Descripcion
+                var tarifaVigente = c.tarifas?.FirstOrDefault(t => t.FechaHasta == null);
+                return new CategoriaDTO
+                {
+                    Id = c.Id,
+                    Descripcion = c.Descripcion,
+                    PrecioHoraVigente = tarifaVigente?.PrecioHora,
+                };
             }).ToList();
         }
 

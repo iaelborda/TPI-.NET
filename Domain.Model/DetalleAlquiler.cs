@@ -115,9 +115,10 @@
 
             var tarifaVigente = bicicleta.Categoria.Tarifas
                 .Where(t => t.FechaDesde <= HoraInicio &&
-                (t.FechaHasta == null || t.FechaHasta >= HoraFin.Value))
+                       (t.FechaHasta == null || t.FechaHasta >= HoraInicio))
                 .OrderByDescending(t => t.FechaDesde)
                 .FirstOrDefault();
+
 
             if (tarifaVigente == null)
             {

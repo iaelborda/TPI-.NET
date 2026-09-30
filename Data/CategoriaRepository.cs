@@ -32,12 +32,12 @@ namespace Data
         }
         public async Task<Categoria?> GetAsync(int id)
         {
-            return await context.Categorias.FirstOrDefaultAsync(c => c.Id == id);
+            return await context.Categorias.Include(c => c.tarifas).FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<IEnumerable<Categoria>> GetAllAsync()
         {
-            return await context.Categorias.ToListAsync();
+            return await context.Categorias.Include(c => c.tarifas).ToListAsync();
         }
         public async Task<bool> UpdateAsync(Categoria categoria)
         {
