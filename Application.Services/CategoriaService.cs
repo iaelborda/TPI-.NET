@@ -43,15 +43,6 @@ namespace Application.Services
             await tarifaRepository.AddAsync(tarifaInicial);
             dto.Id = categoria.Id;
             dto.PrecioHoraVigente = tarifaInicial.PrecioHora;
-            dto.TarifaVigente = new TarifaDTO
-            {
-                Id = tarifaInicial.Id,
-                PrecioHora = tarifaInicial.PrecioHora,
-                FechaDesde = tarifaInicial.FechaDesde,
-                FechaHasta = null,
-                CategoriaId = categoria.Id,
-                DescripcionCategoria = categoria.Descripcion
-            };
             return dto;
         }
 
@@ -83,15 +74,6 @@ namespace Application.Services
                 Id = categoria.Id,
                 Descripcion = categoria.Descripcion,
                 PrecioHoraVigente = tarifaVigente?.PrecioHora,
-                TarifaVigente = tarifaVigente == null ? null : new TarifaDTO
-                {
-                    Id = tarifaVigente.Id,
-                    PrecioHora = tarifaVigente.PrecioHora,
-                    FechaDesde = tarifaVigente.FechaDesde,
-                    FechaHasta = tarifaVigente.FechaHasta,
-                    CategoriaId = tarifaVigente.CategoriaId,
-                    DescripcionCategoria = categoria.Descripcion
-                }
             };
         }
 
@@ -106,15 +88,6 @@ namespace Application.Services
                     Id = c.Id,
                     Descripcion = c.Descripcion,
                     PrecioHoraVigente = tarifaVigente?.PrecioHora,
-                    TarifaVigente = tarifaVigente == null ? null : new TarifaDTO
-                    {
-                        Id = tarifaVigente.Id,
-                        PrecioHora = tarifaVigente.PrecioHora,
-                        FechaDesde = tarifaVigente.FechaDesde,
-                        FechaHasta = tarifaVigente.FechaHasta,
-                        CategoriaId = tarifaVigente.CategoriaId,
-                        DescripcionCategoria = c.Descripcion
-                    }
                 };
             }).ToList();
         }
