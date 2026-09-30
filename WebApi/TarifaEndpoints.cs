@@ -101,6 +101,23 @@ namespace WebApi
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi()
             .RequireAuthorization("TarifasEliminar");
+
+
+            app.MapGet("/tarifas/categoria/{categoriaId}/vigente", async (int categoriaId, ITarifaService tarifaService) =>
+            {
+                var dto = await tarifaService.GetTarifaVigenteAsync(categoriaId);
+                if (dto == null)
+                {
+                    return Results.NotFound(new { error = "No hay tarifa vigente para esta categoría." });
+                }
+                return Results.Ok(dto);
+            })
+            .WithName("GetTarifaVigenteByCategoria")
+            .Produces<TarifaDTO>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithOpenApi()
+            .RequireAuthorization("TarifasLeer");
+
         }
     }
 }

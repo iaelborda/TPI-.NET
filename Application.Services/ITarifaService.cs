@@ -10,5 +10,7 @@ namespace Application.Services
         Task<TarifaDTO?> GetAsync(int id);
         Task<IEnumerable<TarifaDTO>> GetAllAsync();
         Task<IEnumerable<TarifaDTO>> GetByCategoriaIdAsync(int categoriaId);
+        Task<TarifaDTO?> GetTarifaVigenteAsync(int categoriaId);
+
     }
 }
