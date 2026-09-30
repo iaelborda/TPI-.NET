@@ -58,5 +58,10 @@ namespace Data
             }
             return false;
         }
+
+        public async Task<Tarifa?> GetTarifaVigenteAsync(int categoriaId)
+        {
+            return await context.Tarifas.FirstOrDefaultAsync(t => t.CategoriaId == categoriaId && t.FechaHasta == null);
+        }
     }
 }

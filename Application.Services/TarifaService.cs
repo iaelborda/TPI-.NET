@@ -24,13 +24,23 @@ namespace Application.Services
             {
                 throw new ArgumentException($"No existe la categoria con el Id {dto.CategoriaId}");
             }
-            if(dto.FechaHasta.HasValue && dto.FechaHasta < dto.FechaDesde)
+            var ahora = DateTime.Now;
+
+            var tarifaVigente = await tarifaRepository.GetTarifaVigenteAsync(dto.CategoriaId);
+            if (tarifaVigente != null)
             {
-                throw new ArgumentException("La fecha hasta no puede ser menor que la fecha desde");
+                tarifaVigente.SetFechaHasta(ahora);
+                await tarifaRepository.UpdateAsync(tarifaVigente);
             }
-            Tarifa tarifa = new Tarifa(dto.PrecioHora, dto.FechaDesde, dto.FechaHasta, dto.CategoriaId);
-            await tarifaRepository.AddAsync(tarifa);
-            dto.Id = tarifa.Id;
+            Tarifa nuevaTarifa = new Tarifa(
+                dto.PrecioHora,
+                ahora,
+                null,
+                dto.CategoriaId);
+            await tarifaRepository.AddAsync(nuevaTarifa);
+            dto.Id = nuevaTarifa.Id;
+            dto.FechaDesde = nuevaTarifa.FechaDesde;
+            dto.FechaHasta = null;
             dto.DescripcionCategoria = categoria.Descripcion;
             return dto;
         }

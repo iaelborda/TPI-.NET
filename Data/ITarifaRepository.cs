@@ -10,5 +10,7 @@ namespace Data
         Task<IEnumerable<Tarifa>> GetAllAsync();
         Task<IEnumerable<Tarifa>> GetByCategoriaIdAsync(int id);
         Task<bool> UpdateAsync(Tarifa tarifa);
+        Task<Tarifa?> GetTarifaVigenteAsync(int categoriaId);
+
     }
 }
