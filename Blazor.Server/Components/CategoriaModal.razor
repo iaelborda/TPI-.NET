@@ -1,0 +1,197 @@
+@using DTOs
+@using API.Clients
+@using System.Text.RegularExpressions
+@inject IJSRuntime JSRuntime
+
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        @if (mode == FormMode.Add)
+                        {
+                            <text>Agregar Categoria</text>
+                        }
+                        else
+                        {
+                            <text>Editar Categoria</text>
+                        }
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="currentCategoria" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+
+                        @if (mode == FormMode.Update)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Id</label>
+                                <input type="text" class="form-control" value="@currentCategoria.Id" readonly />
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <label class="form-label">Descripcion *</label>
+                            <InputText @bind-Value="currentCategoria.Descripcion" class="form-control" />
+                            @if (validationErrors.ContainsKey("Descripcion"))
+                            {
+                                <div class="text-danger small">@validationErrors["Descripcion"]</div>
+                            }
+                        </div>
+
+
+
+                        @if (mode == FormMode.Add)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Tarifa Inicial ($/hora) *</label>
+                                <InputNumber @bind-Value="currentCategoria.PrecioHoraInicial" class="form-control" placeholder="0.00" />
+                                @if (validationErrors.ContainsKey("PrecioHoraInicial"))
+                                {
+                                    <div class="text-danger small">@validationErrors["PrecioHoraInicial"]</div>
+                                }
+                            </div>
+                        }
+                        @if (mode == FormMode.Update)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Tarifa Vigente ($/hora)</label>
+                                <input type="text" class="form-control" value="@(currentCategoria.PrecioHoraVigente.HasValue? currentCategoria.PrecioHoraVigente.Value.ToString("C2") : "Sin tarifa")" readonly />
+                                <div class="form-text text-muted">La tarifa vigente se administra desde la gestión de tarifas.</div>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger">
+                                @errorMessage
+                            </div>
+                        }
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="Close">Cancelar</button>
+                            <button type="submit" class="btn btn-primary" disabled="@saving">
+                                @if (saving)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                }
+                                @(mode == FormMode.Add ? "Agregar" : "Actualizar")
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public EventCallback OnCategoriaChanged { get; set; }
+
+    private bool showModal = false;
+    private FormMode mode = FormMode.Add;
+    private CategoriaDTO currentCategoria = new CategoriaDTO();
+    private bool saving = false;
+    private string errorMessage = string.Empty;
+    private Dictionary<string, string> validationErrors = new Dictionary<string, string>();
+
+    public enum FormMode
+    {
+        Add,
+        Update
+    }
+
+    public void ShowAddModal()
+    {
+        mode = FormMode.Add;
+        currentCategoria = new CategoriaDTO();
+        ClearValidationErrors();
+        showModal = true;
+        StateHasChanged();
+    }
+
+    public void ShowEditModal(CategoriaDTO categoria)
+    {
+        mode = FormMode.Update;
+        currentCategoria = new CategoriaDTO
+        {
+            Id = categoria.Id,
+            Descripcion = categoria.Descripcion,
+            PrecioHoraVigente = categoria.PrecioHoraVigente
+        };
+        ClearValidationErrors();
+        showModal = true;
+        StateHasChanged();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (!ValidateCategoria())
+            return;
+
+        try
+        {
+            saving = true;
+            errorMessage = string.Empty;
+
+            if (mode == FormMode.Add)
+            {
+                await CategoriaApiClient.AddAsync(currentCategoria);
+            }
+            else
+            {
+                await CategoriaApiClient.UpdateAsync(currentCategoria);
+            }
+
+            await OnCategoriaChanged.InvokeAsync();
+            Close();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            saving = false;
+        }
+    }
+
+    private bool ValidateCategoria()
+    {
+        ClearValidationErrors();
+        bool isValid = true;
+
+        if (string.IsNullOrWhiteSpace(currentCategoria.Descripcion))
+        {
+            validationErrors["Descripcion"] = "La descripcio es requerida";
+            isValid = false;
+        }
+        if (mode == FormMode.Add)
+        {
+            if (!currentCategoria.PrecioHoraInicial.HasValue || currentCategoria.PrecioHoraInicial.Value <= 0)
+            {
+                validationErrors["PrecioHoraInicial"] = "La tarifa inicial es requerida y debe ser mayor a 0";
+                isValid = false;
+            }
+        }
+        StateHasChanged();
+        return isValid;
+    }
+    
+
+    private void ClearValidationErrors()
+    {
+        validationErrors.Clear();
+        errorMessage = string.Empty;
+    }
+
+    private void Close()
+    {
+        showModal = false;
+        ClearValidationErrors();
+        StateHasChanged();
+    }
+}
