@@ -1,5 +1,6 @@
 ﻿using API.Clients;
 using DTOs;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace API.Auth.WindowsForms
 {
@@ -9,6 +10,9 @@ namespace API.Auth.WindowsForms
         private static string? currentUsername;
         private static RolUsuario? currentRol;
         private static DateTime tokenExpiration;
+
+        public event Action<bool>? AuthenticationStateChanged;
+
 
         public async Task<bool> IsAuthenticatedAsync()
         {
@@ -77,6 +81,25 @@ namespace API.Auth.WindowsForms
                 DateTime.UtcNow >= tokenExpiration)
             {
                 await LogoutAsync();
+            }
+        }
+
+        public async Task<bool> HasPermissionAsync(string permission)
+        {
+            var token = await GetTokenAsync();
+            if (string.IsNullOrEmpty(token)) return false;
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadJwtToken(token);
+                var claims = jsonToken.Claims
+                    .Where(c => c.Type == "permission")
+                    .Select(c => c.Value);
+                return claims.Contains(permission);
+            }
+            catch
+            {
+                return false;
             }
         }
     }

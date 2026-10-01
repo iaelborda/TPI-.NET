@@ -11,5 +11,9 @@ namespace API.Clients
         Task LogoutAsync();
         Task<RolUsuario?> GetRolAsync();
         Task CheckTokenExpirationAsync();
+
+        Task<bool> HasPermissionAsync(string permission);
+        event Action<bool>? AuthenticationStateChanged;
+
     }
 }
