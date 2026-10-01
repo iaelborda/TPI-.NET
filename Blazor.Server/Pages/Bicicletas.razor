@@ -1,0 +1,217 @@
+﻿@page "/bicicletas"
+@using DTOs
+@using API.Clients
+@using Blazor.Server.Components
+@inject IJSRuntime JSRuntime
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<PageTitle>Bicicletas</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h3>Bicicletas</h3>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @errorMessage
+                    <button type="button" class="btn-close" @onclick="() => errorMessage = string.Empty"></button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @successMessage
+                    <button type="button" class="btn-close" @onclick="() => successMessage = string.Empty"></button>
+                </div>
+            }
+
+            @if (canAdd)
+            {
+                <div class="mb-3">
+                    <button class="btn btn-primary" @onclick="OpenAddModal">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+            }
+
+            @if (loading)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Id</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Estado</th>
+                                <th>Categoría</th>
+                                <th>Sucursal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (bicicletas != null && bicicletas.Any())
+                            {
+                                @foreach (var bicicleta in bicicletas)
+                                {
+                                    <tr>
+                                        <td>@bicicleta.Id</td>
+                                        <td>@bicicleta.Marca</td>
+                                        <td>@bicicleta.Modelo</td>
+                                        <td>@bicicleta.Estado</td>
+                                        <td>@bicicleta.DescripcionCategoria</td>
+                                        <td>@bicicleta.DireccionSucursal</td>
+                                        <td>
+                                            @if (canUpdate)
+                                            {
+                                                <button class="btn btn-sm btn-outline-primary me-1" @onclick="() => OpenEditModal(bicicleta)">
+                                                    <i class="fas fa-edit"></i> Editar
+                                                </button>
+                                            }
+                                            @if (canDelete)
+                                            {
+                                                <button class="btn btn-sm btn-outline-danger" @onclick="() => ConfirmDelete(bicicleta)">
+                                                    <i class="fas fa-trash"></i> Eliminar
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-3">No hay bicicletas registradas.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<BicicletaModal @ref="bicicletaModal" OnBicicletaChanged="OnBicicletaSaved" />
+
+@code {
+    private List<BicicletaDTO>? bicicletas;
+    private bool loading = true;
+    private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
+    private BicicletaModal bicicletaModal = null!;
+
+    // Permisos de autorización
+    private bool canRead = false;
+    private bool canAdd = false;
+    private bool canUpdate = false;
+    private bool canDelete = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Verificar autenticación antes de cargar datos
+            var isAuthenticated = await AuthService.IsAuthenticatedAsync();
+            if (!isAuthenticated)
+            {
+                Navigation.NavigateTo("/login");
+                return;
+            }
+
+            // Verificar permisos
+            await LoadPermissions();
+
+            // Solo cargar datos si tiene permiso de lectura
+            if (canRead)
+            {
+                await LoadBicicletas();
+            }
+            else
+            {
+                errorMessage = "No tiene permisos para ver bicicletas.";
+            }
+
+            StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task LoadPermissions()
+    {
+        canRead = await AuthService.HasPermissionAsync("bicicletas.leer");
+        canAdd = await AuthService.HasPermissionAsync("bicicletas.agregar");
+        canUpdate = await AuthService.HasPermissionAsync("bicicletas.actualizar");
+        canDelete = await AuthService.HasPermissionAsync("bicicletas.eliminar");
+    }
+
+    private async Task LoadBicicletas()
+    {
+        try
+        {
+            loading = true;
+            bicicletas = (await BicicletaApiClient.GetAllAsync())?.ToList();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al cargar bicicletas: {ex.Message}";
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private async Task OnBicicletaSaved()
+    {
+        successMessage = "Operación realizada exitosamente.";
+        await LoadBicicletas();
+    }
+
+    private async Task OpenAddModal()
+    {
+        await bicicletaModal.ShowAddModal();
+    }
+
+    private async Task OpenEditModal(BicicletaDTO bicicleta)
+    {
+        await bicicletaModal.ShowEditModal(bicicleta);
+    }
+
+    private async Task ConfirmDelete(BicicletaDTO bicicleta)
+    {
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm",
+            $"¿Está seguro que desea eliminar la bicicleta {bicicleta.Marca} {bicicleta.Modelo} (Id: {bicicleta.Id})?");
+
+        if (confirm)
+        {
+            await DeleteBicicleta(bicicleta.Id);
+        }
+    }
+
+    private async Task DeleteBicicleta(int id)
+    {
+        try
+        {
+            await BicicletaApiClient.DeleteAsync(id);
+            successMessage = "Bicicleta eliminada exitosamente.";
+            await LoadBicicletas();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al eliminar Bicicleta: {ex.Message}";
+        }
+    }
+}
