@@ -1,0 +1,202 @@
+﻿@page "/sucursales"
+@using DTOs
+@using API.Clients
+@using Blazor.Server.Components
+@inject IJSRuntime JSRuntime
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<PageTitle>Sucursales</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h3>Sucursales</h3>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @errorMessage
+                    <button type="button" class="btn-close" @onclick="() => errorMessage = string.Empty"></button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @successMessage
+                    <button type="button" class="btn-close" @onclick="() => successMessage = string.Empty"></button>
+                </div>
+            }
+
+            @if (canAdd)
+            {
+                <div class="mb-3">
+                    <button class="btn btn-primary" @onclick="OpenAddModal">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                </div>
+            }
+
+            @if (loading)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Dirección</th>
+                                <th>Teléfono</th>
+                                <th>Capacidad</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (sucursales != null && sucursales.Any())
+                            {
+                                @foreach (var sucursal in sucursales)
+                                {
+                                    <tr>
+                                        <td>@sucursal.Id</td>
+                                        <td>@sucursal.Nombre</td>
+                                        <td>@sucursal.Direccion</td>
+                                        <td>@sucursal.Telefono</td>
+                                        <td>@sucursal.Capacidad</td>
+                                        <td>
+                                            @if (canUpdate)
+                                            {
+                                                <button class="btn btn-sm btn-outline-primary me-1" @onclick="() => OpenEditModal(sucursal)">
+                                                    <i class="fas fa-edit"></i> Editar
+                                                </button>
+                                            }
+                                            @if (canDelete)
+                                            {
+                                                <button class="btn btn-sm btn-outline-danger" @onclick="() => ConfirmDelete(sucursal)">
+                                                    <i class="fas fa-trash"></i> Eliminar
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<SucursalModal @ref="sucursalModal" OnSucursalChanged="LoadSucursales" />
+
+@code {
+    private List<SucursalDTO>? sucursales;
+    private bool loading = true;
+    private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
+    private SucursalModal sucursalModal = null!;
+
+    private bool canRead = false;
+    private bool canAdd = false;
+    private bool canUpdate = false;
+    private bool canDelete = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var isAuthenticated = await AuthService.IsAuthenticatedAsync();
+
+            if (!isAuthenticated)
+            {
+                Navigation.NavigateTo("/login");
+                return;
+            }
+
+            await LoadPermissions();
+
+            if (canRead)
+            {
+                await LoadSucursales();
+            }
+            else
+            {
+                errorMessage = "No tiene permisos para ver sucursales.";
+            }
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task LoadPermissions()
+    {
+        canRead = await AuthService.HasPermissionAsync("sucursales.leer");
+        canAdd = await AuthService.HasPermissionAsync("sucursales.agregar");
+        canUpdate = await AuthService.HasPermissionAsync("sucursales.actualizar");
+        canDelete = await AuthService.HasPermissionAsync("sucursales.eliminar");
+    }
+
+    private async Task LoadSucursales()
+    {
+        try
+        {
+            loading = true;
+            sucursales = (await SucursalApiClient.GetAllAsync())?.ToList();
+            successMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al cargar sucursales: {ex.Message}";
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private void OpenAddModal()
+    {
+        sucursalModal.ShowAddModal();
+    }
+
+    private void OpenEditModal(SucursalDTO sucursal)
+    {
+        sucursalModal.ShowEditModal(sucursal);
+    }
+
+    private async Task ConfirmDelete(SucursalDTO sucursal)
+    {
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm",
+            $"¿Está seguro que desea eliminar la sucursal {sucursal.Nombre} (Id: {sucursal.Id})?");
+
+        if (confirm)
+        {
+            await DeleteSucursal(sucursal.Id);
+        }
+    }
+
+    private async Task DeleteSucursal(int id)
+    {
+        try
+        {
+            await SucursalApiClient.DeleteAsync(id);
+            successMessage = "Sucursal eliminada exitosamente.";
+            await LoadSucursales();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al eliminar sucursal: {ex.Message}";
+        }
+    }
+}

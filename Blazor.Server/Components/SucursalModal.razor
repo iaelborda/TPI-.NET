@@ -1,0 +1,216 @@
+﻿@using DTOs
+@using API.Clients
+
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        @if (mode == FormMode.Add)
+                        {
+                            <text>Agregar Sucursal</text>
+                        }
+                        else
+                        {
+                            <text>Editar Sucursal</text>
+                        }
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <EditForm Model="currentSucursal" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+
+                        @if (mode == FormMode.Update)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Id</label>
+                                <input type="text" class="form-control" value="@currentSucursal.Id" readonly />
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <label class="form-label">Nombre *</label>
+                            <InputText @bind-Value="currentSucursal.Nombre" class="form-control" />
+                            @if (validationErrors.ContainsKey("Nombre"))
+                            {
+                                <div class="text-danger small">@validationErrors["Nombre"]</div>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Dirección *</label>
+                            <InputText @bind-Value="currentSucursal.Direccion" class="form-control" />
+                            @if (validationErrors.ContainsKey("Direccion"))
+                            {
+                                <div class="text-danger small">@validationErrors["Direccion"]</div>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Teléfono *</label>
+                            <InputText @bind-Value="currentSucursal.Telefono" class="form-control" />
+                            @if (validationErrors.ContainsKey("Telefono"))
+                            {
+                                <div class="text-danger small">@validationErrors["Telefono"]</div>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Capacidad *</label>
+                            <InputNumber @bind-Value="currentSucursal.Capacidad" class="form-control" />
+                            @if (validationErrors.ContainsKey("Capacidad"))
+                            {
+                                <div class="text-danger small">@validationErrors["Capacidad"]</div>
+                            }
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger">
+                                @errorMessage
+                            </div>
+                        }
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="Close">Cancelar</button>
+
+                            <button type="submit" class="btn btn-primary" disabled="@saving">
+                                @if (saving)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                }
+                                @(mode == FormMode.Add ? "Agregar" : "Actualizar")
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public EventCallback OnSucursalChanged { get; set; }
+
+    private bool showModal = false;
+    private FormMode mode = FormMode.Add;
+    private SucursalDTO currentSucursal = new SucursalDTO();
+    private bool saving = false;
+    private string errorMessage = string.Empty;
+    private Dictionary<string, string> validationErrors = new Dictionary<string, string>();
+
+    public enum FormMode
+    {
+        Add,
+        Update
+    }
+
+    public void ShowAddModal()
+    {
+        mode = FormMode.Add;
+        currentSucursal = new SucursalDTO();
+        ClearValidationErrors();
+        showModal = true;
+        StateHasChanged();
+    }
+
+    public void ShowEditModal(SucursalDTO sucursal)
+    {
+        mode = FormMode.Update;
+
+        currentSucursal = new SucursalDTO
+        {
+            Id = sucursal.Id,
+            Nombre = sucursal.Nombre,
+            Direccion = sucursal.Direccion,
+            Telefono = sucursal.Telefono,
+            Capacidad = sucursal.Capacidad
+        };
+
+        ClearValidationErrors();
+        showModal = true;
+        StateHasChanged();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (!ValidateSucursal())
+            return;
+
+        try
+        {
+            saving = true;
+            errorMessage = string.Empty;
+
+            if (mode == FormMode.Add)
+            {
+                await SucursalApiClient.AddAsync(currentSucursal);
+            }
+            else
+            {
+                await SucursalApiClient.UpdateAsync(currentSucursal);
+            }
+
+            await OnSucursalChanged.InvokeAsync();
+            Close();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            saving = false;
+        }
+    }
+
+    private bool ValidateSucursal()
+    {
+        ClearValidationErrors();
+        bool isValid = true;
+
+        if (string.IsNullOrWhiteSpace(currentSucursal.Nombre))
+        {
+            validationErrors["Nombre"] = "El nombre es requerido";
+            isValid = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(currentSucursal.Direccion))
+        {
+            validationErrors["Direccion"] = "La dirección es requerida";
+            isValid = false;
+        }
+
+        if (string.IsNullOrWhiteSpace(currentSucursal.Telefono))
+        {
+            validationErrors["Telefono"] = "El teléfono es requerido";
+            isValid = false;
+        }
+
+        if (currentSucursal.Capacidad <= 0)
+        {
+            validationErrors["Capacidad"] = "La capacidad debe ser mayor a 0";
+            isValid = false;
+        }
+
+        StateHasChanged();
+        return isValid;
+    }
+
+    private void ClearValidationErrors()
+    {
+        validationErrors.Clear();
+        errorMessage = string.Empty;
+    }
+
+    private void Close()
+    {
+        showModal = false;
+        ClearValidationErrors();
+        StateHasChanged();
+    }
+}
