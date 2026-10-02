@@ -32,7 +32,8 @@ namespace WindowsForms
         private void categoriasToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CategoriaLista categoriasForm = new CategoriaLista();
-            categoriasForm.ShowDialog();
+            categoriasForm.MdiParent = this;
+            categoriasForm.Show();
         }
 
         private void bicicletasToolStripMenuItem_Click(object sender, EventArgs e)
