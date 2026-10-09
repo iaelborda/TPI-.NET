@@ -51,13 +51,20 @@ namespace Application.Services
             var categoria = await categoriaRepository.GetAsync(id);
 
             if (categoria == null) return false;
-
             var bicicletas = await bicicletaRepository.GetAllAsync();
 
-            if(bicicletas.Any(b => b.CategoriaId == id))
+            if (bicicletas.Any(b => b.CategoriaId == id))
             {
-                throw new InvalidOperationException("No se puede borrar la categoría porque tiene bicicletas asociadas");
+                throw new InvalidOperationException("No se puede borrar la categoría porque tiene bicicletas asociadas.");
             }
+
+            var tarifas = await tarifaRepository.GetAllAsync();
+
+            if (tarifas.Any(t => t.CategoriaId == id))
+            {
+                throw new InvalidOperationException("No se puede borrar la categoría porque tiene tarifas asociadas.");
+            }
+
             return await categoriaRepository.DeleteAsync(id);
         }
 
