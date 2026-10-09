@@ -74,7 +74,7 @@ namespace WebApi
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization("EmpleadosModificar"); 
+            .RequireAuthorization("EmpleadosActualizar"); 
 
             app.MapDelete("/empleados/{id}", async (int id, IEmpleadoService empleadoService) =>
             {

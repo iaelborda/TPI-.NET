@@ -63,7 +63,7 @@ namespace WebApi
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi()
-            .RequireAuthorization("SucursalesModificar"); 
+            .RequireAuthorization("SucursalesEliminar"); 
 
             app.MapPut("/sucursales", async (SucursalDTO dto, ISucursalService sucursalService) =>
             {
@@ -85,7 +85,7 @@ namespace WebApi
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization("SucursalesEliminar"); 
+            .RequireAuthorization("SucursalesActualizar"); 
         }
     }
 }

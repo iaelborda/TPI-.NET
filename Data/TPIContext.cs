@@ -17,12 +17,10 @@ namespace Data
         public TPIContext(DbContextOptions<TPIContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
         }
 
         internal TPIContext()
         {
-            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
