@@ -286,6 +286,78 @@ namespace Data.Migrations
                     b.ToTable("Tarifas");
                 });
 
+            modelBuilder.Entity("Domain.Model.Usuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Rol")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
+                    b.ToTable("Usuarios");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Activo = true,
+                            Email = "admin@tpi.com",
+                            FechaCreacion = new DateTime(2026, 10, 12, 21, 37, 20, 44, DateTimeKind.Local).AddTicks(4840),
+                            PasswordHash = "s00STL62jRmOM633Nt+ed6YHVSzx5CT9p2MgZuM0zmk=",
+                            Rol = 0,
+                            Salt = "6Ypt1HXjEVl/wDsz4Yiql7D5l1FVouk6QAaa6/akyAE=",
+                            Username = "admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Activo = true,
+                            Email = "empleado@tpi.com",
+                            FechaCreacion = new DateTime(2026, 10, 12, 21, 37, 20, 48, DateTimeKind.Local).AddTicks(3298),
+                            PasswordHash = "wGsmuUdZCTrW+d5BmK66GbKyIt5Lry7ps6RMwEoOXa8=",
+                            Rol = 1,
+                            Salt = "m7a7dBKMqCgeeDrnXBS3WwHNIn5o0TvhPbOQyCxXQjI=",
+                            Username = "empleado"
+                        });
+                });
+
             modelBuilder.Entity("Domain.Model.Alquiler", b =>
                 {
                     b.HasOne("Domain.Model.Cliente", "Cliente")

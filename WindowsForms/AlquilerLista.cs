@@ -1,6 +1,7 @@
 ﻿using DTOs;
 using API.Clients;
 using System;
+using Domain.Model;
 
 namespace WindowsForms
 {

@@ -1,77 +1,66 @@
-﻿using DTOs;
+﻿using Data;
+using Domain.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using DTOs;
 
 namespace Application.Services
 {
     public class AuthService
     {
+        private readonly UsuarioRepository usuarioRepository;
         private readonly IConfiguration configuration;
-
-        private static readonly List<(string Username, string Password, RolUsuario Rol)> usuarios = new()
-        {
-            ("admin", "admin123", RolUsuario.Administrador),
-            ("empleado", "empleado123", RolUsuario.Usuario)
-        };
 
         public AuthService(IConfiguration configuration)
         {
+            usuarioRepository = new UsuarioRepository();
             this.configuration = configuration;
         }
 
         public async Task<LoginResponseDTO?> LoginAsync(LoginRequestDTO request)
         {
-            if (string.IsNullOrWhiteSpace(request.Username) ||
-                string.IsNullOrWhiteSpace(request.Password))
+            if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
                 return null;
 
-            var usuario = usuarios.FirstOrDefault(u =>
-                u.Username == request.Username &&
-                u.Password == request.Password);
+            var usuario = await usuarioRepository.GetByUsernameAsync(request.Username);
 
-            if (usuario == default)
+            if (usuario == null || !usuario.ValidatePassword(request.Password))
                 return null;
 
-            var token = GenerateJwtToken(usuario.Username, usuario.Rol);
+            var token = GenerateJwtToken(usuario);
             var expiresAt = DateTime.UtcNow.AddMinutes(GetExpirationMinutes());
 
             return new LoginResponseDTO
             {
-                Username = usuario.Username,
-                Rol = usuario.Rol,
                 Token = token,
-                ExpiresAt = expiresAt
+                ExpiresAt = expiresAt,
+                Username = usuario.Username
             };
         }
 
-        private string GenerateJwtToken(string username, RolUsuario rol)
+        private string GenerateJwtToken(Usuario usuario)
         {
             var jwtSettings = configuration.GetSection("JwtSettings");
             var secretKey = jwtSettings["SecretKey"];
             var issuer = jwtSettings["Issuer"];
             var audience = jwtSettings["Audience"];
 
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(secretKey!));
-
-            var credentials = new SigningCredentials(
-                key,
-                SecurityAlgorithms.HmacSha256);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, rol.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+                new Claim(ClaimTypes.Name, usuario.Username),
+                new Claim(ClaimTypes.Email, usuario.Email),
+                new Claim(ClaimTypes.Role, usuario.Rol.ToString()),
                 new Claim("jti", Guid.NewGuid().ToString())
             };
 
-            foreach (var permiso in ObtenerPermisos(rol))
-            {
-                claims.Add(new Claim("permission", permiso));
-            }
+            claims.AddRange(ObtenerPermisos(usuario.Rol));
 
             var token = new JwtSecurityToken(
                 issuer: issuer,
@@ -84,61 +73,92 @@ namespace Application.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private List<string> ObtenerPermisos(RolUsuario rol)
+        private List<Claim> ObtenerPermisos(RolUsuario rol)
         {
-            var permisos = new List<string>();
-
-            if (rol == RolUsuario.Administrador)
+            var permisos = new List<string>
             {
-                var recursos = new List<string>
-        {
-            "clientes",
-            "bicicletas",
-            "sucursales",
-            "categorias",
-            "empleados",
-            "alquileres",
-            "tarifas"
-        };
+                "clientes.leer", "clientes.agregar", "clientes.actualizar", "clientes.eliminar",
+                "bicicletas.leer", "bicicletas.agregar", "bicicletas.actualizar", "bicicletas.eliminar",
+                "sucursales.leer", "sucursales.agregar", "sucursales.actualizar", "sucursales.eliminar",
+                "categorias.leer", "categorias.agregar", "categorias.actualizar", "categorias.eliminar",
+                "empleados.leer", "empleados.agregar", "empleados.actualizar", "empleados.eliminar",
+                "alquileres.leer", "alquileres.agregar", "alquileres.actualizar", "alquileres.eliminar",
+                "tarifas.leer", "tarifas.agregar", "tarifas.actualizar", "tarifas.eliminar",
+                "usuarios.leer", "usuarios.agregar", "usuarios.actualizar", "usuarios.eliminar"
+            };
 
-                var acciones = new List<string>
-        {
-            "leer",
-            "agregar",
-            "actualizar",
-            "eliminar"
-        };
-
-                permisos.AddRange(
-                    recursos.SelectMany(recurso =>
-                        acciones.Select(accion => $"{recurso}.{accion}")));
-            }
-            else
+            if (rol == RolUsuario.Usuario)
             {
-                permisos.Add("clientes.leer");
+                permisos.RemoveAll(p => p.EndsWith(".agregar") || p.EndsWith(".actualizar") || p.EndsWith(".eliminar"));
+
                 permisos.Add("clientes.agregar");
                 permisos.Add("clientes.actualizar");
-                permisos.Add("bicicletas.leer");
-                permisos.Add("categorias.leer");
-                permisos.Add("sucursales.leer");
-                permisos.Add("empleados.leer");
-                permisos.Add("alquileres.leer");
                 permisos.Add("alquileres.agregar");
                 permisos.Add("alquileres.actualizar");
-                permisos.Add("tarifas.leer");
             }
 
-            return permisos;
+            return permisos.Select(p => new Claim("permission", p)).ToList();
         }
 
+
+        public bool ValidateToken(string token)
+        {
+            try
+            {
+                var jwtSettings = configuration.GetSection("JwtSettings");
+                var secretKey = jwtSettings["SecretKey"];
+                var issuer = jwtSettings["Issuer"];
+                var audience = jwtSettings["Audience"];
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var validationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = issuer,
+                    ValidateAudience = true,
+                    ValidAudience = audience,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key,
+                    ClockSkew = TimeSpan.Zero
+                };
+
+                tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public int? GetUserIdFromToken(string token)
+        {
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var jsonToken = tokenHandler.ReadJwtToken(token);
+
+                var userIdClaim = jsonToken.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    return userId;
+                }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
         private int GetExpirationMinutes()
         {
             var jwtSettings = configuration.GetSection("JwtSettings");
-
             if (int.TryParse(jwtSettings["ExpirationMinutes"], out int minutes))
                 return minutes;
-
-            return 60;
+            return 60; // Default 60 minutes
         }
     }
 }

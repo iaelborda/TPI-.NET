@@ -61,7 +61,11 @@ namespace Data
 
         public async Task<Tarifa?> GetTarifaVigenteAsync(int categoriaId)
         {
-            return await context.Tarifas.Include(t => t.Categoria).FirstOrDefaultAsync(t => t.CategoriaId == categoriaId && t.FechaHasta == null);
+            var ahora = DateTime.Now;
+            return await context.Tarifas.Include(t => t.Categoria)
+                .FirstOrDefaultAsync(t => t.CategoriaId == categoriaId &&
+                    t.FechaDesde <= ahora &&
+                    (!t.FechaHasta.HasValue || t.FechaHasta > ahora));
         }
     }
 }

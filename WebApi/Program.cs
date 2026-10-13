@@ -62,6 +62,12 @@ builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
 builder.Services.AddScoped<ITarifaRepository, TarifaRepository>();
 builder.Services.AddScoped<ITarifaService, TarifaService>();
 
+builder.Services.AddScoped<AlquilerRepository>();
+builder.Services.AddScoped<AlquilerService>();
+
+builder.Services.AddScoped<UsuarioRepository>();
+builder.Services.AddScoped<UsuarioService>();
+
 // Add JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings["SecretKey"];
@@ -129,6 +135,13 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("TarifasAgregar", policy => policy.RequireClaim("permission", "tarifas.agregar"));
     options.AddPolicy("TarifasActualizar", policy => policy.RequireClaim("permission", "tarifas.actualizar"));
     options.AddPolicy("TarifasEliminar", policy => policy.RequireClaim("permission", "tarifas.eliminar"));
+
+    // Políticas para Usuarios
+    options.AddPolicy("UsuariosLeer", policy => policy.RequireClaim("permission", "usuarios.leer"));
+    options.AddPolicy("UsuariosAgregar", policy => policy.RequireClaim("permission", "usuarios.agregar"));
+    options.AddPolicy("UsuariosActualizar", policy => policy.RequireClaim("permission", "usuarios.actualizar"));
+    options.AddPolicy("UsuariosEliminar", policy => policy.RequireClaim("permission", "usuarios.eliminar"));
+
 });
 
 // Configure the HTTP request pipeline.
@@ -155,6 +168,7 @@ app.MapClienteEndpoints();
 app.MapBicicletaEndpoints();
 app.MapSucursalEndpoints();
 app.MapCategoriaEndpoints();
+app.MapUsuarioEndpoints();
 app.MapEmpleadoEndpoints();
 app.MapAlquilerEndpoints();
 app.MapTarifaEndpoints();

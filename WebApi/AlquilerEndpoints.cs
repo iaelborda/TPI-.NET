@@ -1,4 +1,5 @@
-﻿using Application.Services;
+﻿
+using Application.Services;
 using DTOs;
 
 namespace WebApi
@@ -7,15 +8,13 @@ namespace WebApi
     {
         public static void MapAlquilerEndpoints(this WebApplication app)
         {
-            app.MapGet("/alquileres/{id}", async (int id) =>
+            app.MapGet("/alquileres/{id}", async (int id, AlquilerService alquilerService) =>
             {
-                AlquilerService alquilerService = new AlquilerService();
-                AlquilerDTO? dto = await alquilerService.GetAsync(id);
+                var dto = await alquilerService.GetAsync(id);
 
                 if (dto == null)
-                {
                     return Results.NotFound();
-                }
+
                 return Results.Ok(dto);
             })
             .WithName("GetAlquiler")
@@ -24,27 +23,28 @@ namespace WebApi
             .WithOpenApi()
             .RequireAuthorization("AlquileresLeer");
 
-            app.MapGet("/alquileres", async () =>
+            app.MapGet("/alquileres", async (AlquilerService alquilerService) =>
             {
-                AlquilerService alquilerService = new AlquilerService();
                 var dtos = await alquilerService.GetAllAsync();
-
                 return Results.Ok(dtos);
             })
             .WithName("GetAllAquileres")
-            .Produces<AlquilerDTO>(StatusCodes.Status200OK)
+            .Produces<IEnumerable<AlquilerDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
             .RequireAuthorization("AlquileresLeer");
 
-            app.MapPost("/alquileres", async (AlquilerDTO dto) =>
+            app.MapPost("/alquileres", async (AlquilerDTO dto, AlquilerService alquilerService) =>
             {
                 try
                 {
-                    AlquilerService alquilerService = new AlquilerService();
-                    AlquilerDTO alquilerDTO = await alquilerService.AddAsync(dto);
+                    var alquilerDTO = await alquilerService.AddAsync(dto);
                     return Results.Created($"/alquileres/{alquilerDTO.Id}", alquilerDTO);
                 }
                 catch (ArgumentException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
+                catch (InvalidOperationException ex)
                 {
                     return Results.BadRequest(new { error = ex.Message });
                 }
@@ -55,39 +55,39 @@ namespace WebApi
             .WithOpenApi()
             .RequireAuthorization("AlquileresAgregar");
 
-            app.MapPut("/alquileres", async (AlquilerDTO dto) =>
+            app.MapPut("/alquileres", async (AlquilerDTO dto, AlquilerService alquilerService) =>
             {
                 try
                 {
-                    AlquilerService alquilerService = new AlquilerService();
                     var found = await alquilerService.UpdateAsync(dto);
 
                     if (!found)
-                    {
                         return Results.NotFound();
-                    }
+
                     return Results.NoContent();
                 }
                 catch (ArgumentException ex)
                 {
                     return Results.BadRequest(new { error = ex.Message });
                 }
+                catch (InvalidOperationException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
             })
             .WithName("UpdateAquiler")
+            .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
             .RequireAuthorization("AlquileresActualizar");
 
-            app.MapDelete("/alquileres/{id}", async (int id) =>
+            app.MapDelete("/alquileres/{id}", async (int id, AlquilerService alquilerService) =>
             {
-                AlquilerService alquilerService = new AlquilerService();
                 var deleted = await alquilerService.DeleteAsync(id);
 
                 if (!deleted)
-                {
                     return Results.NotFound();
-                }
 
                 return Results.NoContent();
             })

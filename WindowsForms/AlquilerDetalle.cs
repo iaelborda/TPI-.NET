@@ -448,19 +448,22 @@ namespace WindowsForms
             }
         }
 
+
         private void RefreshDetallesGrid()
         {
             detallesDataGridView.DataSource = null;
             detallesDataGridView.DataSource = detallesLocales;
 
-            if (detallesLocales.Count > 0 && detallesDataGridView.Rows.Count > 0)
+            if (detallesDataGridView.Rows.Count > 0 && !detallesDataGridView.Rows[0].IsNewRow)
             {
+                detallesDataGridView.ClearSelection();
                 detallesDataGridView.Rows[0].Selected = true;
             }
 
             ActualizarEstadoBotones();
             UpdateTotales();
         }
+
 
         private void UpdateTotales()
         {

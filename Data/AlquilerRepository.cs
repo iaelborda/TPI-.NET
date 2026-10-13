@@ -1,44 +1,39 @@
-﻿using Domain.Model;
+﻿
+using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
     public class AlquilerRepository
     {
-        private TPIContext CreateContext()
+        private readonly TPIContext _context;
+
+        public AlquilerRepository(TPIContext context)
         {
-            return new TPIContext();
+            _context = context;
         }
 
         public async Task AddAsync(Alquiler alquiler)
         {
-            using var context = CreateContext();
-
-            context.Alquileres.Add(alquiler);
-            await context.SaveChangesAsync();
+            _context.Alquileres.Add(alquiler);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            using var context = CreateContext();
+            var alquiler = await _context.Alquileres.FindAsync(id);
 
-            var alquiler = await context.Alquileres.FindAsync(id);
+            if (alquiler == null)
+                return false;
 
-            if (alquiler != null)
-            {
-                context.Alquileres.Remove(alquiler);
-                await context.SaveChangesAsync();
-                return true;
-            }
-
-            return false;
+            _context.Alquileres.Remove(alquiler);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<Alquiler?> GetAsync(int id)
         {
-            using var context = CreateContext();
-
-            return await context.Alquileres
+            return await _context.Alquileres
                 .Include(a => a.Cliente)
                 .Include(a => a.Empleado)
                 .Include(a => a.DetallesAlquiler)
@@ -49,44 +44,46 @@ namespace Data
 
         public async Task<IEnumerable<Alquiler>> GetAllAsync()
         {
-            using var context = CreateContext();
-
-            return await context.Alquileres
+            return await _context.Alquileres
                 .Include(a => a.Cliente)
                 .Include(a => a.Empleado)
                 .Include(a => a.DetallesAlquiler)
                     .ThenInclude(d => d.Bicicleta)
-                         .ThenInclude(b => b.Categoria)
+                        .ThenInclude(b => b.Categoria)
                 .ToListAsync();
+        }
+
+        public async Task<bool> BicicletaEnAlquilerActivoAsync(int bicicletaId, int? alquilerId = null)
+        {
+            var alquileres = _context.Alquileres.Where(a =>
+                a.EstadoAlquiler == EstadoDeAlquiler.Activo &&
+                a.DetallesAlquiler.Any(d => d.BicicletaId == bicicletaId && d.HoraFin == null));
+
+            if (alquilerId.HasValue)
+                alquileres = alquileres.Where(a => a.Id != alquilerId.Value);
+
+            return await alquileres.AnyAsync();
         }
 
         public async Task<bool> UpdateAsync(Alquiler alquiler)
         {
-            using var context = CreateContext();
-
-            var existingAlquiler = await context.Alquileres
+            var existingAlquiler = await _context.Alquileres
                 .Include(a => a.DetallesAlquiler)
                 .FirstOrDefaultAsync(a => a.Id == alquiler.Id);
 
             if (existingAlquiler == null)
-            {
                 return false;
-            }
 
             existingAlquiler.SetClienteId(alquiler.ClienteId);
             existingAlquiler.SetEmpleadoId(alquiler.EmpleadoId);
-
-            existingAlquiler.SetFechaAlquiler(alquiler.FechaAlquiler);
             existingAlquiler.SetEstadoAlquiler(alquiler.EstadoAlquiler);
 
             var detallesToDelete = existingAlquiler.DetallesAlquiler
-                .Where(existing =>!alquiler.DetallesAlquiler.Any(nuevo => nuevo.BicicletaId == existing.BicicletaId))
+                .Where(existing => !alquiler.DetallesAlquiler.Any(nuevo => nuevo.BicicletaId == existing.BicicletaId))
                 .ToList();
 
-            foreach (var detalleToDelete in detallesToDelete)
-            {
-                existingAlquiler.RemoveDetalle(detalleToDelete);
-            }
+            foreach (var detalle in detallesToDelete)
+                existingAlquiler.RemoveDetalle(detalle);
 
             foreach (var nuevoDetalle in alquiler.DetallesAlquiler)
             {
@@ -107,8 +104,7 @@ namespace Data
                 }
             }
 
-            await context.SaveChangesAsync();
-
+            await _context.SaveChangesAsync();
             return true;
         }
     }

@@ -1,6 +1,8 @@
 ﻿using API.Clients;
 using DTOs;
 using System.IdentityModel.Tokens.Jwt;
+using Domain.Model;
+using System.Security.Claims;
 
 namespace API.Auth.WindowsForms
 {
@@ -8,7 +10,6 @@ namespace API.Auth.WindowsForms
     {
         private static string? currentToken;
         private static string? currentUsername;
-        private static RolUsuario? currentRol;
         private static DateTime tokenExpiration;
 
         public event Action<bool>? AuthenticationStateChanged;
@@ -33,7 +34,27 @@ namespace API.Auth.WindowsForms
                 ? currentToken
                 : null;
         }
+        public async Task<RolUsuario?> GetRolAsync()
+        {
+            var token = await GetTokenAsync();
+            if (string.IsNullOrEmpty(token)) return null;
 
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jwt = handler.ReadJwtToken(token);
+                var claim = jwt.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role || c.Type == "role");
+
+                if (claim != null && Enum.TryParse<RolUsuario>(claim.Value, true, out var rol))
+                    return rol;
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
         public async Task<bool> LoginAsync(string username, string password)
         {
             var request = new LoginRequestDTO
@@ -49,7 +70,6 @@ namespace API.Auth.WindowsForms
             {
                 currentToken = response.Token;
                 currentUsername = response.Username;
-                currentRol = response.Rol;
                 tokenExpiration = response.ExpiresAt;
 
                 return true;
@@ -58,18 +78,10 @@ namespace API.Auth.WindowsForms
             return false;
         }
 
-        public async Task<RolUsuario?> GetRolAsync()
-        {
-            return await IsAuthenticatedAsync()
-                ? currentRol
-                : null;
-        }
-
         public async Task LogoutAsync()
         {
             currentToken = null;
             currentUsername = null;
-            currentRol = null;
             tokenExpiration = default;
 
             await Task.CompletedTask;

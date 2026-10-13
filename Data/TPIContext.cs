@@ -13,6 +13,7 @@ namespace Data
         public DbSet<Alquiler> Alquileres { get; set; }
         public DbSet<Empleado> Empleados { get; set; }
         public DbSet<Tarifa> Tarifas { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
 
         public TPIContext(DbContextOptions<TPIContext> options)
             : base(options)
@@ -297,7 +298,71 @@ namespace Data
                 entity.Navigation(t => t.Categoria).HasField("_categoria");
             });
 
+            modelBuilder.Entity<Usuario>(entity =>
+            {
+                entity.HasKey(e => e.Id);
 
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Username)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.PasswordHash)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.Salt)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.FechaCreacion)
+                    .IsRequired();
+
+                entity.Property(e => e.Activo)
+                    .IsRequired();
+
+                // Restricciones únicas
+                entity.HasIndex(e => e.Username)
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Email)
+                    .IsUnique();
+
+                // Usuarios iniciales
+                var adminUser = new Domain.Model.Usuario(1, "admin", "admin@tpi.com", "admin123", DateTime.Now, RolUsuario.Administrador);
+                var empleadoUser = new Domain.Model.Usuario(2, "empleado", "empleado@tpi.com", "empleado123", DateTime.Now, RolUsuario.Usuario);
+
+                entity.HasData(
+                    new
+                    {
+                        Id = adminUser.Id,
+                        Username = adminUser.Username,
+                        Email = adminUser.Email,
+                        PasswordHash = adminUser.PasswordHash,
+                        Salt = adminUser.Salt,
+                        FechaCreacion = adminUser.FechaCreacion,
+                        Rol = RolUsuario.Administrador,
+                        Activo = adminUser.Activo
+                    },
+                    new
+                    {
+                        Id = empleadoUser.Id,
+                        Username = empleadoUser.Username,
+                        Email = empleadoUser.Email,
+                        PasswordHash = empleadoUser.PasswordHash,
+                        Salt = empleadoUser.Salt,
+                        FechaCreacion = empleadoUser.FechaCreacion,
+                        Rol = RolUsuario.Usuario,
+                        Activo = empleadoUser.Activo
+                    }
+                );
+            });
         }
     }
 }

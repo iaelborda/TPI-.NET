@@ -1,4 +1,5 @@
 ﻿using API.Clients;
+using Domain.Model;
 using DTOs;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -75,14 +76,24 @@ namespace API.Auth.Blazor.Server
 
             var authClient = new AuthApiClient();
             var response = await authClient.LoginAsync(request);
-            if(response != null)
+            if (response != null)
             {
+                var handler = new JwtSecurityTokenHandler();
+                var jwt = handler.ReadJwtToken(response.Token);
+                var claim = jwt.Claims.FirstOrDefault(c => c.Type == "role" || c.Type == System.Security.Claims.ClaimTypes.Role);
+
+                RolUsuario? rol = null;
+                if (claim != null && Enum.TryParse<RolUsuario>(claim.Value, true, out var rolLeido))
+                    rol = rolLeido;
+
                 _currentSession = new SessionData
                 {
                     Token = response.Token,
                     Username = response.Username,
-                    Expiration = response.ExpiresAt
+                    Expiration = response.ExpiresAt,
+                    Rol = rol
                 };
+
                 AuthenticationStateChanged?.Invoke(true);
                 return true;
             }
