@@ -448,15 +448,15 @@ namespace WindowsForms
             }
         }
 
-
         private void RefreshDetallesGrid()
         {
             detallesDataGridView.DataSource = null;
-            detallesDataGridView.DataSource = detallesLocales;
+            detallesDataGridView.DataSource = detallesLocales.ToList();
 
-            if (detallesDataGridView.Rows.Count > 0 && !detallesDataGridView.Rows[0].IsNewRow)
+            if (detallesDataGridView.Rows.Count > 0)
             {
                 detallesDataGridView.ClearSelection();
+                detallesDataGridView.CurrentCell = detallesDataGridView.Rows[0].Cells[0];
                 detallesDataGridView.Rows[0].Selected = true;
             }
 
@@ -514,6 +514,7 @@ namespace WindowsForms
 
             aceptarButton.Enabled = alquilerActivo;
             cancelarButton.Enabled = true;
+
             fechaAlquilerTextBox.Enabled = false;
 
             ActualizarEstadoBotones();
