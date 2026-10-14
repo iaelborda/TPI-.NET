@@ -107,7 +107,7 @@ namespace WindowsForms
         {
             BicicletaDTO bicicletaNueva = new BicicletaDTO();
             BicicletaDetalle bicicletaDetalle = new BicicletaDetalle(FormMode.Add, bicicletaNueva);
-            bicicletaDetalle.ShowDialog();
+            bicicletaDetalle.ShowDialog(this);
             await this.LoadBicicletas();
         }
 
@@ -120,7 +120,7 @@ namespace WindowsForms
                 DeshabilitarControles();
                 BicicletaDTO bicicletaCompleta = await BicicletaApiClient.GetAsync(bicicleta.Id);
                 BicicletaDetalle bicicletaDetalle = new BicicletaDetalle(FormMode.Update, bicicletaCompleta);
-                bicicletaDetalle.ShowDialog();
+                bicicletaDetalle.ShowDialog(this);
                 await this.LoadBicicletas();
             }
             catch (Exception ex)

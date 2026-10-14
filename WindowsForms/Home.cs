@@ -15,9 +15,14 @@ namespace WindowsForms
 {
     public partial class Home : Form
     {
+
+        public bool VolverAlLogin { get; private set; } = false;
         public Home()
         {
             InitializeComponent();
+            this.WindowState = FormWindowState.Maximized;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.ClientSize = new System.Drawing.Size(1280, 800);
         }
 
 
@@ -68,6 +73,7 @@ namespace WindowsForms
         private async void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             await AuthServiceProvider.Instance.LogoutAsync();
+            VolverAlLogin = true;
             this.Close();
         }
     }
