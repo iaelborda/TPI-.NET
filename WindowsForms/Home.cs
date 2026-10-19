@@ -29,37 +29,28 @@ namespace WindowsForms
 
         private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ClienteLista clientesForm = new ClienteLista();
-            clientesForm.MdiParent = this;
-            clientesForm.Show();
+            AbrirFormulario(new ClienteDetalle());
         }
 
         private void categoriasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CategoriaLista categoriasForm = new CategoriaLista();
-            categoriasForm.MdiParent = this;
-            categoriasForm.Show();
+            AbrirFormulario(new CategoriaDetalle());
         }
 
         private void bicicletasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BicicletaLista bicicletasForm = new BicicletaLista();
-            bicicletasForm.MdiParent = this;
-            bicicletasForm.Show();
+            AbrirFormulario(new BicicletaDetalle());
         }
 
         private void sucursalesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SucursalLista sucursalesForm = new SucursalLista();
-            sucursalesForm.MdiParent = this;
-            sucursalesForm.Show();
+            AbrirFormulario(new SucursalDetalle());
 
         }
         private void alquileresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AlquilerLista alquileresForm = new AlquilerLista();
-            alquileresForm.MdiParent = this;
-            alquileresForm.Show();
+
+            AbrirFormulario(new AlquilerLista());
 
         }
 
@@ -75,6 +66,21 @@ namespace WindowsForms
             await AuthServiceProvider.Instance.LogoutAsync();
             VolverAlLogin = true;
             this.Close();
+        }
+
+        private void AbrirFormulario(Form newForm)
+        {
+            foreach(Form form in this.MdiChildren)
+            {
+                if(form.GetType() == newForm.GetType())
+                {
+                    form.BringToFront();
+                    newForm.Dispose();
+                    return;
+                }
+            }
+            newForm.MdiParent = this;
+            newForm.Show();
         }
     }
 }
