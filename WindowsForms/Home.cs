@@ -29,22 +29,22 @@ namespace WindowsForms
 
         private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AbrirFormulario(new ClienteDetalle());
+            AbrirFormulario(new ClienteLista());
         }
 
         private void categoriasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AbrirFormulario(new CategoriaDetalle());
+            AbrirFormulario(new CategoriaLista());
         }
 
         private void bicicletasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AbrirFormulario(new BicicletaDetalle());
+            AbrirFormulario(new BicicletaLista());
         }
 
         private void sucursalesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AbrirFormulario(new SucursalDetalle());
+            AbrirFormulario(new SucursalLista());
 
         }
         private void alquileresToolStripMenuItem_Click(object sender, EventArgs e)
