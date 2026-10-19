@@ -104,7 +104,7 @@ namespace WindowsForms
             AlquilerDetalle alquilerDetalle =
                 new AlquilerDetalle(FormMode.Add, alquilerNuevo);
 
-            alquilerDetalle.ShowDialog();
+            alquilerDetalle.ShowDialog(this);
 
             await this.LoadAlquileres();
         }
@@ -120,7 +120,7 @@ namespace WindowsForms
 
                 AlquilerDTO alquilerCompleto = await AlquilerApiClient.GetAsync(alquiler.Id);
                 AlquilerDetalle alquilerDetalle = new AlquilerDetalle(FormMode.Update, alquilerCompleto);
-                alquilerDetalle.ShowDialog();
+                alquilerDetalle.ShowDialog(this);
 
                 await this.LoadAlquileres();
             }
