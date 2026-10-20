@@ -27,7 +27,14 @@
                 </NavLink>
             </div>
         }
-
+        @if (canReadTarifas)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="tarifas">
+                    <span class="oi oi-home" aria-hidden="true"></span> Tarifas
+                </NavLink>
+            </div>
+        }
         @if (canReadBicicletas)
         {
             <div class="nav-item px-3">
@@ -54,6 +61,14 @@
                 </NavLink>
             </div>
         }
+        @if (canReadAlquileres)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="alquileres">
+                    <span class="oi oi-home" aria-hidden="true"></span> Alquileres
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
 
@@ -61,8 +76,10 @@
     private bool collapseNavMenu = true;
     private bool canReadCategorias = false;
     private bool canReadBicicletas = false;
+    private bool canReadTarifas = false;
     private bool canReadClientes = false;
     private bool canReadSucursales = false;
+    private bool canReadAlquileres = false;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
@@ -81,15 +98,19 @@
         {
             canReadCategorias = await AuthService.HasPermissionAsync("categorias.leer");
             canReadClientes = await AuthService.HasPermissionAsync("clientes.leer");
+            canReadTarifas = await AuthService.HasPermissionAsync("tarifas.leer");
             canReadSucursales = await AuthService.HasPermissionAsync("sucursales.leer");
             canReadBicicletas = await AuthService.HasPermissionAsync("bicicletas.leer");
+            canReadAlquileres = await AuthService.HasPermissionAsync("alquileres.leer");
         }
         else
         {
             canReadCategorias = false;
             canReadBicicletas = false;
+            canReadTarifas = false;
             canReadClientes = false;
             canReadSucursales = false;
+            canReadAlquileres = false;
         }
         StateHasChanged();
     }

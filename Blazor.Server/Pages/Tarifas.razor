@@ -1,0 +1,208 @@
+﻿@page "/tarifas"
+@using DTOs
+@using API.Clients
+@using Blazor.Server.Components
+@inject IJSRuntime JSRuntime
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<PageTitle>Tarifas</PageTitle>
+
+<div class="container-fluid">
+    <h3>Tarifas</h3>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @errorMessage
+            <button type="button" class="btn-close"
+                    @onclick="() => errorMessage = string.Empty"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @successMessage
+            <button type="button" class="btn-close"
+                    @onclick="() => successMessage = string.Empty"></button>
+        </div>
+    }
+
+    @if (canAdd)
+    {
+        <div class="mb-3">
+            <button class="btn btn-primary" @onclick="OpenAddModal">
+                <i class="fas fa-plus"></i> Agregar
+            </button>
+        </div>
+    }
+
+    @if (loading)
+    {
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
+    }
+    else if (tarifas != null && tarifas.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Id</th>
+                        <th>Categoría</th>
+                        <th>Precio por hora</th>
+                        <th>Fecha desde</th>
+                        <th>Fecha hasta</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tarifa in tarifas)
+                    {
+                        <tr>
+                            <td>@tarifa.Id</td>
+                            <td>@tarifa.DescripcionCategoria</td>
+                            <td>@tarifa.PrecioHora.ToString("C2")</td>
+                            <td>@tarifa.FechaDesde.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@(tarifa.FechaHasta?.ToString("dd/MM/yyyy HH:mm") ?? "Vigente")</td>
+                            <td>
+                                @if (canUpdate && !tarifa.FechaHasta.HasValue)
+                                {
+                                    <button class="btn btn-sm btn-outline-primary me-1"
+                                            @onclick="() => OpenEditModal(tarifa)">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                }
+                                @if (canDelete)
+                                {
+                                    <button class="btn btn-sm btn-outline-danger"
+                                            @onclick="() => ConfirmDelete(tarifa)">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>No hay tarifas registradas.</p>
+    }
+</div>
+
+<TarifaModal @ref="tarifaModal" OnTarifaChanged="LoadTarifas" />
+
+@code {
+    private List<TarifaDTO>? tarifas;
+    private bool loading = true;
+    private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
+    private TarifaModal tarifaModal = null!;
+
+    private bool canRead;
+    private bool canAdd;
+    private bool canUpdate;
+    private bool canDelete;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (!await AuthService.IsAuthenticatedAsync())
+            {
+                Navigation.NavigateTo("/login");
+                return;
+            }
+
+            await LoadPermissions();
+
+            if (canRead)
+                await LoadTarifas();
+            else
+                errorMessage = "No tiene permisos para ver tarifas.";
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task LoadPermissions()
+    {
+        canRead = await AuthService.HasPermissionAsync("tarifas.leer");
+        canAdd = await AuthService.HasPermissionAsync("tarifas.agregar");
+        canUpdate = await AuthService.HasPermissionAsync("tarifas.actualizar");
+        canDelete = await AuthService.HasPermissionAsync("tarifas.eliminar");
+    }
+
+    private async Task LoadTarifas()
+    {
+        try
+        {
+            loading = true;
+            errorMessage = string.Empty;
+            tarifas = (await TarifaApiClient.GetAllAsync())?.ToList() ?? new();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al cargar tarifas: {ex.Message}";
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OpenAddModal()
+    {
+        await tarifaModal.ShowAddModal();
+    }
+
+    private async Task OpenEditModal(TarifaDTO tarifa)
+    {
+        await tarifaModal.ShowEditModal(tarifa);
+    }
+
+    private async Task ConfirmDelete(TarifaDTO tarifa)
+    {
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm",
+            $"¿Está seguro que desea eliminar la tarifa de {tarifa.DescripcionCategoria} (Id: {tarifa.Id})?");
+
+        if (confirm)
+            await DeleteTarifa(tarifa.Id);
+    }
+
+    private async Task DeleteTarifa(int id)
+    {
+        try
+        {
+            errorMessage = string.Empty;
+            await TarifaApiClient.DeleteAsync(id);
+            successMessage = "Tarifa eliminada exitosamente.";
+            await LoadTarifas();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ObtenerMensajeError(ex);
+        }
+    }
+
+    private string ObtenerMensajeError(Exception ex)
+    {
+        var mensaje = ex.Message;
+
+        if (mensaje.Contains("No se puede eliminar una tarifa que fue utilizada en alquileres.",
+            StringComparison.OrdinalIgnoreCase))
+            return "No se puede eliminar esta tarifa porque fue utilizada en alquileres.";
+
+        return $"Error al eliminar tarifa: {mensaje}";
+    }
+}

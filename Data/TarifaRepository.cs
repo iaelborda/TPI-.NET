@@ -67,6 +67,18 @@ namespace Data
                     t.FechaDesde <= ahora &&
                     (!t.FechaHasta.HasValue || t.FechaHasta > ahora));
         }
+        public async Task<bool> FueUsadaAsync(int id)
+        {
+            var tarifa = await context.Tarifas.FindAsync(id);
+            if (tarifa == null) return false;
+
+            return await context.Alquileres
+                .SelectMany(a => a.DetallesAlquiler)
+                .AnyAsync(d => d.Bicicleta != null &&
+                    d.Bicicleta.CategoriaId == tarifa.CategoriaId &&
+                    d.HoraInicio >= tarifa.FechaDesde &&
+                    (!tarifa.FechaHasta.HasValue || d.HoraInicio < tarifa.FechaHasta.Value));
+        }
     }
 }
     

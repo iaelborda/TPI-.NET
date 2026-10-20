@@ -126,6 +126,11 @@ namespace Application.Services
                 return false;
             }
 
+            if (existing.FechaHasta.HasValue)
+            {
+                throw new InvalidOperationException("No se puede actualizar una tarifa que ya no está vigente.");
+            }
+
             var categoria = await categoriaRepository.GetAsync(dto.CategoriaId);
             if (categoria == null)
             {
@@ -150,6 +155,12 @@ namespace Application.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
+            var tarifa = await tarifaRepository.GetAsync(id);
+            if (tarifa == null) return false;
+
+            if (await tarifaRepository.FueUsadaAsync(id))
+                throw new InvalidOperationException("No se puede eliminar una tarifa que fue usada en alquileres.");
+
             return await tarifaRepository.DeleteAsync(id);
         }
     }

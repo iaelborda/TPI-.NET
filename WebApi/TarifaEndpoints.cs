@@ -74,6 +74,10 @@ namespace WebApi
 
                     return Results.NoContent();
                 }
+                catch (InvalidOperationException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
                 catch (ArgumentException ex)
                 {
                     return Results.BadRequest(new { error = ex.Message });
@@ -88,20 +92,27 @@ namespace WebApi
 
             app.MapDelete("/tarifas/{id}", async (int id, ITarifaService tarifaService) =>
             {
-                var deleted = await tarifaService.DeleteAsync(id);
-                if (!deleted)
+                try
                 {
-                    return Results.NotFound();
-                }
+                    var deleted = await tarifaService.DeleteAsync(id);
+                    if (!deleted)
+                    {
+                        return Results.NotFound();
+                    }
 
-                return Results.NoContent();
+                    return Results.NoContent();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    return Results.BadRequest(new { mensaje = ex.Message });
+                }
             })
             .WithName("DeleteTarifa")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
             .RequireAuthorization("TarifasEliminar");
-
 
             app.MapGet("/tarifas/categoria/{categoriaId}/vigente", async (int categoriaId, ITarifaService tarifaService) =>
             {

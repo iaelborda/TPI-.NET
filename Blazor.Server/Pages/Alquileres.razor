@@ -1,0 +1,249 @@
+﻿@page "/alquileres"
+@using API.Clients
+@using DTOs
+@using Domain.Model
+@using Blazor.Server.Components
+@inject IJSRuntime JSRuntime
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<PageTitle>Alquileres</PageTitle>
+
+<div class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3>Alquileres</h3>
+            <p class="text-muted mb-0">Administración de alquileres de bicicletas</p>
+        </div>
+
+        @if (canAdd)
+        {
+            <button class="btn btn-primary" @onclick="NuevoAlquiler">
+                <i class="fas fa-plus me-1"></i> Nuevo alquiler
+            </button>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+
+    @if (loading)
+    {
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
+    }
+    else if (canRead && alquileres.Count == 0)
+    {
+        <div class="alert alert-info">No hay alquileres registrados.</div>
+    }
+    else if (canRead)
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Id</th>
+                        <th>Cliente</th>
+                        <th>Empleado</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var alquiler in alquileres)
+                    {
+                        <tr @key="alquiler.Id">
+                            <td>@alquiler.Id</td>
+                            <td>@alquiler.ClienteNombre @alquiler.ClienteApellido</td>
+                            <td>@alquiler.EmpleadoApellido - Legajo: @alquiler.EmpleadoLegajo</td>
+                            <td>@alquiler.FechaAlquiler.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                @if (alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo)
+                                {
+                                    <span class="badge bg-success">Activo</span>
+                                }
+                                else if (alquiler.EstadoAlquiler == EstadoDeAlquiler.Finalizado)
+                                {
+                                    <span class="badge bg-secondary">Finalizado</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Cancelado</span>
+                                }
+                            </td>
+                            <td>@(alquiler.Detalles?.Sum(d => d.Subtotal).ToString("C2") ?? "$0,00")</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1"
+                                        @onclick="() => EditarAlquiler(alquiler.Id)">
+                                    @(canUpdate ? "Ver / Editar" : "Ver")
+                                </button>
+
+                                @if (canDelete)
+                                {
+                                    <button class="btn btn-sm btn-danger ms-1"
+                                            @onclick="() => EliminarAlquiler(alquiler.Id)">
+                                        Eliminar
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@if (mostrarModal)
+{
+    <AlquilerModal @key="alquilerSeleccionado"
+                   AlquilerId="alquilerSeleccionado"
+                   OnCerrar="CerrarModal"
+                   OnGuardado="CargarAlquileres" />
+}
+
+@code {
+    private List<AlquilerDTO> alquileres = new();
+    private bool loading = true;
+    private bool mostrarModal;
+    private int? alquilerSeleccionado;
+    private string errorMessage = string.Empty;
+
+    private bool canRead;
+    private bool canAdd;
+    private bool canUpdate;
+    private bool canDelete;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!await AuthService.IsAuthenticatedAsync())
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        await LoadPermissions();
+
+        if (!canRead)
+        {
+            errorMessage = "No tiene permisos para ver alquileres.";
+            loading = false;
+            return;
+        }
+
+        await CargarAlquileres();
+    }
+
+    private async Task LoadPermissions()
+    {
+        canRead = await AuthService.HasPermissionAsync("alquileres.leer");
+        canAdd = await AuthService.HasPermissionAsync("alquileres.agregar");
+        canUpdate = await AuthService.HasPermissionAsync("alquileres.actualizar");
+        canDelete = await AuthService.HasPermissionAsync("alquileres.eliminar");
+    }
+
+    private async Task CargarAlquileres()
+    {
+        if (!canRead) return;
+
+        try
+        {
+            loading = true;
+            errorMessage = string.Empty;
+            alquileres = (await AlquilerApiClient.GetAllAsync()).ToList();
+        }
+        catch
+        {
+            errorMessage = "No se pudieron cargar los alquileres.";
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private void NuevoAlquiler()
+    {
+        if (!canAdd) return;
+
+        alquilerSeleccionado = null;
+        mostrarModal = true;
+    }
+
+    private void EditarAlquiler(int id)
+    {
+        if (!canRead) return;
+
+        alquilerSeleccionado = id;
+        mostrarModal = true;
+    }
+
+    private void CerrarModal()
+    {
+        mostrarModal = false;
+        alquilerSeleccionado = null;
+    }
+
+    private async Task CancelarAlquiler(AlquilerDTO alquiler)
+    {
+        if (!canUpdate || alquiler.EstadoAlquiler != EstadoDeAlquiler.Activo)
+            return;
+
+        bool confirmar = await JSRuntime.InvokeAsync<bool>(
+            "confirm", $"¿Está seguro de cancelar el alquiler #{alquiler.Id}?");
+
+        if (!confirmar) return;
+
+        try
+        {
+            errorMessage = string.Empty;
+
+            var alquilerCompleto = await AlquilerApiClient.GetAsync(alquiler.Id);
+
+            if (alquilerCompleto.EstadoAlquiler != EstadoDeAlquiler.Activo)
+            {
+                errorMessage = "El alquiler ya no está activo.";
+                await CargarAlquileres();
+                return;
+            }
+
+            alquilerCompleto.EstadoAlquiler = EstadoDeAlquiler.Cancelado;
+
+            await AlquilerApiClient.UpdateAsync(alquilerCompleto);
+            await CargarAlquileres();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"No se pudo cancelar el alquiler: {ex.Message}";
+        }
+    }
+
+    private async Task EliminarAlquiler(int id)
+    {
+        if (!canDelete) return;
+
+        bool confirmar = await JSRuntime.InvokeAsync<bool>(
+            "confirm", $"¿Está seguro de eliminar el alquiler #{id}?");
+
+        if (!confirmar) return;
+
+        try
+        {
+            errorMessage = string.Empty;
+            await AlquilerApiClient.DeleteAsync(id);
+            await CargarAlquileres();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"No se pudo eliminar el alquiler: {ex.Message}";
+        }
+    }
+}
+

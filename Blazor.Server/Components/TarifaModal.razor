@@ -1,0 +1,222 @@
+﻿@using DTOs
+@using API.Clients
+
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        @(mode == FormMode.Add ? "Agregar Tarifa" : "Editar Tarifa")
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <EditForm Model="currentTarifa" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+
+                        @if (mode == FormMode.Update)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Id</label>
+                                <input class="form-control" value="@currentTarifa.Id" readonly />
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <label class="form-label">Categoría *</label>
+                            <InputSelect @bind-Value="currentTarifa.CategoriaId"
+                                         class="form-select"
+                                         disabled="@(mode == FormMode.Update || loadingCategorias)">
+                                <option value="0">Seleccione una categoría</option>
+                                @foreach (var categoria in categorias)
+                                {
+                                    <option value="@categoria.Id">@categoria.Descripcion</option>
+                                }
+                            </InputSelect>
+                            @if (validationErrors.ContainsKey("CategoriaId"))
+                            {
+                                <div class="text-danger small">@validationErrors["CategoriaId"]</div>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Precio por hora *</label>
+                            <InputNumber @bind-Value="currentTarifa.PrecioHora"
+                                         class="form-control"
+                                         min="0.01"
+                                         step="0.01" />
+                            @if (validationErrors.ContainsKey("PrecioHora"))
+                            {
+                                <div class="text-danger small">@validationErrors["PrecioHora"]</div>
+                            }
+                        </div>
+
+                        @if (mode == FormMode.Update)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Fecha desde</label>
+                                <input class="form-control"
+                                       value="@currentTarifa.FechaDesde.ToString("dd/MM/yyyy HH:mm")"
+                                       readonly />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Fecha hasta</label>
+                                <input class="form-control"
+                                       value="@(currentTarifa.FechaHasta?.ToString("dd/MM/yyyy HH:mm") ?? "Vigente")"
+                                       readonly />
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger">@errorMessage</div>
+                        }
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                    @onclick="Close" disabled="@saving">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary"
+                                    disabled="@(saving || loadingCategorias || categorias.Count == 0)">
+                                @if (saving)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                }
+                                @(mode == FormMode.Add ? "Agregar" : "Actualizar")
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public EventCallback OnTarifaChanged { get; set; }
+
+    private bool showModal;
+    private bool saving;
+    private bool loadingCategorias;
+    private FormMode mode = FormMode.Add;
+    private TarifaDTO currentTarifa = new();
+    private List<CategoriaDTO> categorias = new();
+    private string errorMessage = string.Empty;
+    private Dictionary<string, string> validationErrors = new();
+
+    public enum FormMode
+    {
+        Add,
+        Update
+    }
+
+    public async Task ShowAddModal()
+    {
+        mode = FormMode.Add;
+        currentTarifa = new TarifaDTO();
+        ClearValidationErrors();
+        showModal = true;
+        await LoadCategorias();
+    }
+
+    public async Task ShowEditModal(TarifaDTO tarifa)
+    {
+        mode = FormMode.Update;
+        currentTarifa = new TarifaDTO
+        {
+            Id = tarifa.Id,
+            CategoriaId = tarifa.CategoriaId,
+            DescripcionCategoria = tarifa.DescripcionCategoria,
+            PrecioHora = tarifa.PrecioHora,
+            FechaDesde = tarifa.FechaDesde,
+            FechaHasta = tarifa.FechaHasta
+        };
+        ClearValidationErrors();
+        showModal = true;
+        await LoadCategorias();
+    }
+
+    private async Task LoadCategorias()
+    {
+        try
+        {
+            loadingCategorias = true;
+            categorias = (await CategoriaApiClient.GetAllAsync())?.ToList() ?? new();
+            if (categorias.Count == 0)
+                errorMessage = "No hay categorías disponibles para asignar una tarifa.";
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al cargar categorías: {ex.Message}";
+        }
+        finally
+        {
+            loadingCategorias = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (!ValidateTarifa()) return;
+
+        try
+        {
+            saving = true;
+            errorMessage = string.Empty;
+
+            if (mode == FormMode.Add)
+                await TarifaApiClient.AddAsync(currentTarifa);
+            else
+                await TarifaApiClient.UpdateAsync(currentTarifa);
+
+            await OnTarifaChanged.InvokeAsync();
+            Close();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            saving = false;
+        }
+    }
+
+    private bool ValidateTarifa()
+    {
+        ClearValidationErrors();
+        bool isValid = true;
+
+        if (currentTarifa.CategoriaId <= 0)
+        {
+            validationErrors["CategoriaId"] = "Seleccione una categoría.";
+            isValid = false;
+        }
+
+        if (currentTarifa.PrecioHora <= 0)
+        {
+            validationErrors["PrecioHora"] = "El precio por hora debe ser mayor a 0.";
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    private void ClearValidationErrors()
+    {
+        validationErrors.Clear();
+        errorMessage = string.Empty;
+    }
+
+    private void Close()
+    {
+        showModal = false;
+        ClearValidationErrors();
+    }
+}

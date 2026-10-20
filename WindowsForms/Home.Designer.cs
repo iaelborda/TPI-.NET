@@ -34,10 +34,11 @@
             categoriasToolStripMenuItem = new ToolStripMenuItem();
             bicicletasToolStripMenuItem = new ToolStripMenuItem();
             sucursalesToolStripMenuItem = new ToolStripMenuItem();
+            alquileresToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripSeparator();
             cerrarSesionToolStripMenuItem = new ToolStripMenuItem();
             usuarioTextBox = new ToolStripTextBox();
-            alquileresToolStripMenuItem = new ToolStripMenuItem();
+            tarifasToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -54,7 +55,7 @@
             // 
             // administraciónToolStripMenuItem
             // 
-            administraciónToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clientesToolStripMenuItem, categoriasToolStripMenuItem, bicicletasToolStripMenuItem, sucursalesToolStripMenuItem, alquileresToolStripMenuItem, toolStripMenuItem1, cerrarSesionToolStripMenuItem });
+            administraciónToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { clientesToolStripMenuItem, categoriasToolStripMenuItem, tarifasToolStripMenuItem, bicicletasToolStripMenuItem, sucursalesToolStripMenuItem, alquileresToolStripMenuItem, toolStripMenuItem1, cerrarSesionToolStripMenuItem });
             administraciónToolStripMenuItem.Name = "administraciónToolStripMenuItem";
             administraciónToolStripMenuItem.Size = new Size(147, 31);
             administraciónToolStripMenuItem.Text = "Administración";
@@ -87,6 +88,20 @@
             sucursalesToolStripMenuItem.Text = "Sucursales";
             sucursalesToolStripMenuItem.Click += sucursalesToolStripMenuItem_Click;
             // 
+            // alquileresToolStripMenuItem
+            // 
+            alquileresToolStripMenuItem.Name = "alquileresToolStripMenuItem";
+            alquileresToolStripMenuItem.Size = new Size(270, 34);
+            alquileresToolStripMenuItem.Text = "Alquileres";
+            alquileresToolStripMenuItem.Click += alquileresToolStripMenuItem_Click;
+            // 
+            // tarifasToolStripMenuItem
+            // 
+            tarifasToolStripMenuItem.Name = "tarifasToolStripMenuItem";
+            tarifasToolStripMenuItem.Size = new Size(270, 34);
+            tarifasToolStripMenuItem.Text = "Tarifas";
+            tarifasToolStripMenuItem.Click += tarifasToolStripMenuItem_Click;
+            // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
@@ -106,13 +121,6 @@
             usuarioTextBox.ReadOnly = true;
             usuarioTextBox.Size = new Size(349, 31);
             usuarioTextBox.Text = "Usuario: ";
-            // 
-            // alquileresToolStripMenuItem
-            // 
-            alquileresToolStripMenuItem.Name = "alquileresToolStripMenuItem";
-            alquileresToolStripMenuItem.Size = new Size(270, 34);
-            alquileresToolStripMenuItem.Text = "Alquileres";
-            alquileresToolStripMenuItem.Click += alquileresToolStripMenuItem_Click;
             // 
             // Home
             // 
@@ -145,5 +153,6 @@
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripMenuItem cerrarSesionToolStripMenuItem;
         private ToolStripMenuItem alquileresToolStripMenuItem;
+        private ToolStripMenuItem tarifasToolStripMenuItem;
     }
 }

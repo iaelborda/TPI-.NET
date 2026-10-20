@@ -1,0 +1,532 @@
+﻿@using API.Clients
+@using DTOs
+@using Domain.Model
+@using Microsoft.AspNetCore.Components.Forms
+@inject IAuthService AuthService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
+
+<div class="modal fade show d-block" tabindex="-1"
+     style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    @(AlquilerId.HasValue ? $"Alquiler #{AlquilerId}" : "Nuevo alquiler")
+                </h5>
+                <button type="button" class="btn-close"
+                        @onclick="Cerrar" disabled="@saving">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger">@errorMessage</div>
+                }
+
+                @if (loading)
+                {
+                    <p>Cargando datos...</p>
+                }
+                else if (autorizado)
+                {
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Cliente *</label>
+                            <InputSelect class="form-select"
+                                         @bind-Value="alquiler.ClienteId"
+                                         disabled="@(!PuedeEditar)">
+                                <option value="0">Seleccione un cliente</option>
+                                @foreach (var cliente in clientes)
+                                {
+                                    <option value="@cliente.Id">
+                                        @cliente.Nombre @cliente.Apellido
+                                    </option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Empleado *</label>
+                            <InputSelect class="form-select"
+                                         @bind-Value="alquiler.EmpleadoId"
+                                         disabled="@(!PuedeEditar)">
+                                <option value="0">Seleccione un empleado</option>
+                                @foreach (var empleado in empleados)
+                                {
+                                    <option value="@empleado.Id">
+                                        @empleado.Nombre @empleado.Apellido - Legajo: @empleado.Legajo
+                                    </option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Fecha del alquiler</label>
+                        <input class="form-control"
+                               value="@alquiler.FechaAlquiler.ToString("dd/MM/yyyy HH:mm")"
+                               readonly />
+                    </div>
+
+                    <hr />
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0">Bicicletas del alquiler</h6>
+
+                        @if (PuedeEditar)
+                        {
+                            <button type="button" class="btn btn-sm btn-primary"
+                                    @onclick="MostrarAgregarDetalle">
+                                Agregar bicicleta
+                            </button>
+                        }
+                    </div>
+
+                    @if (mostrarDetalle && PuedeEditar)
+                    {
+                        <div class="card card-body mb-3">
+                            <label class="form-label">Bicicleta</label>
+
+                            <InputSelect class="form-select mb-2"
+                                         TValue="int"
+                                         Value="bicicletaId"
+                                         ValueChanged="SeleccionarBicicleta"
+                                         ValueExpression="@(() => bicicletaId)">
+                                <option value="0">Seleccione una bicicleta</option>
+                                @foreach (var bicicleta in bicicletas)
+                                {
+                                    <option value="@bicicleta.Id">
+                                        @bicicleta.BicicletaDescripcion
+                                    </option>
+                                }
+                            </InputSelect>
+
+                            @if (precioHora.HasValue)
+                            {
+                                <p>
+                                    Tarifa por hora:
+                                    <strong>@precioHora.Value.ToString("C2")</strong>
+                                </p>
+                            }
+
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-success btn-sm"
+                                        @onclick="AgregarDetalle"
+                                        disabled="@(!precioHora.HasValue || saving)">
+                                    Agregar
+                                </button>
+
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                        @onclick="CancelarDetalle">
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Bicicleta</th>
+                                    <th>Categoría</th>
+                                    <th>Inicio</th>
+                                    <th>Fin</th>
+                                    <th>Tarifa/hora</th>
+                                    <th>Subtotal</th>
+                                    <th>Estado</th>
+                                    @if (PuedeEditar)
+                                    {
+                                        <th></th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var detalle in alquiler.Detalles)
+                                {
+                                    <tr @key="detalle.BicicletaId">
+                                        <td>@detalle.BicicletaMarca (#@detalle.BicicletaId)</td>
+                                        <td>@detalle.CategoriaDescripcion</td>
+                                        <td>@detalle.HoraInicio.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>@(detalle.HoraFin?.ToString("dd/MM/yyyy HH:mm") ?? "-")</td>
+                                        <td>@detalle.PrecioHora.ToString("C2")</td>
+                                        <td>@detalle.Subtotal.ToString("C2")</td>
+                                        <td>@detalle.Estado</td>
+
+                                        @if (PuedeEditar)
+                                        {
+                                            <td>
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        @onclick="() => EliminarDetalle(detalle)">
+                                                    Quitar
+                                                </button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="text-end fw-bold mb-3">
+                        Total bicicletas: @alquiler.Detalles.Count
+                        <br />
+                        Total: @alquiler.Detalles.Sum(d => d.Subtotal).ToString("C2")
+                    </div>
+
+                    @if (AlquilerId.HasValue && EsActivo && canUpdate)
+                    {
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-outline-warning"
+                                    @onclick="FinalizarAlquiler"
+                                    disabled="@(alquiler.Detalles.Count == 0 || saving)">
+                                Finalizar alquiler
+                            </button>
+
+                            <button type="button" class="btn btn-outline-danger"
+                                    @onclick="CancelarAlquiler"
+                                    disabled="@saving">
+                                Cancelar alquiler
+                            </button>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                        @onclick="Cerrar" disabled="@saving">
+                    Cerrar
+                </button>
+
+                @if (autorizado && PuedeEditar)
+                {
+                    <button type="button" class="btn btn-primary"
+                            @onclick="Guardar"
+                            disabled="@(loading || saving)">
+                        @(saving ? "Guardando..." : "Guardar alquiler")
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int? AlquilerId { get; set; }
+    [Parameter] public EventCallback OnCerrar { get; set; }
+    [Parameter] public EventCallback OnGuardado { get; set; }
+
+    private AlquilerDTO alquiler = new();
+    private List<ClienteDTO> clientes = new();
+    private List<EmpleadoDTO> empleados = new();
+    private List<BicicletaDTO> bicicletas = new();
+
+    private bool loading = true;
+    private bool saving;
+    private bool autorizado;
+    private bool mostrarDetalle;
+    private bool canRead;
+    private bool canAdd;
+    private bool canUpdate;
+
+    private int bicicletaId;
+    private decimal? precioHora;
+    private string errorMessage = string.Empty;
+
+    private bool EsActivo => alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo;
+
+    private bool PuedeEditar =>
+        EsActivo && (AlquilerId.HasValue ? canUpdate : canAdd);
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (!await AuthService.IsAuthenticatedAsync())
+            {
+                Navigation.NavigateTo("/login");
+                return;
+            }
+
+            canRead = await AuthService.HasPermissionAsync("alquileres.leer");
+            canAdd = await AuthService.HasPermissionAsync("alquileres.agregar");
+            canUpdate = await AuthService.HasPermissionAsync("alquileres.actualizar");
+
+            if (AlquilerId.HasValue && !canRead)
+            {
+                errorMessage = "No tiene permisos para ver alquileres.";
+                return;
+            }
+
+            if (!AlquilerId.HasValue && !canAdd)
+            {
+                errorMessage = "No tiene permisos para crear alquileres.";
+                return;
+            }
+
+            if (AlquilerId.HasValue && !canUpdate)
+            {
+                // El usuario puede consultar, pero no modificar.
+            }
+
+            clientes = (await ClienteApiClient.GetAllAsync()).ToList();
+            empleados = (await EmpleadoApiClient.GetAllAsync()).ToList();
+            bicicletas = (await BicicletaApiClient.GetAllAsync()).ToList();
+
+            if (AlquilerId.HasValue)
+            {
+                alquiler = await AlquilerApiClient.GetAsync(AlquilerId.Value);
+                alquiler.Detalles ??= new();
+            }
+            else
+            {
+                alquiler = new AlquilerDTO
+                {
+                    FechaAlquiler = DateTime.Now,
+                    EstadoAlquiler = EstadoDeAlquiler.Activo,
+                    Detalles = new()
+                };
+            }
+
+            autorizado = true;
+        }
+        catch
+        {
+            errorMessage = "No se pudieron cargar los datos del alquiler.";
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private void MostrarAgregarDetalle()
+    {
+        if (!PuedeEditar) return;
+
+        bicicletaId = 0;
+        precioHora = null;
+        errorMessage = string.Empty;
+        mostrarDetalle = true;
+    }
+
+    private async Task SeleccionarBicicleta(int id)
+    {
+        if (!PuedeEditar) return;
+
+        bicicletaId = id;
+        precioHora = null;
+
+        var bicicleta = bicicletas.FirstOrDefault(b => b.Id == id);
+        if (bicicleta == null) return;
+
+        try
+        {
+            var tarifa = await TarifaApiClient.GetTarifaVigenteAsync(bicicleta.CategoriaId);
+
+            if (tarifa == null)
+            {
+                errorMessage = "La categoría de la bicicleta no tiene una tarifa vigente.";
+                return;
+            }
+
+            precioHora = tarifa.PrecioHora;
+            errorMessage = string.Empty;
+        }
+        catch
+        {
+            errorMessage = "No se pudo obtener la tarifa vigente.";
+        }
+    }
+
+    private void AgregarDetalle()
+    {
+        if (!PuedeEditar || saving) return;
+
+        var bicicleta = bicicletas.FirstOrDefault(b => b.Id == bicicletaId);
+        if (bicicleta == null || !precioHora.HasValue) return;
+
+        if (alquiler.Detalles.Any(d => d.BicicletaId == bicicletaId))
+        {
+            errorMessage = "Esta bicicleta ya está agregada al alquiler.";
+            return;
+        }
+
+        alquiler.Detalles.Add(new DetalleAlquilerDTO
+        {
+            BicicletaId = bicicleta.Id,
+            BicicletaMarca = bicicleta.Marca,
+            CategoriaDescripcion = bicicleta.DescripcionCategoria,
+            HoraInicio = DateTime.Now,
+            HoraFin = null,
+            Estado = EstadoDetalleAlquiler.Activo,
+            PrecioHora = precioHora.Value,
+            Subtotal = 0
+        });
+
+        mostrarDetalle = false;
+        bicicletaId = 0;
+        precioHora = null;
+        errorMessage = string.Empty;
+    }
+
+    private void CancelarDetalle()
+    {
+        mostrarDetalle = false;
+        bicicletaId = 0;
+        precioHora = null;
+    }
+
+    private void EliminarDetalle(DetalleAlquilerDTO detalle)
+    {
+        if (!PuedeEditar || saving) return;
+
+        alquiler.Detalles.Remove(detalle);
+    }
+
+    private async Task Guardar()
+    {
+        if (!PuedeEditar || saving) return;
+
+        if (alquiler.ClienteId <= 0 || alquiler.EmpleadoId <= 0)
+        {
+            errorMessage = "Debe seleccionar un cliente y un empleado.";
+            return;
+        }
+
+        if (alquiler.Detalles.Count == 0)
+        {
+            errorMessage = "Debe agregar al menos una bicicleta.";
+            return;
+        }
+
+        try
+        {
+            saving = true;
+            errorMessage = string.Empty;
+
+            if (AlquilerId.HasValue)
+                await AlquilerApiClient.UpdateAsync(alquiler);
+            else
+                await AlquilerApiClient.AddAsync(alquiler);
+
+            await OnGuardado.InvokeAsync();
+            await Cerrar();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            saving = false;
+        }
+    }
+
+    private async Task FinalizarAlquiler()
+    {
+        if (!AlquilerId.HasValue || !canUpdate || !EsActivo || saving)
+            return;
+
+        if (alquiler.Detalles.Count == 0)
+        {
+            errorMessage = "No se puede finalizar un alquiler sin bicicletas.";
+            return;
+        }
+
+        bool confirmar = await JSRuntime.InvokeAsync<bool>(
+            "confirm",
+            "¿Desea registrar la devolución de las bicicletas y finalizar el alquiler?");
+
+        if (!confirmar) return;
+
+        try
+        {
+            saving = true;
+            errorMessage = string.Empty;
+
+            DateTime fechaFin = DateTime.Now;
+
+            foreach (var detalle in alquiler.Detalles)
+            {
+                if (detalle.Estado == EstadoDetalleAlquiler.Activo || !detalle.HoraFin.HasValue)
+                {
+                    detalle.HoraFin = fechaFin;
+                    detalle.Subtotal = CalcularSubtotal(
+                        detalle.HoraInicio, fechaFin, detalle.PrecioHora);
+                    detalle.Estado = EstadoDetalleAlquiler.Devuelto;
+                }
+            }
+
+            alquiler.EstadoAlquiler = EstadoDeAlquiler.Finalizado;
+
+            await AlquilerApiClient.UpdateAsync(alquiler);
+            await OnGuardado.InvokeAsync();
+            await Cerrar();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            saving = false;
+        }
+    }
+
+    private async Task CancelarAlquiler()
+    {
+        if (!AlquilerId.HasValue || !canUpdate || !EsActivo || saving)
+            return;
+
+        bool confirmar = await JSRuntime.InvokeAsync<bool>(
+            "confirm", "¿Está seguro de cancelar este alquiler?");
+
+        if (!confirmar) return;
+
+        try
+        {
+            saving = true;
+            errorMessage = string.Empty;
+
+            var alquilerCompleto = await AlquilerApiClient.GetAsync(AlquilerId.Value);
+
+            if (alquilerCompleto.EstadoAlquiler != EstadoDeAlquiler.Activo)
+            {
+                errorMessage = "El alquiler ya no está activo.";
+                return;
+            }
+
+            alquilerCompleto.EstadoAlquiler = EstadoDeAlquiler.Cancelado;
+
+            await AlquilerApiClient.UpdateAsync(alquilerCompleto);
+            await OnGuardado.InvokeAsync();
+            await Cerrar();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            saving = false;
+        }
+    }
+
+    private decimal CalcularSubtotal(DateTime inicio, DateTime fin, decimal precio)
+    {
+        double horas = Math.Ceiling((fin - inicio).TotalHours);
+        if (horas < 1) horas = 1;
+
+        return (decimal)horas * precio;
+    }
+
+    private async Task Cerrar()
+    {
+        await OnCerrar.InvokeAsync();
+    }
+}

@@ -57,6 +57,13 @@ namespace WindowsForms
             alquileresForm.Show();
 
         }
+        private void tarifasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TarifaLista tarifasForm = new TarifaLista();
+            tarifasForm.MdiParent = this;
+            tarifasForm.Show();
+
+        }
 
         private async void Home_Load(object sender, EventArgs e)
         {
