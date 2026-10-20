@@ -178,8 +178,10 @@
             Controls.Add(fechaDesdeLabel);
             Controls.Add(precioHoraLabel);
             Controls.Add(idLabel);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "TarifaDetalle";
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Tarifa";
             ((System.ComponentModel.ISupportInitialize)errorProvider).EndInit();
             ((System.ComponentModel.ISupportInitialize)precioHoraNumericUpDown).EndInit();

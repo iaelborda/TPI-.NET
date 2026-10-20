@@ -89,8 +89,10 @@
             Controls.Add(actualizarButton);
             Controls.Add(agregarButton);
             Controls.Add(tarifasDataGridView);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "TarifaLista";
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Tarifas";
             Load += Tarifas_Load;
             ((System.ComponentModel.ISupportInitialize)tarifasDataGridView).EndInit();

@@ -15,54 +15,47 @@ namespace WindowsForms
 {
     public partial class Home : Form
     {
+
+        public bool VolverAlLogin { get; private set; } = false;
         public Home()
         {
             InitializeComponent();
+            this.WindowState = FormWindowState.Maximized;
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.ClientSize = new System.Drawing.Size(1280, 800);
         }
 
 
 
         private void clientesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ClienteLista clientesForm = new ClienteLista();
-            clientesForm.MdiParent = this;
-            clientesForm.Show();
+            AbrirFormulario(new ClienteLista());
         }
 
         private void categoriasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CategoriaLista categoriasForm = new CategoriaLista();
-            categoriasForm.MdiParent = this;
-            categoriasForm.Show();
+            AbrirFormulario(new CategoriaLista());
         }
 
         private void bicicletasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BicicletaLista bicicletasForm = new BicicletaLista();
-            bicicletasForm.MdiParent = this;
-            bicicletasForm.Show();
+            AbrirFormulario(new BicicletaLista());
         }
 
         private void sucursalesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SucursalLista sucursalesForm = new SucursalLista();
-            sucursalesForm.MdiParent = this;
-            sucursalesForm.Show();
+            AbrirFormulario(new SucursalLista());
 
         }
         private void alquileresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AlquilerLista alquileresForm = new AlquilerLista();
-            alquileresForm.MdiParent = this;
-            alquileresForm.Show();
+
+            AbrirFormulario(new AlquilerLista());
 
         }
         private void tarifasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TarifaLista tarifasForm = new TarifaLista();
-            tarifasForm.MdiParent = this;
-            tarifasForm.Show();
-
+            AbrirFormulario(new TarifaLista());
         }
 
         private async void Home_Load(object sender, EventArgs e)
@@ -75,7 +68,23 @@ namespace WindowsForms
         private async void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             await AuthServiceProvider.Instance.LogoutAsync();
+            VolverAlLogin = true;
             this.Close();
+        }
+
+        private void AbrirFormulario(Form newForm)
+        {
+            foreach(Form form in this.MdiChildren)
+            {
+                if(form.GetType() == newForm.GetType())
+                {
+                    form.BringToFront();
+                    newForm.Dispose();
+                    return;
+                }
+            }
+            newForm.MdiParent = this;
+            newForm.Show();
         }
     }
 }

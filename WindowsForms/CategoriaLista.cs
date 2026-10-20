@@ -48,7 +48,7 @@ namespace WindowsForms
         {
             CategoriaDTO categoriaNueva = new CategoriaDTO();
             CategoriaDetalle categoriaDetalle = new CategoriaDetalle(FormMode.Add, categoriaNueva);
-            categoriaDetalle.ShowDialog();
+            categoriaDetalle.ShowDialog(this);
             await this.CargarCategorias();
         }
 
@@ -61,7 +61,7 @@ namespace WindowsForms
                 DeshabilitarControles();
                 CategoriaDTO categoriaCompleta = await CategoriaApiClient.GetAsync(categoria.Id);
                 CategoriaDetalle categoriaDetalle = new CategoriaDetalle(FormMode.Update, categoriaCompleta);
-                categoriaDetalle.ShowDialog();
+                categoriaDetalle.ShowDialog(this);
                 await this.CargarCategorias();
             }
             catch (Exception ex)

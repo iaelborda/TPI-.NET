@@ -107,7 +107,7 @@ namespace WindowsForms
         {
             SucursalDTO sucursalNuevo = new SucursalDTO();
             SucursalDetalle sucursalDetalle = new SucursalDetalle(FormMode.Add, sucursalNuevo);
-            sucursalDetalle.ShowDialog();
+            sucursalDetalle.ShowDialog(this);
             await this.LoadSucursales();
         }
 
@@ -125,7 +125,7 @@ namespace WindowsForms
                     return;
                 }
                 SucursalDetalle sucursalDetalle = new SucursalDetalle(FormMode.Update, sucursalCompleta);
-                sucursalDetalle.ShowDialog();
+                sucursalDetalle.ShowDialog(this);
                 await this.LoadSucursales();
             }
             catch (Exception ex)

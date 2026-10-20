@@ -107,8 +107,8 @@ namespace WindowsForms
         {
             TarifaDTO tarifaNueva = new TarifaDTO();
             TarifaDetalle tarifaDetalle = new TarifaDetalle(FormMode.Add, tarifaNueva);
-            tarifaDetalle.ShowDialog();
-            await LoadTarifas();
+            tarifaDetalle.ShowDialog(this);
+            await this.LoadTarifas();
         }
 
         private async void actualizarButton_Click(object sender, EventArgs e)
@@ -128,8 +128,8 @@ namespace WindowsForms
                 }
 
                 TarifaDetalle tarifaDetalle = new TarifaDetalle(FormMode.Update, tarifaCompleta);
-                tarifaDetalle.ShowDialog();
-                await LoadTarifas();
+                tarifaDetalle.ShowDialog(this);
+                await this.LoadTarifas();
             }
             catch (Exception ex)
             {

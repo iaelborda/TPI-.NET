@@ -388,7 +388,7 @@ namespace WindowsForms
 
             DetalleAlquilerDetalle detalleForm = new DetalleAlquilerDetalle(FormMode.Add, nuevoDetalle);
 
-            if (detalleForm.ShowDialog() == DialogResult.OK)
+            if (detalleForm.ShowDialog(this) == DialogResult.OK)
             {
                 detalleForm.Detalle.Subtotal = 0;
                 detalleForm.Detalle.HoraFin = null;
@@ -419,7 +419,7 @@ namespace WindowsForms
 
                 DetalleAlquilerDetalle detalleForm = new DetalleAlquilerDetalle(FormMode.Update, detalleCopia);
 
-                if (detalleForm.ShowDialog() == DialogResult.OK)
+                if (detalleForm.ShowDialog(this) == DialogResult.OK)
                 {
                     int index = detallesLocales.FindIndex(d => d.BicicletaId == selectedDetalle.BicicletaId);
 

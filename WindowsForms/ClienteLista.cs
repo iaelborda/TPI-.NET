@@ -179,7 +179,7 @@ namespace WindowsForms
                 DeshabilitarControles();
                 ClienteDTO clienteCompleto = await ClienteApiClient.GetAsync(cliente.Id);
                 ClienteDetalle clienteDetalle = new ClienteDetalle(FormMode.Update, clienteCompleto);
-                clienteDetalle.ShowDialog();
+                clienteDetalle.ShowDialog(this);
                 await this.CargarClientes();
             }
             catch (Exception ex)
@@ -196,7 +196,7 @@ namespace WindowsForms
         {
             ClienteDTO clienteNuevo = new ClienteDTO();
             ClienteDetalle clienteDetalle = new ClienteDetalle(FormMode.Add, clienteNuevo);
-            clienteDetalle.ShowDialog();
+            clienteDetalle.ShowDialog(this);
             await this.CargarClientes();
         }
 
