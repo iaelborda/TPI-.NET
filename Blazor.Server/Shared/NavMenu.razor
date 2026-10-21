@@ -27,6 +27,15 @@
                 </NavLink>
             </div>
         }
+        @if (canReadEmpleados)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="empleados">
+                    <span class="oi oi-person" aria-hidden="true"></span> Empleados
+                </NavLink>
+            </div>
+        }
+
         @if (canReadTarifas)
         {
             <div class="nav-item px-3">
@@ -80,6 +89,7 @@
     private bool canReadClientes = false;
     private bool canReadSucursales = false;
     private bool canReadAlquileres = false;
+    private bool canReadEmpleados = false;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
@@ -102,6 +112,7 @@
             canReadSucursales = await AuthService.HasPermissionAsync("sucursales.leer");
             canReadBicicletas = await AuthService.HasPermissionAsync("bicicletas.leer");
             canReadAlquileres = await AuthService.HasPermissionAsync("alquileres.leer");
+            canReadEmpleados = await AuthService.HasPermissionAsync("empleados.leer");
         }
         else
         {
@@ -111,6 +122,7 @@
             canReadClientes = false;
             canReadSucursales = false;
             canReadAlquileres = false;
+            canReadEmpleados = false;
         }
         StateHasChanged();
     }
