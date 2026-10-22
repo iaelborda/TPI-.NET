@@ -91,5 +91,10 @@ namespace WindowsForms
         {
             AbrirFormulario(new EmpleadoLista());
         }
+
+        private void pagosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario(new PagoLista());
+        }
     }
 }

@@ -35,9 +35,9 @@ namespace Application.Services
             {
                 throw new InvalidOperationException($"El alquiler {dto.IdAlquiler} ya cuenta con un pago registrado.");
             }
-            if (alquiler.EstadoAlquiler != EstadoDeAlquiler.Activo)
+            if (alquiler.EstadoAlquiler == EstadoDeAlquiler.Cancelado)
             {
-                throw new InvalidOperationException("Solo se pueden pagar alquileres que se encuentren en estado Activo.");
+                throw new InvalidOperationException("No se pueden pagar alquileres cancelados.");
             }
             if (alquiler.DetallesAlquiler == null || !alquiler.DetallesAlquiler.Any())
             {
@@ -53,6 +53,7 @@ namespace Application.Services
 
             alquiler.SetEstadoAlquiler(EstadoDeAlquiler.Finalizado);
             await alquilerRepository.UpdateAsync(alquiler);
+
             dto.IdPago = pago.IdPago;
             dto.FechaPago = pago.FechaPago;
             dto.Monto = pago.Monto;

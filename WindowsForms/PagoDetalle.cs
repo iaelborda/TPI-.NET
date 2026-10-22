@@ -109,11 +109,15 @@ namespace WindowsForms
             try
             {
                 var todos = await AlquilerApiClient.GetAllAsync();
+                var pagosExistentes = await PagoApiClient.GetAllAsync();
+                var alquileresConPago = pagosExistentes.Select(p => p.IdAlquiler).ToHashSet();
+
                 alquileresPendientes = todos
-                    .Where(a => a.EstadoAlquiler == EstadoDeAlquiler.Activo &&
+                    .Where(a => a.EstadoAlquiler != EstadoDeAlquiler.Cancelado &&
                                 a.Detalles != null &&
                                 a.Detalles.Count > 0 &&
-                                a.Detalles.All(d => d.HoraFin.HasValue))
+                                a.Detalles.All(d => d.HoraFin.HasValue) &&
+                                !alquileresConPago.Contains(a.Id))
                     .ToList();
 
                 alquilerComboBox.DisplayMember = "DisplayText";
@@ -127,9 +131,14 @@ namespace WindowsForms
 
                 alquilerComboBox.DataSource = listaCombo;
 
+                if (pago != null && pago.IdAlquiler > 0)
+                {
+                    alquilerComboBox.SelectedValue = pago.IdAlquiler;
+                }
+
                 if (listaCombo.Count == 0)
                 {
-                    MessageBox.Show("No hay alquileres activos con todas las bicicletas devueltas pendientes de cobro.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("No hay alquileres con todas las bicicletas devueltas pendientes de cobro.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     aceptarButton.Enabled = false;
                 }
             }
@@ -138,6 +147,7 @@ namespace WindowsForms
                 MessageBox.Show($"Error al cargar alquileres pendientes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
         private void alquilerComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {

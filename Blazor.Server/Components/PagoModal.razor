@@ -1,4 +1,4 @@
-﻿@using DTOs
+@using DTOs
 @using Domain.Model
 @using API.Clients
 
@@ -137,16 +137,20 @@
         try
         {
             var todos = await AlquilerApiClient.GetAllAsync();
+            var pagos = await PagoApiClient.GetAllAsync();
+            var pagados = pagos.Select(p => p.IdAlquiler).ToHashSet();
+
             alquileresPendientes = todos
-                .Where(a => a.EstadoAlquiler == EstadoDeAlquiler.Activo &&
+                .Where(a => a.EstadoAlquiler != EstadoDeAlquiler.Cancelado &&
                             a.Detalles != null &&
                             a.Detalles.Count > 0 &&
-                            a.Detalles.All(d => d.HoraFin.HasValue))
+                            a.Detalles.All(d => d.HoraFin.HasValue) &&
+                            !pagados.Contains(a.Id))
                 .ToList();
 
             if (alquileresPendientes.Count == 0)
             {
-                errorMessage = "No hay alquileres activos con todas las bicicletas devueltas listos para cobrar.";
+                errorMessage = "No hay alquileres con todas las bicicletas devueltas listos para cobrar.";
             }
         }
         catch (Exception ex)

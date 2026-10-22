@@ -1,4 +1,4 @@
-﻿using DTOs;
+using DTOs;
 using API.Clients;
 using System;
 using Domain.Model;
@@ -247,9 +247,9 @@ namespace WindowsForms
             AlquilerDTO? alquiler = this.SelectedItem();
             if (alquiler == null) return;
 
-            if (alquiler.EstadoAlquiler != EstadoDeAlquiler.Activo)
+            if (alquiler.EstadoAlquiler == EstadoDeAlquiler.Cancelado)
             {
-                MessageBox.Show("Solo se pueden cobrar alquileres que se encuentren en estado Activo.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No se pueden cobrar alquileres cancelados.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 

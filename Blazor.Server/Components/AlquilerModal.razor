@@ -1,4 +1,4 @@
-﻿@using API.Clients
+@using API.Clients
 @using DTOs
 @using Domain.Model
 @using Microsoft.AspNetCore.Components.Forms
@@ -32,7 +32,22 @@
                 else if (autorizado)
                 {
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label class="form-label">Sucursal *</label>
+                            <InputSelect class="form-select"
+                                         Value="sucursalIdSeleccionada"
+                                         ValueChanged="@((int val) => OnSucursalChanged(val))"
+                                         ValueExpression="@(() => sucursalIdSeleccionada)"
+                                         disabled="@(!PuedeEditar || alquiler.Detalles.Count > 0)">
+                                <option value="0">Seleccione una sucursal</option>
+                                @foreach (var suc in sucursales)
+                                {
+                                    <option value="@suc.Id">@suc.Nombre</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        <div class="col-md-4">
                             <label class="form-label">Cliente *</label>
                             <InputSelect class="form-select"
                                          @bind-Value="alquiler.ClienteId"
@@ -47,13 +62,13 @@
                             </InputSelect>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label">Empleado *</label>
                             <InputSelect class="form-select"
                                          @bind-Value="alquiler.EmpleadoId"
-                                         disabled="@(!PuedeEditar)">
+                                         disabled="@(!PuedeEditar || sucursalIdSeleccionada <= 0)">
                                 <option value="0">Seleccione un empleado</option>
-                                @foreach (var empleado in empleados)
+                                @foreach (var empleado in empleadosFiltrados)
                                 {
                                     <option value="@empleado.Id">
                                         @empleado.Nombre @empleado.Apellido - Legajo: @empleado.Legajo
@@ -78,7 +93,8 @@
                         @if (PuedeEditar)
                         {
                             <button type="button" class="btn btn-sm btn-primary"
-                                    @onclick="MostrarAgregarDetalle">
+                                    @onclick="MostrarAgregarDetalle"
+                                    disabled="@(sucursalIdSeleccionada <= 0)">
                                 Agregar bicicleta
                             </button>
                         }
@@ -95,7 +111,7 @@
                                          ValueChanged="SeleccionarBicicleta"
                                          ValueExpression="@(() => bicicletaId)">
                                 <option value="0">Seleccione una bicicleta</option>
-                                @foreach (var bicicleta in bicicletas)
+                                @foreach (var bicicleta in bicicletasDisponibles)
                                 {
                                     <option value="@bicicleta.Id">
                                         @bicicleta.BicicletaDescripcion
@@ -158,9 +174,19 @@
                                         @if (PuedeEditar)
                                         {
                                             <td>
+                                                @if (detalle.Estado == EstadoDetalleAlquiler.Activo && !detalle.HoraFin.HasValue)
+                                                {
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-outline-success me-1"
+                                                            @onclick="() => DevolverDetalle(detalle)"
+                                                            disabled="@saving">
+                                                        Devolver
+                                                    </button>
+                                                }
                                                 <button type="button"
                                                         class="btn btn-sm btn-outline-danger"
-                                                        @onclick="() => EliminarDetalle(detalle)">
+                                                        @onclick="() => EliminarDetalle(detalle)"
+                                                        disabled="@saving">
                                                     Quitar
                                                 </button>
                                             </td>
@@ -221,10 +247,14 @@
     [Parameter] public EventCallback OnGuardado { get; set; }
 
     private AlquilerDTO alquiler = new();
+    private List<SucursalDTO> sucursales = new();
     private List<ClienteDTO> clientes = new();
-    private List<EmpleadoDTO> empleados = new();
-    private List<BicicletaDTO> bicicletas = new();
+    private List<EmpleadoDTO> todosLosEmpleados = new();
+    private List<EmpleadoDTO> empleadosFiltrados = new();
+    private List<BicicletaDTO> todasLasBicicletas = new();
+    private List<BicicletaDTO> bicicletasDisponibles = new();
 
+    private int sucursalIdSeleccionada;
     private bool loading = true;
     private bool saving;
     private bool autorizado;
@@ -268,19 +298,21 @@
                 return;
             }
 
-            if (AlquilerId.HasValue && !canUpdate)
-            {
-                // El usuario puede consultar, pero no modificar.
-            }
-
+            sucursales = (await SucursalApiClient.GetAllAsync()).ToList();
             clientes = (await ClienteApiClient.GetAllAsync()).ToList();
-            empleados = (await EmpleadoApiClient.GetAllAsync()).ToList();
-            bicicletas = (await BicicletaApiClient.GetAllAsync()).ToList();
+            todosLosEmpleados = (await EmpleadoApiClient.GetAllAsync()).ToList();
+            todasLasBicicletas = (await BicicletaApiClient.GetAllAsync()).ToList();
 
             if (AlquilerId.HasValue)
             {
                 alquiler = await AlquilerApiClient.GetAsync(AlquilerId.Value);
                 alquiler.Detalles ??= new();
+
+                var emp = todosLosEmpleados.FirstOrDefault(e => e.Id == alquiler.EmpleadoId);
+                if (emp != null)
+                {
+                    sucursalIdSeleccionada = emp.SucursalId;
+                }
             }
             else
             {
@@ -292,6 +324,7 @@
                 };
             }
 
+            FiltrarEmpleadosYBicicletas();
             autorizado = true;
         }
         catch
@@ -304,10 +337,41 @@
         }
     }
 
+    private void OnSucursalChanged(int val)
+    {
+        sucursalIdSeleccionada = val;
+        alquiler.EmpleadoId = 0;
+        FiltrarEmpleadosYBicicletas();
+    }
+
+    private void FiltrarEmpleadosYBicicletas()
+    {
+        if (sucursalIdSeleccionada > 0)
+        {
+            empleadosFiltrados = todosLosEmpleados
+                .Where(e => e.SucursalId == sucursalIdSeleccionada)
+                .ToList();
+
+            var idsAgregadas = alquiler.Detalles.Select(d => d.BicicletaId).ToHashSet();
+
+            bicicletasDisponibles = todasLasBicicletas
+                .Where(b => b.SucursalId == sucursalIdSeleccionada &&
+                            b.Estado == EstadoBicicleta.Disponible &&
+                            !idsAgregadas.Contains(b.Id))
+                .ToList();
+        }
+        else
+        {
+            empleadosFiltrados = new();
+            bicicletasDisponibles = new();
+        }
+    }
+
     private void MostrarAgregarDetalle()
     {
-        if (!PuedeEditar) return;
+        if (!PuedeEditar || sucursalIdSeleccionada <= 0) return;
 
+        FiltrarEmpleadosYBicicletas();
         bicicletaId = 0;
         precioHora = null;
         errorMessage = string.Empty;
@@ -321,7 +385,7 @@
         bicicletaId = id;
         precioHora = null;
 
-        var bicicleta = bicicletas.FirstOrDefault(b => b.Id == id);
+        var bicicleta = bicicletasDisponibles.FirstOrDefault(b => b.Id == id);
         if (bicicleta == null) return;
 
         try
@@ -347,7 +411,7 @@
     {
         if (!PuedeEditar || saving) return;
 
-        var bicicleta = bicicletas.FirstOrDefault(b => b.Id == bicicletaId);
+        var bicicleta = bicicletasDisponibles.FirstOrDefault(b => b.Id == bicicletaId);
         if (bicicleta == null || !precioHora.HasValue) return;
 
         if (alquiler.Detalles.Any(d => d.BicicletaId == bicicletaId))
@@ -372,6 +436,7 @@
         bicicletaId = 0;
         precioHora = null;
         errorMessage = string.Empty;
+        FiltrarEmpleadosYBicicletas();
     }
 
     private void CancelarDetalle()
@@ -386,6 +451,51 @@
         if (!PuedeEditar || saving) return;
 
         alquiler.Detalles.Remove(detalle);
+        FiltrarEmpleadosYBicicletas();
+    }
+
+    private async Task DevolverDetalle(DetalleAlquilerDTO detalle)
+    {
+        if (!PuedeEditar || saving || detalle.Estado == EstadoDetalleAlquiler.Devuelto) return;
+
+        bool confirmar = await JSRuntime.InvokeAsync<bool>(
+            "confirm", $"¿Desea registrar la devolución de la bicicleta {detalle.BicicletaMarca}?");
+        if (!confirmar) return;
+
+        try
+        {
+            saving = true;
+            DateTime fechaFin = DateTime.Now;
+            detalle.HoraFin = fechaFin;
+            detalle.Subtotal = CalcularSubtotal(detalle.HoraInicio, fechaFin, detalle.PrecioHora);
+            detalle.Estado = EstadoDetalleAlquiler.Devuelto;
+
+            bool todasDevueltas = alquiler.Detalles.All(d => d.HoraFin.HasValue);
+            if (todasDevueltas)
+            {
+                alquiler.EstadoAlquiler = EstadoDeAlquiler.Finalizado;
+            }
+
+            if (AlquilerId.HasValue)
+            {
+                await AlquilerApiClient.UpdateAsync(alquiler);
+            }
+            await OnGuardado.InvokeAsync();
+
+            if (todasDevueltas)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "Todas las bicicletas han sido devueltas y el alquiler ha finalizado.");
+                await Cerrar();
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            saving = false;
+        }
     }
 
     private async Task Guardar()
