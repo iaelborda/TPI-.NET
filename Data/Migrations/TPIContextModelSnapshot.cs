@@ -225,6 +225,34 @@ namespace Data.Migrations
                     b.ToTable("Empleados");
                 });
 
+            modelBuilder.Entity("Domain.Model.Pago", b =>
+                {
+                    b.Property<int>("IdPago")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPago"));
+
+                    b.Property<DateTime>("FechaPago")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdAlquiler")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Metodo")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Monto")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("IdPago");
+
+                    b.HasIndex("IdAlquiler")
+                        .IsUnique();
+
+                    b.ToTable("Pagos");
+                });
+
             modelBuilder.Entity("Domain.Model.Sucursal", b =>
                 {
                     b.Property<int>("Id")
@@ -339,10 +367,10 @@ namespace Data.Migrations
                             Id = 1,
                             Activo = true,
                             Email = "admin@tpi.com",
-                            FechaCreacion = new DateTime(2026, 10, 12, 21, 37, 20, 44, DateTimeKind.Local).AddTicks(4840),
-                            PasswordHash = "s00STL62jRmOM633Nt+ed6YHVSzx5CT9p2MgZuM0zmk=",
+                            FechaCreacion = new DateTime(2026, 10, 21, 23, 27, 15, 651, DateTimeKind.Local).AddTicks(5063),
+                            PasswordHash = "Pbf5enu0L2D5iqmvpB5nkQ21A+fdiyvx+MSe75RMEWI=",
                             Rol = 0,
-                            Salt = "6Ypt1HXjEVl/wDsz4Yiql7D5l1FVouk6QAaa6/akyAE=",
+                            Salt = "dwXpeHGKn1WVhcLQJCaupbWpds7K7UG+rnqETWvuSOg=",
                             Username = "admin"
                         },
                         new
@@ -350,10 +378,10 @@ namespace Data.Migrations
                             Id = 2,
                             Activo = true,
                             Email = "empleado@tpi.com",
-                            FechaCreacion = new DateTime(2026, 10, 12, 21, 37, 20, 48, DateTimeKind.Local).AddTicks(3298),
-                            PasswordHash = "wGsmuUdZCTrW+d5BmK66GbKyIt5Lry7ps6RMwEoOXa8=",
+                            FechaCreacion = new DateTime(2026, 10, 21, 23, 27, 15, 654, DateTimeKind.Local).AddTicks(143),
+                            PasswordHash = "GZBOsiaZNdPLZhm2v/Tdy+6LaQaHZ9XfBcqs0MasNMk=",
                             Rol = 1,
-                            Salt = "m7a7dBKMqCgeeDrnXBS3WwHNIn5o0TvhPbOQyCxXQjI=",
+                            Salt = "AipMYU6fxrodKdV6EGNwHZOnAGUe102x3aFUnSChQ/Y=",
                             Username = "empleado"
                         });
                 });
@@ -454,6 +482,15 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Sucursal");
+                });
+
+            modelBuilder.Entity("Domain.Model.Pago", b =>
+                {
+                    b.HasOne("Domain.Model.Alquiler", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.Model.Pago", "IdAlquiler")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Model.Tarifa", b =>

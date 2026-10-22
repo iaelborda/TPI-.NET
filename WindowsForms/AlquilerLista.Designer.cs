@@ -32,6 +32,7 @@
             eliminarButton = new Button();
             actualizarButton = new Button();
             agregarButton = new Button();
+            cobrarButton = new Button();
             ((System.ComponentModel.ISupportInitialize)alquileresDataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -40,22 +41,22 @@
             alquileresDataGridView.AllowUserToAddRows = false;
             alquileresDataGridView.AllowUserToDeleteRows = false;
             alquileresDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            alquileresDataGridView.Location = new Point(30, 34);
+            alquileresDataGridView.Location = new Point(24, 27);
             alquileresDataGridView.Margin = new Padding(2);
             alquileresDataGridView.MultiSelect = false;
             alquileresDataGridView.Name = "alquileresDataGridView";
             alquileresDataGridView.ReadOnly = true;
             alquileresDataGridView.RowHeadersWidth = 82;
             alquileresDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            alquileresDataGridView.Size = new Size(1073, 405);
+            alquileresDataGridView.Size = new Size(858, 324);
             alquileresDataGridView.TabIndex = 0;
             // 
             // eliminarButton
             // 
-            eliminarButton.Location = new Point(723, 472);
+            eliminarButton.Location = new Point(578, 378);
             eliminarButton.Margin = new Padding(2);
             eliminarButton.Name = "eliminarButton";
-            eliminarButton.Size = new Size(115, 36);
+            eliminarButton.Size = new Size(92, 29);
             eliminarButton.TabIndex = 2;
             eliminarButton.Text = "Eliminar";
             eliminarButton.UseVisualStyleBackColor = true;
@@ -63,10 +64,10 @@
             // 
             // actualizarButton
             // 
-            actualizarButton.Location = new Point(855, 472);
+            actualizarButton.Location = new Point(684, 378);
             actualizarButton.Margin = new Padding(2);
             actualizarButton.Name = "actualizarButton";
-            actualizarButton.Size = new Size(115, 36);
+            actualizarButton.Size = new Size(92, 29);
             actualizarButton.TabIndex = 3;
             actualizarButton.Text = "Actualizar";
             actualizarButton.UseVisualStyleBackColor = true;
@@ -74,24 +75,36 @@
             // 
             // agregarButton
             // 
-            agregarButton.Location = new Point(988, 472);
+            agregarButton.Location = new Point(790, 378);
             agregarButton.Margin = new Padding(2);
             agregarButton.Name = "agregarButton";
-            agregarButton.Size = new Size(115, 36);
+            agregarButton.Size = new Size(92, 29);
             agregarButton.TabIndex = 3;
             agregarButton.Text = "Agregar";
             agregarButton.UseVisualStyleBackColor = true;
             agregarButton.Click += agregarButton_Click;
             // 
+            // cobrarButton
+            // 
+            cobrarButton.Location = new Point(462, 378);
+            cobrarButton.Name = "cobrarButton";
+            cobrarButton.Size = new Size(94, 29);
+            cobrarButton.TabIndex = 4;
+            cobrarButton.Text = "Cobrar";
+            cobrarButton.UseVisualStyleBackColor = true;
+            cobrarButton.Click += cobrarButton_Click;
+            // 
             // AlquilerLista
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1137, 534);
+            ClientSize = new Size(910, 427);
+            Controls.Add(cobrarButton);
             Controls.Add(agregarButton);
             Controls.Add(actualizarButton);
             Controls.Add(eliminarButton);
             Controls.Add(alquileresDataGridView);
+            Margin = new Padding(2, 2, 2, 2);
             Name = "AlquilerLista";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Alquileres";
@@ -106,5 +119,6 @@
         private Button eliminarButton;
         private Button actualizarButton;
         private Button agregarButton;
+        private Button cobrarButton;
     }
 }

@@ -8,6 +8,8 @@ namespace WindowsForms
     {
         private DetalleAlquilerDTO detalle;
         private FormMode mode;
+        private int sucursalId;
+        private List<int> bicicletasExcluidas;
 
         public DetalleAlquilerDTO Detalle
         {
@@ -28,10 +30,13 @@ namespace WindowsForms
         public DetalleAlquilerDetalle()
         {
             InitializeComponent();
+            bicicletasExcluidas = new List<int>();
         }
 
-        public DetalleAlquilerDetalle(FormMode mode, DetalleAlquilerDTO detalle) : this()
+        public DetalleAlquilerDetalle(FormMode mode, DetalleAlquilerDTO detalle, int sucursalId = 0, List<int>? bicicletasExcluidas = null) : this()
         {
+            this.sucursalId = sucursalId;
+            this.bicicletasExcluidas = bicicletasExcluidas ?? new List<int>();
             Init(mode, detalle);
         }
 
@@ -65,19 +70,22 @@ namespace WindowsForms
 
         private async Task LoadBicicletas()
         {
-            var bicicletas = await BicicletaApiClient.GetAllAsync();
-
+            var todas = await BicicletaApiClient.GetAllAsync();
+            var disponibles = todas.Where(b =>
+                (this.sucursalId <= 0 || b.SucursalId == this.sucursalId) &&
+                (b.Estado == EstadoBicicleta.Disponible || (this.mode == FormMode.Update && this.detalle != null && b.Id == this.detalle.BicicletaId)) &&
+                (!bicicletasExcluidas.Contains(b.Id) || (this.mode == FormMode.Update && this.detalle != null && b.Id == this.detalle.BicicletaId))
+            ).ToList();
             bicicletaComboBox.SelectedIndexChanged -= bicicletaComboBox_SelectedIndexChanged;
-
-            bicicletaComboBox.DataSource = bicicletas.ToList();
+            bicicletaComboBox.DataSource = disponibles;
             bicicletaComboBox.DisplayMember = "BicicletaDescripcion";
             bicicletaComboBox.ValueMember = "Id";
             bicicletaComboBox.SelectedIndex = -1;
-
             bicicletaComboBox.SelectedIndexChanged += bicicletaComboBox_SelectedIndexChanged;
         }
 
-        private async void bicicletaComboBox_SelectedIndexChanged(object sender, EventArgs e)
+
+        private async void bicicletaComboBox_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (bicicletaComboBox.SelectedItem is BicicletaDTO bicicleta)
             {

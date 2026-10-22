@@ -1,0 +1,208 @@
+@page "/pagos"
+@using DTOs
+@using API.Clients
+@using Blazor.Server.Components
+@inject IJSRuntime JSRuntime
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<PageTitle>Pagos</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h3>Pagos</h3>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @errorMessage
+                    <button type="button" class="btn-close" @onclick="() => errorMessage = string.Empty"></button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @successMessage
+                    <button type="button" class="btn-close" @onclick="() => successMessage = string.Empty"></button>
+                </div>
+            }
+
+            @if (canAdd)
+            {
+                <div class="mb-3">
+                    <button class="btn btn-primary" @onclick="OpenAddModal">
+                        <i class="fas fa-plus"></i> Registrar Pago
+                    </button>
+                </div>
+            }
+
+            @if (loading)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Id</th>
+                                <th>N° Alquiler</th>
+                                <th>Cliente</th>
+                                <th>Fecha Pago</th>
+                                <th>Monto</th>
+                                <th>Método</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (pagos != null && pagos.Any())
+                            {
+                                @foreach (var pago in pagos)
+                                {
+                                    <tr>
+                                        <td>@pago.IdPago</td>
+                                        <td>Alquiler #@pago.IdAlquiler</td>
+                                        <td>@(pago.ClienteNombre ?? "") @(pago.ClienteApellido ?? "")</td>
+                                        <td>@pago.FechaPago.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>@pago.Monto.ToString("C2")</td>
+                                        <td>@pago.Metodo</td>
+                                        <td>
+                                            @if (canUpdate)
+                                            {
+                                                <button class="btn btn-sm btn-outline-primary me-1" @onclick="() => OpenEditModal(pago)">
+                                                    <i class="fas fa-edit"></i> Editar
+                                                </button>
+                                            }
+                                            @if (canDelete)
+                                            {
+                                                <button class="btn btn-sm btn-outline-danger" @onclick="() => ConfirmDelete(pago)">
+                                                    <i class="fas fa-trash"></i> Anular
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<PagoModal @ref="pagoModal" OnPagoChanged="LoadPagos" />
+
+@code {
+    private List<PagoDTO>? pagos;
+    private bool loading = true;
+    private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
+    private PagoModal pagoModal = null!;
+
+    private bool canRead = false;
+    private bool canAdd = false;
+    private bool canUpdate = false;
+    private bool canDelete = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var isAuthenticated = await AuthService.IsAuthenticatedAsync();
+
+            if (!isAuthenticated)
+            {
+                Navigation.NavigateTo("/login");
+                return;
+            }
+
+            await LoadPermissions();
+
+            if (canRead)
+            {
+                await LoadPagos();
+            }
+            else
+            {
+                errorMessage = "No tiene permisos para ver pagos.";
+            }
+
+            if (canAdd && AlquilerId.HasValue && AlquilerId.Value > 0)
+            {
+                await pagoModal.ShowAddModal(AlquilerId.Value);
+            }
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task LoadPermissions()
+    {
+        canRead = await AuthService.HasPermissionAsync("pagos.leer");
+        canAdd = await AuthService.HasPermissionAsync("pagos.agregar");
+        canUpdate = await AuthService.HasPermissionAsync("pagos.actualizar");
+        canDelete = await AuthService.HasPermissionAsync("pagos.eliminar");
+    }
+
+    private async Task LoadPagos()
+    {
+        try
+        {
+            loading = true;
+            pagos = (await PagoApiClient.GetAllAsync())?.ToList();
+            successMessage = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al cargar pagos: {ex.Message}";
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    [SupplyParameterFromQuery]
+    [Parameter]
+    public int? AlquilerId { get; set; }
+
+    private async Task OpenAddModal()
+    {
+        await pagoModal.ShowAddModal();
+    }
+
+    private void OpenEditModal(PagoDTO pago)
+    {
+        pagoModal.ShowEditModal(pago);
+    }
+
+    private async Task ConfirmDelete(PagoDTO pago)
+    {
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm",
+            $"¿Está seguro de anular el pago #{pago.IdPago}? El alquiler #{pago.IdAlquiler} volverá a estado Activo.");
+
+        if (confirm)
+        {
+            try
+            {
+                await PagoApiClient.DeleteAsync(pago.IdPago);
+                successMessage = "Pago anulado exitosamente.";
+                await LoadPagos();
+            }
+            catch (Exception ex)
+            {
+                errorMessage = $"Error al anular pago: {ex.Message}";
+            }
+        }
+    }
+}

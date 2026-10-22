@@ -78,6 +78,14 @@
                 </NavLink>
             </div>
         }
+        @if (canReadPagos)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="pagos">
+                    <span class="oi oi-credit-card" aria-hidden="true"></span> Pagos
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
 
@@ -90,6 +98,7 @@
     private bool canReadSucursales = false;
     private bool canReadAlquileres = false;
     private bool canReadEmpleados = false;
+    private bool canReadPagos = false;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
@@ -113,6 +122,7 @@
             canReadBicicletas = await AuthService.HasPermissionAsync("bicicletas.leer");
             canReadAlquileres = await AuthService.HasPermissionAsync("alquileres.leer");
             canReadEmpleados = await AuthService.HasPermissionAsync("empleados.leer");
+            canReadPagos = await AuthService.HasPermissionAsync("pagos.leer");
         }
         else
         {
@@ -123,6 +133,7 @@
             canReadSucursales = false;
             canReadAlquileres = false;
             canReadEmpleados = false;
+            canReadPagos = false;
         }
         StateHasChanged();
     }

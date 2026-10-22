@@ -148,6 +148,10 @@
             TimeSpan duracion = HoraFin.Value - HoraInicio;
             decimal horas = (decimal)duracion.TotalHours;
             horas = Math.Ceiling(horas);
+            if (horas < 1)
+            {
+                horas = 1;
+            }
 
             Subtotal = horas * PrecioHora;
         }

@@ -23,6 +23,8 @@ namespace Domain.Model
         public decimal Monto { get; private set; }
         public MetodoPago Metodo { get; private set; }
 
+        protected Pago() { }
+
         public Pago(int idAlquiler, MetodoPago metodo)
         {
             SetAlquilerId(idAlquiler);

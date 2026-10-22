@@ -48,6 +48,9 @@ namespace Application.Services
                 if (bicicleta == null)
                     throw new ArgumentException($"No existe la bicicleta con Id {detalleDto.BicicletaId}.");
 
+                if (bicicleta.Estado != EstadoBicicleta.Disponible)
+                    throw new InvalidOperationException($"La bicicleta #{bicicleta.Id} ({bicicleta.Marca}) no se encuentra disponible.");
+
                 if (await alquilerRepository.BicicletaEnAlquilerActivoAsync(bicicleta.Id))
                     throw new ArgumentException($"La bicicleta {bicicleta.Id} ya está en un alquiler activo.");
 
@@ -62,6 +65,9 @@ namespace Application.Services
                 detalle.SetSubtotal(0);
 
                 alquiler.AddDetalle(detalle);
+
+                bicicleta.SetEstado(EstadoBicicleta.EnUso);
+                await bicicletaRepository.UpdateAsync(bicicleta);
             }
 
             await alquilerRepository.AddAsync(alquiler);
@@ -74,8 +80,22 @@ namespace Application.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
+            var alquiler = await alquilerRepository.GetAsync(id);
+            if (alquiler != null)
+            {
+                foreach (var detalle in alquiler.DetallesAlquiler)
+                {
+                    var bicicleta = await bicicletaRepository.GetAsync(detalle.BicicletaId);
+                    if (bicicleta != null && bicicleta.Estado == EstadoBicicleta.EnUso)
+                    {
+                        bicicleta.SetEstado(EstadoBicicleta.Disponible);
+                        await bicicletaRepository.UpdateAsync(bicicleta);
+                    }
+                }
+            }
             return await alquilerRepository.DeleteAsync(id);
         }
+
 
         public async Task<AlquilerDTO?> GetAsync(int id)
         {
@@ -185,21 +205,33 @@ namespace Application.Services
                 detalle.SetHoraInicio(detalleDto.HoraInicio);
                 detalle.SetPrecioHora(tarifa.PrecioHora);
 
-                if (detalleDto.HoraFin.HasValue)
+                if (detalleDto.HoraFin.HasValue || dto.EstadoAlquiler == EstadoDeAlquiler.Finalizado || dto.EstadoAlquiler == EstadoDeAlquiler.Cancelado)
                 {
-                    detalle.SetHoraFin(detalleDto.HoraFin);
-                    detalle.CalcularSubTotal(tarifa.PrecioHora);
-                    detalle.SetEstado(EstadoDetalleAlquiler.Devuelto);
+                    if (dto.EstadoAlquiler == EstadoDeAlquiler.Cancelado)
+                    {
+                        detalle.SetHoraFin(detalleDto.HoraFin ?? DateTime.Now);
+                        detalle.SetSubtotal(0);
+                        detalle.SetEstado(EstadoDetalleAlquiler.Devuelto);
+                    }
+                    else
+                    {
+                        var fin = detalleDto.HoraFin ?? DateTime.Now;
+                        detalle.SetHoraFin(fin);
+                        detalle.CalcularSubTotal(tarifa.PrecioHora);
+                        detalle.SetEstado(EstadoDetalleAlquiler.Devuelto);
+                    }
+                    bicicleta.SetEstado(EstadoBicicleta.Disponible);
+                    await bicicletaRepository.UpdateAsync(bicicleta);
                 }
                 else
                 {
                     detalle.SetSubtotal(0);
                     detalle.SetEstado(EstadoDetalleAlquiler.Activo);
+                    bicicleta.SetEstado(EstadoBicicleta.EnUso);
+                    await bicicletaRepository.UpdateAsync(bicicleta);
                 }
-
                 alquiler.AddDetalle(detalle);
             }
-
             return await alquilerRepository.UpdateAsync(alquiler);
         }
     }

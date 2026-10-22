@@ -68,6 +68,10 @@ builder.Services.AddScoped<AlquilerService>();
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<UsuarioService>();
 
+builder.Services.AddScoped<IPagoRepository, PagoRepository>();
+builder.Services.AddScoped<IPagoService, PagoService>();
+
+
 // Add JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings["SecretKey"];
@@ -142,6 +146,13 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("UsuariosActualizar", policy => policy.RequireClaim("permission", "usuarios.actualizar"));
     options.AddPolicy("UsuariosEliminar", policy => policy.RequireClaim("permission", "usuarios.eliminar"));
 
+    // Políticas para Pagos
+    options.AddPolicy("PagosLeer", policy => policy.RequireClaim("permission", "pagos.leer"));
+    options.AddPolicy("PagosAgregar", policy => policy.RequireClaim("permission", "pagos.agregar"));
+    options.AddPolicy("PagosActualizar", policy => policy.RequireClaim("permission", "pagos.actualizar"));
+    options.AddPolicy("PagosEliminar", policy => policy.RequireClaim("permission", "pagos.eliminar"));
+
+
 });
 
 // Configure the HTTP request pipeline.
@@ -172,6 +183,8 @@ app.MapUsuarioEndpoints();
 app.MapEmpleadoEndpoints();
 app.MapAlquilerEndpoints();
 app.MapTarifaEndpoints();
+app.MapPagoEndpoints();
+
 
 using (var scope = app.Services.CreateScope())
 {

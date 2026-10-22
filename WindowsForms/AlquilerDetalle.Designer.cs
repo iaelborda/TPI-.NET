@@ -49,6 +49,9 @@
             errorProvider = new ErrorProvider(components);
             cancelarAlquilerButton = new Button();
             finalizarAlquilerButton = new Button();
+            sucursalLabel = new Label();
+            sucursalComboBox = new ComboBox();
+            devolverBicicletaButton = new Button();
             ((System.ComponentModel.ISupportInitialize)detallesDataGridView).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider).BeginInit();
             SuspendLayout();
@@ -56,36 +59,40 @@
             // idLabel
             // 
             idLabel.AutoSize = true;
-            idLabel.Location = new Point(54, 60);
+            idLabel.Location = new Point(43, 48);
+            idLabel.Margin = new Padding(2, 0, 2, 0);
             idLabel.Name = "idLabel";
-            idLabel.Size = new Size(28, 25);
+            idLabel.Size = new Size(22, 20);
             idLabel.TabIndex = 0;
             idLabel.Text = "Id";
             // 
             // clienteLabel
             // 
             clienteLabel.AutoSize = true;
-            clienteLabel.Location = new Point(54, 124);
+            clienteLabel.Location = new Point(43, 99);
+            clienteLabel.Margin = new Padding(2, 0, 2, 0);
             clienteLabel.Name = "clienteLabel";
-            clienteLabel.Size = new Size(65, 25);
+            clienteLabel.Size = new Size(55, 20);
             clienteLabel.TabIndex = 1;
             clienteLabel.Text = "Cliente";
             // 
             // empleadoLabel
             // 
             empleadoLabel.AutoSize = true;
-            empleadoLabel.Location = new Point(485, 124);
+            empleadoLabel.Location = new Point(388, 99);
+            empleadoLabel.Margin = new Padding(2, 0, 2, 0);
             empleadoLabel.Name = "empleadoLabel";
-            empleadoLabel.Size = new Size(92, 25);
+            empleadoLabel.Size = new Size(77, 20);
             empleadoLabel.TabIndex = 2;
             empleadoLabel.Text = "Empleado";
             // 
             // fechaAlquilerLabel
             // 
             fechaAlquilerLabel.AutoSize = true;
-            fechaAlquilerLabel.Location = new Point(54, 183);
+            fechaAlquilerLabel.Location = new Point(43, 146);
+            fechaAlquilerLabel.Margin = new Padding(2, 0, 2, 0);
             fechaAlquilerLabel.Name = "fechaAlquilerLabel";
-            fechaAlquilerLabel.Size = new Size(122, 25);
+            fechaAlquilerLabel.Size = new Size(103, 20);
             fechaAlquilerLabel.TabIndex = 3;
             fechaAlquilerLabel.Text = "Fecha Alquiler";
             // 
@@ -93,9 +100,10 @@
             // 
             bicicletasLabel.AutoSize = true;
             bicicletasLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            bicicletasLabel.Location = new Point(54, 241);
+            bicicletasLabel.Location = new Point(43, 193);
+            bicicletasLabel.Margin = new Padding(2, 0, 2, 0);
             bicicletasLabel.Name = "bicicletasLabel";
-            bicicletasLabel.Size = new Size(92, 25);
+            bicicletasLabel.Size = new Size(74, 20);
             bicicletasLabel.TabIndex = 4;
             bicicletasLabel.Text = "Bicicletas";
             // 
@@ -103,9 +111,10 @@
             // 
             totalBicicletasLabel.AutoSize = true;
             totalBicicletasLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            totalBicicletasLabel.Location = new Point(54, 669);
+            totalBicicletasLabel.Location = new Point(43, 535);
+            totalBicicletasLabel.Margin = new Padding(2, 0, 2, 0);
             totalBicicletasLabel.Name = "totalBicicletasLabel";
-            totalBicicletasLabel.Size = new Size(144, 25);
+            totalBicicletasLabel.Size = new Size(117, 20);
             totalBicicletasLabel.TabIndex = 5;
             totalBicicletasLabel.Text = "Total Bicicletas:";
             // 
@@ -113,9 +122,10 @@
             // 
             totalPrecioLabel.AutoSize = true;
             totalPrecioLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            totalPrecioLabel.Location = new Point(54, 707);
+            totalPrecioLabel.Location = new Point(43, 566);
+            totalPrecioLabel.Margin = new Padding(2, 0, 2, 0);
             totalPrecioLabel.Name = "totalPrecioLabel";
-            totalPrecioLabel.Size = new Size(117, 25);
+            totalPrecioLabel.Size = new Size(95, 20);
             totalPrecioLabel.TabIndex = 7;
             totalPrecioLabel.Text = "Total Precio:";
             // 
@@ -124,21 +134,22 @@
             detallesDataGridView.AllowUserToAddRows = false;
             detallesDataGridView.AllowUserToDeleteRows = false;
             detallesDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            detallesDataGridView.Location = new Point(54, 285);
+            detallesDataGridView.Location = new Point(43, 228);
+            detallesDataGridView.Margin = new Padding(2);
             detallesDataGridView.MultiSelect = false;
             detallesDataGridView.Name = "detallesDataGridView";
             detallesDataGridView.ReadOnly = true;
             detallesDataGridView.RowHeadersWidth = 62;
             detallesDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            detallesDataGridView.Size = new Size(826, 369);
+            detallesDataGridView.Size = new Size(661, 295);
             detallesDataGridView.TabIndex = 0;
             // 
             // agregarButton
             // 
-            agregarButton.Location = new Point(431, 661);
-            agregarButton.Margin = new Padding(5);
+            agregarButton.Location = new Point(345, 529);
+            agregarButton.Margin = new Padding(4);
             agregarButton.Name = "agregarButton";
-            agregarButton.Size = new Size(143, 33);
+            agregarButton.Size = new Size(114, 26);
             agregarButton.TabIndex = 9;
             agregarButton.Text = "&Agregar";
             agregarButton.UseVisualStyleBackColor = true;
@@ -146,10 +157,10 @@
             // 
             // modificarButton
             // 
-            modificarButton.Location = new Point(584, 661);
-            modificarButton.Margin = new Padding(5);
+            modificarButton.Location = new Point(467, 529);
+            modificarButton.Margin = new Padding(4);
             modificarButton.Name = "modificarButton";
-            modificarButton.Size = new Size(143, 33);
+            modificarButton.Size = new Size(114, 26);
             modificarButton.TabIndex = 10;
             modificarButton.Text = "&Modificar";
             modificarButton.UseVisualStyleBackColor = true;
@@ -157,10 +168,10 @@
             // 
             // eliminarButton
             // 
-            eliminarButton.Location = new Point(737, 661);
-            eliminarButton.Margin = new Padding(5);
+            eliminarButton.Location = new Point(590, 529);
+            eliminarButton.Margin = new Padding(4);
             eliminarButton.Name = "eliminarButton";
-            eliminarButton.Size = new Size(143, 33);
+            eliminarButton.Size = new Size(114, 26);
             eliminarButton.TabIndex = 11;
             eliminarButton.Text = "&Eliminar";
             eliminarButton.UseVisualStyleBackColor = true;
@@ -168,9 +179,10 @@
             // 
             // aceptarButton
             // 
-            aceptarButton.Location = new Point(628, 740);
+            aceptarButton.Location = new Point(502, 592);
+            aceptarButton.Margin = new Padding(2);
             aceptarButton.Name = "aceptarButton";
-            aceptarButton.Size = new Size(115, 50);
+            aceptarButton.Size = new Size(92, 40);
             aceptarButton.TabIndex = 12;
             aceptarButton.Text = "&Aceptar";
             aceptarButton.UseVisualStyleBackColor = true;
@@ -178,9 +190,10 @@
             // 
             // cancelarButton
             // 
-            cancelarButton.Location = new Point(765, 740);
+            cancelarButton.Location = new Point(612, 592);
+            cancelarButton.Margin = new Padding(2);
             cancelarButton.Name = "cancelarButton";
-            cancelarButton.Size = new Size(115, 50);
+            cancelarButton.Size = new Size(92, 40);
             cancelarButton.TabIndex = 13;
             cancelarButton.Text = "&Cancelar";
             cancelarButton.UseVisualStyleBackColor = true;
@@ -188,36 +201,40 @@
             // 
             // idTextBox
             // 
-            idTextBox.Location = new Point(182, 60);
+            idTextBox.Location = new Point(146, 48);
+            idTextBox.Margin = new Padding(2);
             idTextBox.Name = "idTextBox";
             idTextBox.ReadOnly = true;
-            idTextBox.Size = new Size(150, 31);
+            idTextBox.Size = new Size(121, 27);
             idTextBox.TabIndex = 14;
             // 
             // clienteComboBox
             // 
             clienteComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             clienteComboBox.FormattingEnabled = true;
-            clienteComboBox.Location = new Point(182, 121);
+            clienteComboBox.Location = new Point(146, 97);
+            clienteComboBox.Margin = new Padding(2);
             clienteComboBox.Name = "clienteComboBox";
-            clienteComboBox.Size = new Size(297, 33);
+            clienteComboBox.Size = new Size(238, 28);
             clienteComboBox.TabIndex = 15;
             // 
             // empleadoComboBox
             // 
             empleadoComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             empleadoComboBox.FormattingEnabled = true;
-            empleadoComboBox.Location = new Point(583, 121);
+            empleadoComboBox.Location = new Point(466, 97);
+            empleadoComboBox.Margin = new Padding(2);
             empleadoComboBox.Name = "empleadoComboBox";
-            empleadoComboBox.Size = new Size(297, 33);
+            empleadoComboBox.Size = new Size(238, 28);
             empleadoComboBox.TabIndex = 16;
             // 
             // fechaAlquilerTextBox
             // 
-            fechaAlquilerTextBox.Location = new Point(182, 180);
+            fechaAlquilerTextBox.Location = new Point(146, 144);
+            fechaAlquilerTextBox.Margin = new Padding(2);
             fechaAlquilerTextBox.Name = "fechaAlquilerTextBox";
             fechaAlquilerTextBox.ReadOnly = true;
-            fechaAlquilerTextBox.Size = new Size(266, 31);
+            fechaAlquilerTextBox.Size = new Size(214, 27);
             fechaAlquilerTextBox.TabIndex = 17;
             // 
             // errorProvider
@@ -227,9 +244,10 @@
             // cancelarAlquilerButton
             // 
             cancelarAlquilerButton.BackColor = Color.IndianRed;
-            cancelarAlquilerButton.Location = new Point(255, 740);
+            cancelarAlquilerButton.Location = new Point(204, 592);
+            cancelarAlquilerButton.Margin = new Padding(2);
             cancelarAlquilerButton.Name = "cancelarAlquilerButton";
-            cancelarAlquilerButton.Size = new Size(170, 50);
+            cancelarAlquilerButton.Size = new Size(136, 40);
             cancelarAlquilerButton.TabIndex = 18;
             cancelarAlquilerButton.Text = "Cancelar Alquiler";
             cancelarAlquilerButton.UseVisualStyleBackColor = false;
@@ -238,19 +256,53 @@
             // finalizarAlquilerButton
             // 
             finalizarAlquilerButton.BackColor = Color.YellowGreen;
-            finalizarAlquilerButton.Location = new Point(445, 740);
+            finalizarAlquilerButton.Location = new Point(356, 592);
+            finalizarAlquilerButton.Margin = new Padding(2);
             finalizarAlquilerButton.Name = "finalizarAlquilerButton";
-            finalizarAlquilerButton.Size = new Size(161, 50);
+            finalizarAlquilerButton.Size = new Size(129, 40);
             finalizarAlquilerButton.TabIndex = 19;
             finalizarAlquilerButton.Text = "Finalizar Alquiler";
             finalizarAlquilerButton.UseVisualStyleBackColor = false;
             finalizarAlquilerButton.Click += finalizarAlquilerButton_Click;
             // 
+            // sucursalLabel
+            // 
+            sucursalLabel.AutoSize = true;
+            sucursalLabel.Location = new Point(396, 51);
+            sucursalLabel.Name = "sucursalLabel";
+            sucursalLabel.Size = new Size(63, 20);
+            sucursalLabel.TabIndex = 20;
+            sucursalLabel.Text = "Sucursal";
+            // 
+            // sucursalComboBox
+            // 
+            sucursalComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            sucursalComboBox.FormattingEnabled = true;
+            sucursalComboBox.Location = new Point(466, 48);
+            sucursalComboBox.Name = "sucursalComboBox";
+            sucursalComboBox.Size = new Size(238, 28);
+            sucursalComboBox.TabIndex = 21;
+            sucursalComboBox.SelectedIndexChanged += sucursalComboBox_SelectedIndexChanged;
+            // 
+            // devolverBicicletaButton
+            // 
+            devolverBicicletaButton.Location = new Point(223, 529);
+            devolverBicicletaButton.Margin = new Padding(4);
+            devolverBicicletaButton.Name = "devolverBicicletaButton";
+            devolverBicicletaButton.Size = new Size(114, 26);
+            devolverBicicletaButton.TabIndex = 22;
+            devolverBicicletaButton.Text = "&Devolver";
+            devolverBicicletaButton.UseVisualStyleBackColor = true;
+            devolverBicicletaButton.Click += devolverBicicletaButton_Click;
+            // 
             // AlquilerDetalle
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(935, 813);
+            ClientSize = new Size(748, 650);
+            Controls.Add(devolverBicicletaButton);
+            Controls.Add(sucursalComboBox);
+            Controls.Add(sucursalLabel);
             Controls.Add(finalizarAlquilerButton);
             Controls.Add(cancelarAlquilerButton);
             Controls.Add(fechaAlquilerTextBox);
@@ -271,6 +323,7 @@
             Controls.Add(clienteLabel);
             Controls.Add(idLabel);
             FormBorderStyle = FormBorderStyle.FixedDialog;
+            Margin = new Padding(2);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "AlquilerDetalle";
@@ -304,5 +357,8 @@
         private ErrorProvider errorProvider;
         private Button cancelarAlquilerButton;
         private Button finalizarAlquilerButton;
+        private ComboBox sucursalComboBox;
+        private Label sucursalLabel;
+        private Button devolverBicicletaButton;
     }
 }
