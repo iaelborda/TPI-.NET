@@ -30,15 +30,25 @@
                             <label class="form-label">Alquiler *</label>
                             @if (mode == FormMode.Add)
                             {
-                                <select class="form-select" @onchange="OnAlquilerChanged">
-                                    <option value="0">Seleccione un alquiler pendiente</option>
-                                    @foreach (var alq in alquileresPendientes)
-                                    {
-                                        <option value="@alq.Id">
-                                            Alquiler #@alq.Id - @alq.ClienteNombre @alq.ClienteApellido (Total: @(alq.Detalles?.Sum(d => d.Subtotal).ToString("C2") ?? "$0,00"))
-                                        </option>
-                                    }
-                                </select>
+                                @if (loadingAlquileres)
+                                {
+                                    <div class="d-flex align-items-center text-muted small py-2">
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                        Cargando alquileres pendientes...
+                                    </div>
+                                }
+                                else
+                                {
+                                    <select class="form-select" value="@currentPago.IdAlquiler" @onchange="OnAlquilerChanged">
+                                        <option value="0">Seleccione un alquiler pendiente</option>
+                                        @foreach (var alq in alquileresPendientes)
+                                        {
+                                            <option value="@alq.Id">
+                                                Alquiler #@alq.Id - @alq.ClienteNombre @alq.ClienteApellido (Total: @(alq.Detalles?.Sum(d => d.Subtotal).ToString("C2") ?? "$0,00"))
+                                            </option>
+                                        }
+                                    </select>
+                                }
                             }
                             else
                             {
@@ -74,7 +84,7 @@
                             <button type="button" class="btn btn-secondary" @onclick="Close" disabled="@saving">
                                 Cancelar
                             </button>
-                            <button type="submit" class="btn btn-primary" disabled="@(saving || (mode == FormMode.Add && alquileresPendientes.Count == 0))">
+                            <button type="submit" class="btn btn-primary" disabled="@(saving || loadingAlquileres || (mode == FormMode.Add && (alquileresPendientes.Count == 0 || currentPago.IdAlquiler <= 0)))">
                                 @if (saving)
                                 {
                                     <span class="spinner-border spinner-border-sm me-2"></span>
@@ -94,6 +104,7 @@
 
     private bool showModal;
     private bool saving;
+    private bool loadingAlquileres;
     private FormMode mode = FormMode.Add;
     private PagoDTO currentPago = new();
     private List<AlquilerDTO> alquileresPendientes = new();
@@ -107,14 +118,45 @@
         Update
     }
 
-    public async Task ShowAddModal()
+    public async Task ShowAddModal(int? preselectedAlquilerId = null)
     {
         mode = FormMode.Add;
         currentPago = new PagoDTO { Metodo = MetodoPago.Efectivo };
         montoCalculado = 0;
         ClearValidationErrors();
+        loadingAlquileres = true;
         showModal = true;
+        StateHasChanged();
+
         await LoadAlquileresPendientes();
+        loadingAlquileres = false;
+
+        if (preselectedAlquilerId.HasValue && preselectedAlquilerId.Value > 0)
+        {
+            var alq = alquileresPendientes.FirstOrDefault(a => a.Id == preselectedAlquilerId.Value);
+            if (alq != null)
+            {
+                currentPago.IdAlquiler = alq.Id;
+                montoCalculado = alq.Detalles?.Sum(d => d.Subtotal) ?? 0;
+            }
+            else
+            {
+                try
+                {
+                    var directo = await AlquilerApiClient.GetAsync(preselectedAlquilerId.Value);
+                    if (directo != null && directo.Detalles != null && directo.Detalles.Count > 0)
+                    {
+                        alquileresPendientes.Insert(0, directo);
+                        currentPago.IdAlquiler = directo.Id;
+                        montoCalculado = directo.Detalles.Sum(d => d.Subtotal);
+                        errorMessage = string.Empty;
+                    }
+                }
+                catch { }
+            }
+        }
+
+        StateHasChanged();
     }
 
     public void ShowEditModal(PagoDTO pago)
@@ -130,6 +172,7 @@
         montoCalculado = pago.Monto;
         ClearValidationErrors();
         showModal = true;
+        StateHasChanged();
     }
 
     private async Task LoadAlquileresPendientes()
@@ -151,6 +194,10 @@
             if (alquileresPendientes.Count == 0)
             {
                 errorMessage = "No hay alquileres con todas las bicicletas devueltas listos para cobrar.";
+            }
+            else
+            {
+                errorMessage = string.Empty;
             }
         }
         catch (Exception ex)
@@ -182,6 +229,8 @@
         {
             saving = true;
             errorMessage = string.Empty;
+
+            currentPago.Monto = montoCalculado;
 
             if (mode == FormMode.Add)
                 await PagoApiClient.AddAsync(currentPago);
@@ -225,5 +274,6 @@
     {
         showModal = false;
         ClearValidationErrors();
+        StateHasChanged();
     }
 }

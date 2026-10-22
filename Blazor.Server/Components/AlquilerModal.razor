@@ -484,8 +484,9 @@
 
             if (todasDevueltas)
             {
-                await JSRuntime.InvokeVoidAsync("alert", "Todas las bicicletas han sido devueltas y el alquiler ha finalizado.");
+                await JSRuntime.InvokeVoidAsync("alert", "Todas las bicicletas han sido devueltas y el alquiler ha finalizado. Se abrirá la sección de cobro.");
                 await Cerrar();
+                Navigation.NavigateTo($"pagos?alquilerId={alquiler.Id}");
             }
         }
         catch (Exception ex)
@@ -576,7 +577,9 @@
 
             await AlquilerApiClient.UpdateAsync(alquiler);
             await OnGuardado.InvokeAsync();
+            await JSRuntime.InvokeVoidAsync("alert", "El alquiler se ha finalizado correctamente. Se abrirá la sección de cobro.");
             await Cerrar();
+            Navigation.NavigateTo($"pagos?alquilerId={alquiler.Id}");
         }
         catch (Exception ex)
         {

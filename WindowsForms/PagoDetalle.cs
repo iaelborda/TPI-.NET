@@ -1,4 +1,4 @@
-﻿using API.Clients;
+using API.Clients;
 using Domain.Model;
 using DTOs;
 using System;
@@ -136,6 +136,8 @@ namespace WindowsForms
                     alquilerComboBox.SelectedValue = pago.IdAlquiler;
                 }
 
+                ActualizarMontoSeleccionado();
+
                 if (listaCombo.Count == 0)
                 {
                     MessageBox.Show("No hay alquileres con todas las bicicletas devueltas pendientes de cobro.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -148,18 +150,28 @@ namespace WindowsForms
             }
         }
 
-
-        private void alquilerComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void ActualizarMontoSeleccionado()
         {
             if (mode == FormMode.Add && alquilerComboBox.SelectedValue is int alquilerId)
             {
-                var seleccionado = alquileresPendientes.FirstOrDefault(a => a.Id == alquilerId);
+                var seleccionado = alquileresPendientes?.FirstOrDefault(a => a.Id == alquilerId);
                 if (seleccionado != null)
                 {
-                    decimal total = seleccionado.Detalles.Sum(d => d.Subtotal);
+                    decimal total = seleccionado.Detalles != null ? seleccionado.Detalles.Sum(d => d.Subtotal) : 0m;
                     montoTextBox.Text = total.ToString("C2");
+                    this.pago.Monto = total;
+                }
+                else
+                {
+                    montoTextBox.Text = 0m.ToString("C2");
+                    this.pago.Monto = 0m;
                 }
             }
+        }
+
+        private void alquilerComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ActualizarMontoSeleccionado();
         }
 
         private async void aceptarButton_Click(object sender, EventArgs e)

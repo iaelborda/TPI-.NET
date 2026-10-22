@@ -1,4 +1,4 @@
-﻿using API.Clients;
+using API.Clients;
 using Domain.Model;
 using DTOs;
 namespace WindowsForms
@@ -303,7 +303,15 @@ namespace WindowsForms
                 await AlquilerApiClient.UpdateAsync(this.Alquiler);
 
                 RefreshDetallesGrid();
-                MessageBox.Show("El alquiler se ha finalizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("El alquiler se ha finalizado correctamente. Se abrirá la ventana de cobro.", "Alquiler Finalizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                PagoDTO nuevoPago = new PagoDTO 
+                { 
+                    IdAlquiler = this.Alquiler.Id,
+                    Monto = detallesLocales.Sum(d => d.Subtotal)
+                };
+                PagoDetalle pagoDetalle = new PagoDetalle(FormMode.Add, nuevoPago);
+                pagoDetalle.ShowDialog(this);
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
@@ -623,7 +631,11 @@ namespace WindowsForms
                     await AlquilerApiClient.UpdateAsync(this.Alquiler);
 
                     MessageBox.Show("Todas las bicicletas han sido devueltas. El alquiler ha finalizado. Se abrirá la ventana de cobro.", "Alquiler Finalizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    PagoDTO nuevoPago = new PagoDTO { IdAlquiler = this.Alquiler.Id };
+                    PagoDTO nuevoPago = new PagoDTO 
+                    { 
+                        IdAlquiler = this.Alquiler.Id,
+                        Monto = detallesLocales.Sum(d => d.Subtotal)
+                    };
                     PagoDetalle pagoDetalle = new PagoDetalle(FormMode.Add, nuevoPago);
                     pagoDetalle.ShowDialog(this);
 

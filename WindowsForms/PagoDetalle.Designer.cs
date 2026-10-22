@@ -1,4 +1,4 @@
-﻿namespace WindowsForms
+namespace WindowsForms
 {
     partial class PagoDetalle
     {
@@ -106,6 +106,7 @@
             alquilerComboBox.Name = "alquilerComboBox";
             alquilerComboBox.Size = new Size(172, 28);
             alquilerComboBox.TabIndex = 6;
+            alquilerComboBox.SelectedIndexChanged += alquilerComboBox_SelectedIndexChanged;
             // 
             // montoTextBox
             // 

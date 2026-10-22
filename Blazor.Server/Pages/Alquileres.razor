@@ -1,4 +1,4 @@
-﻿@page "/alquileres"
+@page "/alquileres"
 @using API.Clients
 @using DTOs
 @using Domain.Model
@@ -85,10 +85,15 @@
                                     @(canUpdate ? "Ver / Editar" : "Ver")
                                 </button>
 
-                                @if (canUpdate && alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo && alquiler.Detalles.All(d => d.HoraFin.HasValue))
+                                @if (canUpdate && 
+                                     alquiler.EstadoAlquiler != EstadoDeAlquiler.Cancelado && 
+                                     alquiler.Detalles != null && 
+                                     alquiler.Detalles.Count > 0 && 
+                                     alquiler.Detalles.All(d => d.HoraFin.HasValue) &&
+                                     !alquileresConPago.Contains(alquiler.Id))
                                 {
-                                    <a class="btn btn-sm btn-success me-1" href="pagos">
-                                        <i class="oi oi-credit-card"></i> Cobrar
+                                    <a class="btn btn-sm btn-success me-1" href="@($"pagos?alquilerId={alquiler.Id}")">
+                                        <i class="fas fa-dollar-sign me-1"></i> Cobrar
                                     </a>
                                 }
 
@@ -157,6 +162,8 @@
         canDelete = await AuthService.HasPermissionAsync("alquileres.eliminar");
     }
 
+    private HashSet<int> alquileresConPago = new();
+
     private async Task CargarAlquileres()
     {
         if (!canRead) return;
@@ -166,6 +173,16 @@
             loading = true;
             errorMessage = string.Empty;
             alquileres = (await AlquilerApiClient.GetAllAsync()).ToList();
+
+            try
+            {
+                var pagos = await PagoApiClient.GetAllAsync();
+                alquileresConPago = pagos.Select(p => p.IdAlquiler).ToHashSet();
+            }
+            catch
+            {
+                alquileresConPago.Clear();
+            }
         }
         catch
         {

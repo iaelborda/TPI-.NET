@@ -1,4 +1,4 @@
-﻿@page "/pagos"
+@page "/pagos"
 @using DTOs
 @using API.Clients
 @using Blazor.Server.Components
@@ -135,6 +135,11 @@
                 errorMessage = "No tiene permisos para ver pagos.";
             }
 
+            if (canAdd && AlquilerId.HasValue && AlquilerId.Value > 0)
+            {
+                await pagoModal.ShowAddModal(AlquilerId.Value);
+            }
+
             StateHasChanged();
         }
 
@@ -167,9 +172,13 @@
         }
     }
 
-    private void OpenAddModal()
+    [SupplyParameterFromQuery]
+    [Parameter]
+    public int? AlquilerId { get; set; }
+
+    private async Task OpenAddModal()
     {
-        pagoModal.ShowAddModal();
+        await pagoModal.ShowAddModal();
     }
 
     private void OpenEditModal(PagoDTO pago)

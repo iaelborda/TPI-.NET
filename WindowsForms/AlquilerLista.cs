@@ -266,7 +266,11 @@ namespace WindowsForms
                     return;
                 }
 
-                PagoDTO nuevoPago = new PagoDTO { IdAlquiler = alquilerCompleto.Id };
+                PagoDTO nuevoPago = new PagoDTO 
+                { 
+                    IdAlquiler = alquilerCompleto.Id,
+                    Monto = alquilerCompleto.Detalles != null ? alquilerCompleto.Detalles.Sum(d => d.Subtotal) : 0m
+                };
                 PagoDetalle pagoDetalle = new PagoDetalle(FormMode.Add, nuevoPago);
                 pagoDetalle.ShowDialog(this);
 
