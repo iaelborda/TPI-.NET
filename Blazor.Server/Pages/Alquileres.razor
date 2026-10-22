@@ -85,6 +85,14 @@
                                     @(canUpdate ? "Ver / Editar" : "Ver")
                                 </button>
 
+                                @if (canUpdate && alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo && alquiler.Detalles.All(d => d.HoraFin.HasValue))
+                                {
+                                    <a class="btn btn-sm btn-success me-1" href="pagos">
+                                        <i class="oi oi-credit-card"></i> Cobrar
+                                    </a>
+                                }
+
+
                                 @if (canDelete)
                                 {
                                     <button class="btn btn-sm btn-danger ms-1"

@@ -1,0 +1,225 @@
+﻿@using DTOs
+@using Domain.Model
+@using API.Clients
+
+@if (showModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        @(mode == FormMode.Add ? "Registrar Pago" : "Editar Método de Pago")
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <EditForm Model="currentPago" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+
+                        @if (mode == FormMode.Update)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Id Pago</label>
+                                <input class="form-control" value="@currentPago.IdPago" readonly />
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <label class="form-label">Alquiler *</label>
+                            @if (mode == FormMode.Add)
+                            {
+                                <select class="form-select" @onchange="OnAlquilerChanged">
+                                    <option value="0">Seleccione un alquiler pendiente</option>
+                                    @foreach (var alq in alquileresPendientes)
+                                    {
+                                        <option value="@alq.Id">
+                                            Alquiler #@alq.Id - @alq.ClienteNombre @alq.ClienteApellido (Total: @(alq.Detalles?.Sum(d => d.Subtotal).ToString("C2") ?? "$0,00"))
+                                        </option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <input class="form-control" value="Alquiler #@currentPago.IdAlquiler" readonly />
+                            }
+                            @if (validationErrors.ContainsKey("IdAlquiler"))
+                            {
+                                <div class="text-danger small">@validationErrors["IdAlquiler"]</div>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Monto</label>
+                            <input class="form-control fw-bold" value="@montoCalculado.ToString("C2")" readonly />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Método de Pago *</label>
+                            <InputSelect @bind-Value="currentPago.Metodo" class="form-select">
+                                @foreach (MetodoPago m in Enum.GetValues(typeof(MetodoPago)))
+                                {
+                                    <option value="@m">@m</option>
+                                }
+                            </InputSelect>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger">@errorMessage</div>
+                        }
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="Close" disabled="@saving">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary" disabled="@(saving || (mode == FormMode.Add && alquileresPendientes.Count == 0))">
+                                @if (saving)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                }
+                                @(mode == FormMode.Add ? "Registrar Pago" : "Actualizar")
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public EventCallback OnPagoChanged { get; set; }
+
+    private bool showModal;
+    private bool saving;
+    private FormMode mode = FormMode.Add;
+    private PagoDTO currentPago = new();
+    private List<AlquilerDTO> alquileresPendientes = new();
+    private decimal montoCalculado = 0;
+    private string errorMessage = string.Empty;
+    private Dictionary<string, string> validationErrors = new();
+
+    public enum FormMode
+    {
+        Add,
+        Update
+    }
+
+    public async Task ShowAddModal()
+    {
+        mode = FormMode.Add;
+        currentPago = new PagoDTO { Metodo = MetodoPago.Efectivo };
+        montoCalculado = 0;
+        ClearValidationErrors();
+        showModal = true;
+        await LoadAlquileresPendientes();
+    }
+
+    public void ShowEditModal(PagoDTO pago)
+    {
+        mode = FormMode.Update;
+        currentPago = new PagoDTO
+        {
+            IdPago = pago.IdPago,
+            IdAlquiler = pago.IdAlquiler,
+            Metodo = pago.Metodo,
+            Monto = pago.Monto
+        };
+        montoCalculado = pago.Monto;
+        ClearValidationErrors();
+        showModal = true;
+    }
+
+    private async Task LoadAlquileresPendientes()
+    {
+        try
+        {
+            var todos = await AlquilerApiClient.GetAllAsync();
+            alquileresPendientes = todos
+                .Where(a => a.EstadoAlquiler == EstadoDeAlquiler.Activo &&
+                            a.Detalles != null &&
+                            a.Detalles.Count > 0 &&
+                            a.Detalles.All(d => d.HoraFin.HasValue))
+                .ToList();
+
+            if (alquileresPendientes.Count == 0)
+            {
+                errorMessage = "No hay alquileres activos con todas las bicicletas devueltas listos para cobrar.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al cargar alquileres pendientes: {ex.Message}";
+        }
+    }
+
+    private void OnAlquilerChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int alqId) && alqId > 0)
+        {
+            currentPago.IdAlquiler = alqId;
+            var alq = alquileresPendientes.FirstOrDefault(a => a.Id == alqId);
+            montoCalculado = alq?.Detalles?.Sum(d => d.Subtotal) ?? 0;
+        }
+        else
+        {
+            currentPago.IdAlquiler = 0;
+            montoCalculado = 0;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (!ValidatePago()) return;
+
+        try
+        {
+            saving = true;
+            errorMessage = string.Empty;
+
+            if (mode == FormMode.Add)
+                await PagoApiClient.AddAsync(currentPago);
+            else
+                await PagoApiClient.UpdateAsync(currentPago);
+
+            await OnPagoChanged.InvokeAsync();
+            Close();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            saving = false;
+        }
+    }
+
+    private bool ValidatePago()
+    {
+        ClearValidationErrors();
+        bool isValid = true;
+
+        if (mode == FormMode.Add && currentPago.IdAlquiler <= 0)
+        {
+            validationErrors["IdAlquiler"] = "Seleccione un alquiler válido.";
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    private void ClearValidationErrors()
+    {
+        validationErrors.Clear();
+        errorMessage = string.Empty;
+    }
+
+    private void Close()
+    {
+        showModal = false;
+        ClearValidationErrors();
+    }
+}

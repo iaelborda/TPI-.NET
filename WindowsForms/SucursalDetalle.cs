@@ -24,8 +24,8 @@ namespace WindowsForms
 
         public FormMode Mode
         {
-            get{return mode;}
-            set{SetFormMode(value);}
+            get { return mode; }
+            set { SetFormMode(value); }
         }
 
         public SucursalDetalle()
@@ -112,7 +112,7 @@ namespace WindowsForms
                 this.capacidadNumericUpDown.Value = capacidadNumericUpDown.Minimum;
             }
         }
-   
+
 
         private void SetFormMode(FormMode value)
         {
@@ -155,7 +155,7 @@ namespace WindowsForms
             if (string.IsNullOrWhiteSpace(telefonoTextBox.Text))
             {
                 isValid = false;
-                errorProvider.SetError(telefonoTextBox,"El Teléfono es requerido");
+                errorProvider.SetError(telefonoTextBox, "El Teléfono es requerido");
             }
             else
             {
@@ -164,12 +164,12 @@ namespace WindowsForms
                 if (!Regex.IsMatch(telefonoTextBox.Text, @"^[0-9\-]+$"))
                 {
                     isValid = false;
-                    errorProvider.SetError(telefonoTextBox,"El teléfono solo puede contener números y guiones");
+                    errorProvider.SetError(telefonoTextBox, "El teléfono solo puede contener números y guiones");
                 }
                 else if (soloNumeros.Length != 10)
                 {
                     isValid = false;
-                    errorProvider.SetError(telefonoTextBox,"El teléfono debe tener 10 dígitos");
+                    errorProvider.SetError(telefonoTextBox, "El teléfono debe tener 10 dígitos");
                 }
             }
 

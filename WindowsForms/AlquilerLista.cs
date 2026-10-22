@@ -90,10 +90,12 @@ namespace WindowsForms
 
             agregarButton.Visible = true;
             actualizarButton.Visible = true;
+            cobrarButton.Visible = true;
             eliminarButton.Visible = esAdministrador;
 
             agregarButton.Tag = true;
             actualizarButton.Tag = true;
+            cobrarButton.Tag = true;
             eliminarButton.Tag = esAdministrador;
         }
 
@@ -201,7 +203,7 @@ namespace WindowsForms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar alquileres: {ex.Message}","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar alquileres: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -222,16 +224,63 @@ namespace WindowsForms
 
         private void DeshabilitarControles()
         {
+            alquileresDataGridView.Enabled = false;
+            eliminarButton.Enabled = false;
             agregarButton.Enabled = false;
             actualizarButton.Enabled = false;
-            eliminarButton.Enabled = false;
-            alquileresDataGridView.Enabled = false;
+            cobrarButton.Enabled = false;
         }
 
         private void HabilitarControles()
         {
-            agregarButton.Enabled = true;
             alquileresDataGridView.Enabled = true;
+            agregarButton.Enabled = true;
+            actualizarButton.Enabled = alquileresDataGridView.Rows.Count > 0;
+            cobrarButton.Enabled = alquileresDataGridView.Rows.Count > 0;
+
+            bool canDelete = eliminarButton.Tag is bool deletePermission && deletePermission;
+            eliminarButton.Enabled = canDelete && alquileresDataGridView.Rows.Count > 0;
         }
+
+        private async void cobrarButton_Click(object sender, EventArgs e)
+        {
+            AlquilerDTO? alquiler = this.SelectedItem();
+            if (alquiler == null) return;
+
+            if (alquiler.EstadoAlquiler != EstadoDeAlquiler.Activo)
+            {
+                MessageBox.Show("Solo se pueden cobrar alquileres que se encuentren en estado Activo.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            try
+            {
+                DeshabilitarControles();
+
+                AlquilerDTO? alquilerCompleto = await AlquilerApiClient.GetAsync(alquiler.Id);
+                if (alquilerCompleto == null) return;
+
+                if (alquilerCompleto.Detalles == null || !alquilerCompleto.Detalles.Any() || alquilerCompleto.Detalles.Any(d => d.HoraFin == null))
+                {
+                    MessageBox.Show("No se puede cobrar el alquiler porque aún hay bicicletas pendientes de devolución.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                PagoDTO nuevoPago = new PagoDTO { IdAlquiler = alquilerCompleto.Id };
+                PagoDetalle pagoDetalle = new PagoDetalle(FormMode.Add, nuevoPago);
+                pagoDetalle.ShowDialog(this);
+
+                await this.LoadAlquileres();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al procesar el cobro: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HabilitarControles();
+            }
+        }
+
     }
 }

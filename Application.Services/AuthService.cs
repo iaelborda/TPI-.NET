@@ -1,4 +1,4 @@
-﻿using Data;
+using Data;
 using Domain.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -84,7 +84,8 @@ namespace Application.Services
                 "empleados.leer", "empleados.agregar", "empleados.actualizar", "empleados.eliminar",
                 "alquileres.leer", "alquileres.agregar", "alquileres.actualizar", "alquileres.eliminar",
                 "tarifas.leer", "tarifas.agregar", "tarifas.actualizar", "tarifas.eliminar",
-                "usuarios.leer", "usuarios.agregar", "usuarios.actualizar", "usuarios.eliminar"
+                "usuarios.leer", "usuarios.agregar", "usuarios.actualizar", "usuarios.eliminar",
+                "pagos.leer", "pagos.agregar", "pagos.actualizar", "pagos.eliminar"
             };
 
             if (rol == RolUsuario.Usuario)
@@ -95,6 +96,9 @@ namespace Application.Services
                 permisos.Add("clientes.actualizar");
                 permisos.Add("alquileres.agregar");
                 permisos.Add("alquileres.actualizar");
+                permisos.Add("pagos.leer");
+                permisos.Add("pagos.agregar");
+                permisos.Add("pagos.actualizar");
             }
 
             return permisos.Select(p => new Claim("permission", p)).ToList();

@@ -49,94 +49,104 @@
             // idLabel
             // 
             idLabel.AutoSize = true;
-            idLabel.Location = new Point(47, 59);
+            idLabel.Location = new Point(38, 47);
             idLabel.Margin = new Padding(2, 0, 2, 0);
             idLabel.Name = "idLabel";
-            idLabel.Size = new Size(28, 25);
+            idLabel.Size = new Size(22, 20);
             idLabel.TabIndex = 11;
             idLabel.Text = "Id";
             // 
             // idTextBox
             // 
             idTextBox.BackColor = SystemColors.Control;
-            idTextBox.Location = new Point(182, 53);
+            idTextBox.Location = new Point(146, 42);
+            idTextBox.Margin = new Padding(2, 2, 2, 2);
             idTextBox.Name = "idTextBox";
             idTextBox.ReadOnly = true;
-            idTextBox.Size = new Size(150, 31);
+            idTextBox.Size = new Size(121, 27);
             idTextBox.TabIndex = 0;
             idTextBox.TabStop = false;
             // 
             // nombreLabel
             // 
             nombreLabel.AutoSize = true;
-            nombreLabel.Location = new Point(47, 117);
+            nombreLabel.Location = new Point(38, 94);
+            nombreLabel.Margin = new Padding(2, 0, 2, 0);
             nombreLabel.Name = "nombreLabel";
-            nombreLabel.Size = new Size(78, 25);
+            nombreLabel.Size = new Size(64, 20);
             nombreLabel.TabIndex = 11;
             nombreLabel.Text = "Nombre";
             // 
             // direccionLabel
             // 
             direccionLabel.AutoSize = true;
-            direccionLabel.Location = new Point(47, 180);
+            direccionLabel.Location = new Point(38, 144);
+            direccionLabel.Margin = new Padding(2, 0, 2, 0);
             direccionLabel.Name = "direccionLabel";
-            direccionLabel.Size = new Size(85, 25);
+            direccionLabel.Size = new Size(72, 20);
             direccionLabel.TabIndex = 11;
             direccionLabel.Text = "Dirección";
             // 
             // telefonoLabel
             // 
             telefonoLabel.AutoSize = true;
-            telefonoLabel.Location = new Point(47, 246);
+            telefonoLabel.Location = new Point(38, 197);
+            telefonoLabel.Margin = new Padding(2, 0, 2, 0);
             telefonoLabel.Name = "telefonoLabel";
-            telefonoLabel.Size = new Size(79, 25);
+            telefonoLabel.Size = new Size(67, 20);
             telefonoLabel.TabIndex = 11;
             telefonoLabel.Text = "Teléfono";
             // 
             // capacidadLabel
             // 
             capacidadLabel.AutoSize = true;
-            capacidadLabel.Location = new Point(47, 306);
+            capacidadLabel.Location = new Point(38, 245);
+            capacidadLabel.Margin = new Padding(2, 0, 2, 0);
             capacidadLabel.Name = "capacidadLabel";
-            capacidadLabel.Size = new Size(95, 25);
+            capacidadLabel.Size = new Size(80, 20);
             capacidadLabel.TabIndex = 11;
             capacidadLabel.Text = "Capacidad";
             // 
             // nombreTextBox
             // 
-            nombreTextBox.Location = new Point(182, 111);
+            nombreTextBox.Location = new Point(146, 89);
+            nombreTextBox.Margin = new Padding(2, 2, 2, 2);
             nombreTextBox.Name = "nombreTextBox";
-            nombreTextBox.Size = new Size(150, 31);
+            nombreTextBox.Size = new Size(121, 27);
             nombreTextBox.TabIndex = 0;
             // 
             // direccionTextBox
             // 
-            direccionTextBox.Location = new Point(182, 177);
+            direccionTextBox.Location = new Point(146, 142);
+            direccionTextBox.Margin = new Padding(2, 2, 2, 2);
             direccionTextBox.Name = "direccionTextBox";
-            direccionTextBox.Size = new Size(217, 31);
+            direccionTextBox.Size = new Size(174, 27);
             direccionTextBox.TabIndex = 0;
             // 
             // telefonoTextBox
             // 
-            telefonoTextBox.Location = new Point(182, 243);
+            telefonoTextBox.Location = new Point(146, 194);
+            telefonoTextBox.Margin = new Padding(2, 2, 2, 2);
             telefonoTextBox.Name = "telefonoTextBox";
-            telefonoTextBox.Size = new Size(217, 31);
+            telefonoTextBox.Size = new Size(174, 27);
             telefonoTextBox.TabIndex = 0;
             // 
             // capacidadNumericUpDown
             // 
-            capacidadNumericUpDown.Location = new Point(182, 304);
+            capacidadNumericUpDown.Location = new Point(146, 243);
+            capacidadNumericUpDown.Margin = new Padding(2, 2, 2, 2);
             capacidadNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             capacidadNumericUpDown.Name = "capacidadNumericUpDown";
-            capacidadNumericUpDown.Size = new Size(150, 31);
+            capacidadNumericUpDown.Size = new Size(120, 27);
             capacidadNumericUpDown.TabIndex = 0;
             capacidadNumericUpDown.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // aceptarButton
             // 
-            aceptarButton.Location = new Point(366, 401);
+            aceptarButton.Location = new Point(143, 343);
+            aceptarButton.Margin = new Padding(2, 2, 2, 2);
             aceptarButton.Name = "aceptarButton";
-            aceptarButton.Size = new Size(112, 34);
+            aceptarButton.Size = new Size(90, 27);
             aceptarButton.TabIndex = 2;
             aceptarButton.Text = "Aceptar";
             aceptarButton.UseVisualStyleBackColor = true;
@@ -144,9 +154,10 @@
             // 
             // cancelarButton
             // 
-            cancelarButton.Location = new Point(499, 401);
+            cancelarButton.Location = new Point(249, 343);
+            cancelarButton.Margin = new Padding(2, 2, 2, 2);
             cancelarButton.Name = "cancelarButton";
-            cancelarButton.Size = new Size(112, 34);
+            cancelarButton.Size = new Size(90, 27);
             cancelarButton.TabIndex = 2;
             cancelarButton.Text = "Cancelar";
             cancelarButton.UseVisualStyleBackColor = true;
@@ -158,9 +169,9 @@
             // 
             // SucursalDetalle
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(623, 476);
+            ClientSize = new Size(350, 381);
             Controls.Add(cancelarButton);
             Controls.Add(aceptarButton);
             Controls.Add(capacidadNumericUpDown);
@@ -173,6 +184,7 @@
             Controls.Add(nombreLabel);
             Controls.Add(idTextBox);
             Controls.Add(idLabel);
+            Margin = new Padding(2, 2, 2, 2);
             Name = "SucursalDetalle";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Sucursal";

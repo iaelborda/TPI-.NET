@@ -15,6 +15,8 @@ namespace Data
         public DbSet<Tarifa> Tarifas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
 
+        public DbSet<Pago> Pagos { get; set; }
+
         public TPIContext(DbContextOptions<TPIContext> options)
             : base(options)
         {
@@ -236,6 +238,18 @@ namespace Data
                         .HasForeignKey(i => i.BicicletaId);
                 });
 
+            });
+
+            modelBuilder.Entity<Pago>(entity =>
+            {
+                entity.HasKey(e => e.IdPago);
+                entity.Property(e => e.IdPago).ValueGeneratedOnAdd();
+                entity.Property(e => e.IdAlquiler).IsRequired();
+                entity.Property(e => e.FechaPago).IsRequired();
+                entity.Property(e => e.Monto).IsRequired().HasColumnType("decimal(18,2)");
+                entity.Property(e => e.Metodo).IsRequired();
+                entity.HasIndex(e => e.IdAlquiler).IsUnique();
+                entity.HasOne<Alquiler>().WithOne().HasForeignKey<Pago>(e => e.IdAlquiler).OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Empleado>(entity =>
