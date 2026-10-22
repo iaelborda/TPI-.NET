@@ -74,9 +74,9 @@ namespace WindowsForms
 
         private void AbrirFormulario(Form newForm)
         {
-            foreach(Form form in this.MdiChildren)
+            foreach (Form form in this.MdiChildren)
             {
-                if(form.GetType() == newForm.GetType())
+                if (form.GetType() == newForm.GetType())
                 {
                     form.BringToFront();
                     newForm.Dispose();
@@ -85,6 +85,11 @@ namespace WindowsForms
             }
             newForm.MdiParent = this;
             newForm.Show();
+        }
+
+        private void empleadosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AbrirFormulario(new EmpleadoLista());
         }
     }
 }
