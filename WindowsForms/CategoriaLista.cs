@@ -1,5 +1,6 @@
-﻿using DTOs;
-using API.Clients;
+﻿using API.Clients;
+using Domain.Model;
+using DTOs;
 
 namespace WindowsForms
 {
@@ -129,14 +130,18 @@ namespace WindowsForms
             actualizarButton.Enabled = false;
         }
 
-        private void HabilitarControles()
+        private async void HabilitarControles()
         {
-            buscarButton.Enabled = true;
-            buscarTextBox.Enabled = true;
+            bool esAdmin = await AuthServiceProvider.Instance.GetRolAsync() == RolUsuario.Administrador;
+
+            agregarButton.Enabled = esAdmin;
             categoriasDataGridView.Enabled = true;
-            agregarButton.Enabled = true;
-            actualizarButton.Enabled = true;
-            eliminarButton.Enabled = true;
+
+            if (categoriasDataGridView.Rows.Count > 0)
+            {
+                eliminarButton.Enabled = esAdmin;
+                actualizarButton.Enabled = esAdmin;
+            }
         }
 
         private async Task CargarCategorias()

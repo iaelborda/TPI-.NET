@@ -1,4 +1,7 @@
-﻿using System;
+﻿using API.Clients;
+using Domain.Model;
+using DTOs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,8 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DTOs;
-using API.Clients;
 
 namespace WindowsForms
 {
@@ -127,12 +128,18 @@ namespace WindowsForms
             actualizarButton.Enabled = false;
         }
 
-        private void HabilitarControles()
+        private async void HabilitarControles()
         {
+            bool esAdmin = await AuthServiceProvider.Instance.GetRolAsync() == RolUsuario.Administrador;
             buscarButton.Enabled = true;
             buscarTextBox.Enabled = true;
             agregarButton.Enabled = true;
             clientesDataGridView.Enabled = true;
+            if (clientesDataGridView.Rows.Count > 0)
+            {
+                eliminarButton.Enabled = esAdmin;
+                actualizarButton.Enabled = true;
+            }
         }
 
         private async Task CargarClientes()

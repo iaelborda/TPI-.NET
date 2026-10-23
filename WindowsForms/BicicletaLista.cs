@@ -1,4 +1,5 @@
 ﻿using API.Clients;
+using Domain.Model;
 using DTOs;
 
 namespace WindowsForms
@@ -174,10 +175,18 @@ namespace WindowsForms
             bicicletasDataGridView.Enabled = false;
         }
 
-        private void HabilitarControles()
+        private async void HabilitarControles()
         {
-            agregarButton.Enabled = true;
+            bool esAdmin = await AuthServiceProvider.Instance.GetRolAsync() == RolUsuario.Administrador;
+
+            agregarButton.Enabled = esAdmin;
             bicicletasDataGridView.Enabled = true;
+
+            if (bicicletasDataGridView.Rows.Count > 0)
+            {
+                eliminarButton.Enabled = esAdmin;
+                actualizarButton.Enabled = esAdmin;
+            }
         }
     }
 }
