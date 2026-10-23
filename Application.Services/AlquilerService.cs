@@ -11,14 +11,16 @@ namespace Application.Services
         private readonly ITarifaRepository tarifaRepository;
         private readonly IClienteRepository clienteRepository;
         private readonly IEmpleadoRepository empleadoRepository;
+        private readonly IPagoRepository pagoRepository;
 
-        public AlquilerService(AlquilerRepository alquilerRepository, IBicicletaRepository bicicletaRepository, ITarifaRepository tarifaRepository, IClienteRepository clienteRepository, IEmpleadoRepository empleadoRepository)
+        public AlquilerService(AlquilerRepository alquilerRepository, IBicicletaRepository bicicletaRepository, ITarifaRepository tarifaRepository, IClienteRepository clienteRepository, IEmpleadoRepository empleadoRepository, IPagoRepository pagoRepository)
         {
             this.alquilerRepository = alquilerRepository;
             this.bicicletaRepository = bicicletaRepository;
             this.tarifaRepository = tarifaRepository;
             this.clienteRepository = clienteRepository;
             this.empleadoRepository = empleadoRepository;
+            this.pagoRepository = pagoRepository;
         }
 
         public async Task<AlquilerDTO> AddAsync(AlquilerDTO dto)
@@ -81,6 +83,15 @@ namespace Application.Services
         public async Task<bool> DeleteAsync(int id)
         {
             var alquiler = await alquilerRepository.GetAsync(id);
+
+            if (alquiler == null) return false;
+
+            var pagos = await pagoRepository.GetAllAsync();
+
+            if (pagos.Any(p => p.IdAlquiler == id))
+            {
+                throw new InvalidOperationException("No se puede borrar el alquiler porque tiene pagos asociados.");
+            }
             if (alquiler != null)
             {
                 foreach (var detalle in alquiler.DetallesAlquiler)

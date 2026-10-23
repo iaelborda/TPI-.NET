@@ -84,16 +84,24 @@ namespace WebApi
 
             app.MapDelete("/alquileres/{id}", async (int id, AlquilerService alquilerService) =>
             {
-                var deleted = await alquilerService.DeleteAsync(id);
+                try
+                {
+                    var deleted = await alquilerService.DeleteAsync(id);
 
-                if (!deleted)
-                    return Results.NotFound();
+                    if (!deleted)
+                        return Results.NotFound();
 
-                return Results.NoContent();
+                    return Results.NoContent();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
             })
             .WithName("DeleteAquiler")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
             .RequireAuthorization("AlquileresEliminar");
         }
