@@ -169,39 +169,41 @@ namespace Data
         }
 
 
-        public async Task<List<ReporteRankingBicicleta>> GetRankingBicicletasAsync(DateTime fechaDesde, DateTime fechaHasta, int? top = null)
+        public async Task<List<ReporteRankingBicicleta>> GetTop10BicicletasAnioAsync(int anio)
         {
-            DateTime desde = fechaDesde.Date;
-            DateTime hasta = fechaHasta.Date;
-            var query = _context.Alquileres.Where(a => a.FechaAlquiler >= desde && a.FechaAlquiler < hasta && a.EstadoAlquiler != EstadoDeAlquiler.Cancelado);
+            DateTime desde = new DateTime(anio, 1, 1);
+            DateTime hasta = new DateTime(anio + 1, 1, 1);
 
-            var bicicletasAlquiladas = await query.SelectMany(a =>
-            a.DetallesAlquiler).Select(d => new
-            {
-                d.BicicletaId,
-                Marca = d.Bicicleta != null ? d.Bicicleta.Marca : "Sin Marca",
-                Modelo = d.Bicicleta != null ? d.Bicicleta.Modelo : "Sin Modelo",
-            })
-            .ToListAsync();
+            var query = _context.Alquileres
+                .Where(a => a.FechaAlquiler >= desde &&
+                            a.FechaAlquiler < hasta &&
+                            a.EstadoAlquiler != EstadoDeAlquiler.Cancelado);
 
-            var ranking = bicicletasAlquiladas.GroupBy(b => new
-            {
-                b.BicicletaId,
-                b.Marca,
-                b.Modelo,
-            }).Select(g => new ReporteRankingBicicleta
-            {
-                IdBicicleta = g.Key.BicicletaId,
-                Marca = g.Key.Marca,
-                Modelo = g.Key.Modelo,
-                CantAlquileres = g.Count()
-            }).OrderByDescending(r => r.CantAlquileres).ThenBy(r => r.Marca).ThenBy(r => r.Modelo);
+            var bicicletasAlquiladas = await query
+                .SelectMany(a => a.DetallesAlquiler)
+                .Select(d => new
+                {
+                    d.BicicletaId,
+                    Marca = d.Bicicleta != null ? d.Bicicleta.Marca : "Sin marca",
+                    Modelo = d.Bicicleta != null ? d.Bicicleta.Modelo : "Sin modelo"
+                })
+                .ToListAsync();
 
-            if(top.HasValue && top.Value > 0)
-            {
-                return ranking.Take(top.Value).ToList();
-            }
-            return ranking.ToList();
+            return bicicletasAlquiladas
+                .GroupBy(b => new { b.BicicletaId, b.Marca, b.Modelo })
+                .Select(g => new ReporteRankingBicicleta
+                {
+                    IdBicicleta = g.Key.BicicletaId,
+                    Marca = g.Key.Marca,
+                    Modelo = g.Key.Modelo,
+                    CantAlquileres = g.Count()
+                })
+                .OrderByDescending(r => r.CantAlquileres)
+                .ThenBy(r => r.Marca)
+                .ThenBy(r => r.Modelo)
+                .Take(10) 
+                .ToList();
         }
+
     }
 }

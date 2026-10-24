@@ -1,6 +1,8 @@
 ﻿using API.Clients;
 using Domain.Model;
 using DTOs;
+using System.Diagnostics;
+using System.IO;
 
 namespace WindowsForms
 {
@@ -173,6 +175,7 @@ namespace WindowsForms
             actualizarButton.Enabled = false;
             eliminarButton.Enabled = false;
             bicicletasDataGridView.Enabled = false;
+            generarReporteButton.Enabled = false;
         }
 
         private async void HabilitarControles()
@@ -181,12 +184,41 @@ namespace WindowsForms
 
             agregarButton.Enabled = esAdmin;
             bicicletasDataGridView.Enabled = true;
-
+            generarReporteButton.Enabled = esAdmin;
             if (bicicletasDataGridView.Rows.Count > 0)
             {
                 eliminarButton.Enabled = esAdmin;
                 actualizarButton.Enabled = esAdmin;
             }
+        }
+
+        private async void generarReporteButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                generarReporteButton.Enabled = false;
+                byte[] pdf = await ReporteApiClient.GetTop10BicicletasAnioAsync();
+                using var dialogo = new SaveFileDialog
+                {
+                    Filter = "Archivos PDF|*.pdf",
+                    FileName = $"Top10Bicicletas_{DateTime.Now:yyyyMMdd_HHmm}.pdf",
+                    Title = "Guardar Top 10 Bicicletas"
+                };
+
+                if(dialogo.ShowDialog() == DialogResult.OK)
+                {
+                    await File.WriteAllBytesAsync(dialogo.FileName, pdf);
+                    Process.Start(new ProcessStartInfo(dialogo.FileName) { UseShellExecute = true });
+                }
+            }catch(Exception ex)
+            {
+                MessageBox.Show($"Error al generar el reporte: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                generarReporteButton.Enabled = true;
+            }
+        
         }
     }
 }

@@ -34,14 +34,13 @@ namespace WebApi
             .WithOpenApi()
             .RequireAuthorization("ReportesLeer");
 
-            app.MapPost("/reportes/ranking-bicicletas", async (ReporteRankingBicicletaCriteriaDTO criteria, IReporteService reporteService, ReportePdfService reportePdfService) =>
+            app.MapGet("/reportes/top10-bicicletas", async (IReporteService reporteService, ReportePdfService reportePdfService) =>
             {
                 try
                 {
-                    var datos = await reporteService.ObtenerRankingBicicletasAsync(criteria);
-
-                    var pdf = reportePdfService.GenerarReporteRankingBicicletas(datos, criteria.FechaDesde!.Value, criteria.FechaHasta!.Value, criteria.Top);
-                    return Results.File(pdf, "application/pdf", "RankingBicicletas.pdf");
+                    var datos = await reporteService.ObtenerTop10BicicletasAnioAsync();
+                    int anioActual = DateTime.Today.Year;
+                    var pdf = reportePdfService.GenerarReporteTop10Bicicletas(datos, anioActual); return Results.File(pdf, "application/pdf", "RankingBicicletas.pdf");
                 }
                 catch (ArgumentException ex)
                 {
@@ -51,8 +50,8 @@ namespace WebApi
                 {
                     return Results.BadRequest(new { error = ex.Message });
                 }
-            }).WithName("GetRankingBicicletas")
-            .Produces(StatusCodes.Status200OK)
+            }).WithName("GetTop10Bicicletas")
+            .Produces(StatusCodes.Status200OK, contentType: "application/pdf")
             .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status403Forbidden)
             .WithOpenApi()
