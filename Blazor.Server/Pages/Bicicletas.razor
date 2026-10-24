@@ -37,6 +37,14 @@
                     </button>
                 </div>
             }
+            @if (canReport)
+            {
+                <button class="btn btn-success" @onclick="GenerarReporte" disabled="@generandoReporte">
+                    <i class="fas fa-file-pdf me-1"></i>
+                    @(generandoReporte ? "Generando..." : "Reporte Top 10")
+                </button>
+            }
+
 
             @if (loading)
             {
@@ -96,6 +104,33 @@
                                     <td colspan="7" class="text-center text-muted py-3">No hay bicicletas registradas.</td>
                                 </tr>
                             }
+
+
+                            @if (mostrarVisorModal)
+                            {
+                                <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+                                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                                        <div class="modal-content" style="height: 85vh;">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">
+                                                    <i class="fas fa-file-pdf text-danger me-2"></i>Reporte Top 10 Bicicletas (@DateTime.Now.Year)
+                                                </h5>
+                                                <button type="button" class="btn-close" @onclick="CerrarVisorModal"></button>
+                                            </div>
+                                            <div class="modal-body p-0" style="height: calc(100% - 120px);">
+                                                <iframe src="@pdfBase64Url" style="width: 100%; height: 100%; border: none;"></iframe>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" @onclick="CerrarVisorModal">Cerrar</button>
+                                                <button class="btn btn-success" @onclick="DescargarPdf">
+                                                    <i class="fas fa-download me-1"></i>Descargar PDF
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
                         </tbody>
                     </table>
                 </div>
@@ -112,13 +147,17 @@
     private string errorMessage = string.Empty;
     private string successMessage = string.Empty;
     private BicicletaModal bicicletaModal = null!;
+    private bool generandoReporte;
+    private bool mostrarVisorModal;
+    private byte[]? pdfBytes;
+    private string pdfBase64Url = string.Empty;
 
     // Permisos de autorización
     private bool canRead = false;
     private bool canAdd = false;
     private bool canUpdate = false;
     private bool canDelete = false;
-
+    private bool canReport = false;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -155,6 +194,7 @@
         canAdd = await AuthService.HasPermissionAsync("bicicletas.agregar");
         canUpdate = await AuthService.HasPermissionAsync("bicicletas.actualizar");
         canDelete = await AuthService.HasPermissionAsync("bicicletas.eliminar");
+        canReport = await AuthService.HasPermissionAsync("reportes.leer");
     }
 
     private async Task LoadBicicletas()
@@ -213,5 +253,41 @@
         {
             errorMessage = $"Error al eliminar Bicicleta: {ex.Message}";
         }
+    }
+
+    private async Task GenerarReporte()
+    {
+        if (!canReport) return;
+        try
+        {
+            generandoReporte = true;
+            pdfBytes = await ReporteApiClient.GetTop10BicicletasAnioAsync();
+            pdfBase64Url = $"data:application/pdf;base64,{Convert.ToBase64String(pdfBytes)}";
+            mostrarVisorModal = true;
+        }catch(Exception ex)
+        {
+            errorMessage = $"No se puedo generar el reporte: {ex.Message}";
+        }
+        finally
+        {
+            generandoReporte = false;
+        }
+    }
+
+    private void CerrarVisorModal()
+    {
+        mostrarVisorModal = false;
+        pdfBase64Url = string.Empty;
+    }
+
+    private async Task DescargarPdf()
+    {
+        if (pdfBytes == null) return;
+
+        await JSRuntime.InvokeVoidAsync(
+            "descargarArchivo",
+            $"Top10Bicicletas_{DateTime.Now.Year}_{DateTime.Now:yyyyMMdd_HHmm}.pdf",
+            "application/pdf",
+            Convert.ToBase64String(pdfBytes));
     }
 }
