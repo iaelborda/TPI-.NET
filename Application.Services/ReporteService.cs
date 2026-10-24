@@ -1,5 +1,7 @@
 ﻿using Data;
 using DTOs;
+using Microsoft.Identity.Client;
+using System.Data;
 
 namespace Application.Services
 {
@@ -16,6 +18,14 @@ namespace Application.Services
 
         public async Task<List<ReporteAlquileresDTO>> ObtenerReporteAlquileresAsync(ReporteAlquileresCriteriaDTO criteria)
         {
+            if (criteria.FechaDesde < new DateTime(2000, 1, 1) ||
+                criteria.FechaHasta < new DateTime(2000, 1, 1))
+                throw new ArgumentException("Las fechas no pueden ser anteriores al 01/01/2000.");
+
+            if (criteria.FechaDesde.Date > DateTime.Today ||
+                criteria.FechaHasta.Date > DateTime.Today)
+                throw new ArgumentException("Las fechas no pueden ser futuras.");
+
             if (criteria.FechaDesde.Date > criteria.FechaHasta.Date)
                 throw new ArgumentException("La fecha desde no puede ser posterior a la fecha hasta.");
             
@@ -52,6 +62,33 @@ namespace Application.Services
                     });
                 }
             }
+
+            return resultado;
+        }
+
+        public async Task<List<ReporteRankingBicicletaDTO>> ObtenerRankingBicicletasAsync(ReporteRankingBicicletaCriteriaDTO dto)
+        {
+            int anioActual = DateTime.Today.Year;
+            DateTime fechaDesde = dto.FechaDesde ?? new DateTime(anioActual, 1, 1);
+            DateTime fechaHasta = dto.FechaHasta ?? new DateTime(anioActual, 12, 1);
+
+            if(fechaDesde.Date > fechaHasta.Date)
+            {
+                throw new ArgumentException("La fecha desde no puede ser posterior a la fecha hasta");
+            }
+            dto.FechaDesde = fechaDesde;
+            dto.FechaHasta = fechaHasta;
+            int? limite = dto.Top > 0 ? dto.Top : null;
+
+            var datos = await _alquilerRepository.GetRankingBicicletasAsync(fechaDesde, fechaHasta, limite);
+            var resultado = datos.Select((item, indice) => new ReporteRankingBicicletaDTO
+            {
+                Puesto = indice + 1,
+                IdBicicleta = item.IdBicicleta,
+                Marca = item.Marca,
+                Modelo = item.Modelo,
+                CantAlquileres = item.CantAlquileres
+            }).ToList();
 
             return resultado;
         }

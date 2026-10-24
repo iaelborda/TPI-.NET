@@ -35,6 +35,7 @@
             <div class="col-md-3">
                 <label class="form-label">Fecha desde</label>
                 <input type="date" class="form-control"
+                       min="2000-01-01"
                        max="@DateTime.Today.ToString("yyyy-MM-dd")"
                        @bind="fechaDesde"
                        @bind:after="CargarAlquileres" />
@@ -43,6 +44,7 @@
             <div class="col-md-3">
                 <label class="form-label">Fecha hasta</label>
                 <input type="date" class="form-control"
+                       min="2000-01-01"
                        max="@DateTime.Today.ToString("yyyy-MM-dd")"
                        @bind="fechaHasta"
                        @bind:after="CargarAlquileres" />
@@ -59,12 +61,17 @@
                 </select>
             </div>
 
-            <div class="col-md-3">
-                <button class="btn btn-success" @onclick="GenerarReporte" disabled="@generandoReporte">
-                    <i class="fas fa-file-pdf me-1"></i>
-                    @(generandoReporte ? "Generando..." : "Generar reporte")
-                </button>
-            </div>
+            @if (canReport)
+            {
+                <div class="col-md-3">
+                    <button class="btn btn-success"
+                            @onclick="GenerarReporte"
+                            disabled="@generandoReporte">
+                        <i class="fas fa-file-pdf me-1"></i>
+                        @(generandoReporte ? "Generando..." : "Generar reporte")
+                    </button>
+                </div>
+            }
         </div>
     }
 
@@ -136,7 +143,6 @@
                                     </a>
                                 }
 
-
                                 @if (canDelete)
                                 {
                                     <button class="btn btn-sm btn-danger ms-1"
@@ -178,6 +184,9 @@
     private bool canAdd;
     private bool canUpdate;
     private bool canDelete;
+    private bool canReport;
+
+    private HashSet<int> alquileresConPago = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -207,15 +216,18 @@
         canAdd = await AuthService.HasPermissionAsync("alquileres.agregar");
         canUpdate = await AuthService.HasPermissionAsync("alquileres.actualizar");
         canDelete = await AuthService.HasPermissionAsync("alquileres.eliminar");
+        canReport = await AuthService.HasPermissionAsync("reportes.leer");
     }
-
-    private HashSet<int> alquileresConPago = new();
 
     private async Task CargarAlquileres()
     {
         if (!canRead) return;
 
-        if (!FechasValidas()) return;
+        if (!FechasValidas())
+        {
+            loading = false;
+            return;
+        }
 
         try
         {
@@ -248,9 +260,10 @@
 
     private bool FechasValidas()
     {
-        if (fechaDesde == DateTime.MinValue || fechaHasta == DateTime.MinValue)
+        if (fechaDesde.Date < new DateTime(2000, 1, 1) ||
+            fechaHasta.Date < new DateTime(2000, 1, 1))
         {
-            errorMessage = "Debe ingresar ambas fechas.";
+            errorMessage = "Las fechas no pueden ser anteriores al 01/01/2000.";
             return false;
         }
 
@@ -272,7 +285,7 @@
 
     private async Task GenerarReporte()
     {
-        if (!canRead || !FechasValidas()) return;
+        if (!canReport || !canRead || !FechasValidas()) return;
 
         try
         {

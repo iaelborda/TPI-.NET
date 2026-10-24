@@ -136,6 +136,9 @@ namespace WindowsForms
 
         private async void generarReporteButton_Click(object? sender, EventArgs e)
         {
+            if (generarReporteButton.Tag is not bool esAdministrador || !esAdministrador)
+                return;
+
             DateTime desde = fechaDesdeDateTimePicker.Value.Date;
             DateTime hasta = fechaHastaDateTimePicker.Value.Date;
 
@@ -188,11 +191,13 @@ namespace WindowsForms
             actualizarButton.Visible = true;
             cobrarButton.Visible = true;
             eliminarButton.Visible = esAdministrador;
+            generarReporteButton.Visible = esAdministrador;
 
             agregarButton.Tag = true;
             actualizarButton.Tag = true;
             cobrarButton.Tag = true;
             eliminarButton.Tag = esAdministrador;
+            generarReporteButton.Tag = esAdministrador;
         }
 
         private async void agregarButton_Click(object sender, EventArgs e)
