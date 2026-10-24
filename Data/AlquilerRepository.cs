@@ -106,5 +106,47 @@ namespace Data
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<List<ReporteAlquileresMensual>> GetReporteAlquileresMensualAsync(DateTime fechaDesde, DateTime fechaHasta, int? sucursalId)
+        {
+            DateTime desde = fechaDesde.Date;
+            DateTime hasta = fechaHasta.Date.AddDays(1);
+
+            var query = _context.Alquileres.Where(a => a.FechaAlquiler >= desde && a.FechaAlquiler < hasta && a.EstadoAlquiler != EstadoDeAlquiler.Cancelado);
+
+            if (sucursalId.HasValue)
+                query = query.Where(a => a.Empleado != null && a.Empleado.SucursalId == sucursalId.Value);
+
+            var alquileres = await query
+                .Select(a => new
+                {
+                    a.FechaAlquiler,
+                    SucursalId = a.Empleado != null ? (int?)a.Empleado.SucursalId : null,
+                    Sucursal = a.Empleado != null && a.Empleado.Sucursal != null
+                        ? a.Empleado.Sucursal.Nombre
+                        : null
+                })
+                .ToListAsync();
+
+            return alquileres
+                .GroupBy(a => new
+                {
+                    Anio = a.FechaAlquiler.Year,
+                    Mes = a.FechaAlquiler.Month,
+                    SucursalId = a.SucursalId ?? 0,
+                    Sucursal = a.Sucursal ?? "Sin sucursal"
+                })
+                .Select(g => new ReporteAlquileresMensual
+                {
+                    Anio = g.Key.Anio,
+                    Mes = g.Key.Mes,
+                    SucursalId = g.Key.SucursalId,
+                    Sucursal = g.Key.Sucursal,
+                    CantidadAlquileres = g.Count()
+                })
+                .OrderBy(r => r.Anio)
+                .ThenBy(r => r.Mes)
+                .ThenBy(r => r.Sucursal)
+                .ToList();
+        }
     }
 }

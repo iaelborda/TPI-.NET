@@ -3,9 +3,12 @@ using Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using QuestPDF.Infrastructure;
 using System.Text;
 using WebApi;
 using WebAPI;
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +74,8 @@ builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 builder.Services.AddScoped<IPagoService, PagoService>();
 
+builder.Services.AddScoped<IReporteService, ReporteService>();
+builder.Services.AddScoped<ReportePdfService>();
 
 // Add JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -184,6 +189,7 @@ app.MapEmpleadoEndpoints();
 app.MapAlquilerEndpoints();
 app.MapTarifaEndpoints();
 app.MapPagoEndpoints();
+app.MapReporteEndpoints();
 
 
 using (var scope = app.Services.CreateScope())
