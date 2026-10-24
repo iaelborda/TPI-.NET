@@ -99,10 +99,6 @@ namespace WindowsForms
             }
         }
 
-        private async void buscarButton_Click(object sender, EventArgs e)
-        {
-            await this.CargarCategorias();
-        }
 
         private async void CategoriaLista_Load(object sender, EventArgs e)
         {
@@ -122,8 +118,6 @@ namespace WindowsForms
 
         private void DeshabilitarControles()
         {
-            buscarButton.Enabled = false;
-            buscarTextBox.Enabled = false;
             categoriasDataGridView.Enabled = false;
             eliminarButton.Enabled = false;
             agregarButton.Enabled = false;

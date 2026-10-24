@@ -104,18 +104,6 @@ namespace WindowsForms
                 DeshabilitarControles();
                 this.empleadosDataGridView.DataSource = null;
                 IEnumerable<EmpleadoDTO> empleados = await EmpleadoApiClient.GetAllAsync();
-                if (!string.IsNullOrWhiteSpace(buscarTextBox.Text))
-                {
-                    string filtro = buscarTextBox.Text.Trim().ToLower();
-                    empleados = empleados.Where(emp =>
-                        emp.Nombre.ToLower().Contains(filtro) ||
-                        emp.Apellido.ToLower().Contains(filtro) ||
-                        emp.Documento.ToLower().Contains(filtro) ||
-                        emp.Legajo.ToString().Contains(filtro) ||
-                        (emp.NombreSucursal != null && emp.NombreSucursal.ToLower().Contains(filtro))
-                    );
-                }
-
                 this.empleadosDataGridView.DataSource = empleados.ToList();
                 if (this.empleadosDataGridView.Rows.Count > 0)
                 {
@@ -210,8 +198,6 @@ namespace WindowsForms
 
         private void DeshabilitarControles()
         {
-            buscarButton.Enabled = false;
-            buscarTextBox.Enabled = false;
             empleadosDataGridView.Enabled = false;
             eliminarButton.Enabled = false;
             agregarButton.Enabled = false;
@@ -222,8 +208,6 @@ namespace WindowsForms
         {
             bool esAdmin = await AuthServiceProvider.Instance.GetRolAsync() == RolUsuario.Administrador;
 
-            buscarButton.Enabled = true;
-            buscarTextBox.Enabled = true;
             empleadosDataGridView.Enabled = true;
 
             agregarButton.Enabled = esAdmin;

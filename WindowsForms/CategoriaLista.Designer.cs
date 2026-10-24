@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             categoriasDataGridView = new DataGridView();
-            buscarTextBox = new TextBox();
-            buscarButton = new Button();
             eliminarButton = new Button();
             actualizarButton = new Button();
             agregarButton = new Button();
@@ -43,35 +41,15 @@
             categoriasDataGridView.AllowUserToDeleteRows = false;
             categoriasDataGridView.AllowUserToOrderColumns = true;
             categoriasDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            categoriasDataGridView.Location = new Point(24, 56);
+            categoriasDataGridView.Location = new Point(24, 11);
             categoriasDataGridView.Margin = new Padding(2);
             categoriasDataGridView.MultiSelect = false;
             categoriasDataGridView.Name = "categoriasDataGridView";
             categoriasDataGridView.ReadOnly = true;
             categoriasDataGridView.RowHeadersWidth = 82;
             categoriasDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            categoriasDataGridView.Size = new Size(858, 325);
+            categoriasDataGridView.Size = new Size(858, 370);
             categoriasDataGridView.TabIndex = 0;
-            // 
-            // buscarTextBox
-            // 
-            buscarTextBox.Location = new Point(24, 24);
-            buscarTextBox.Margin = new Padding(2);
-            buscarTextBox.Name = "buscarTextBox";
-            buscarTextBox.PlaceholderText = "Buscar por descripcion";
-            buscarTextBox.Size = new Size(248, 27);
-            buscarTextBox.TabIndex = 4;
-            // 
-            // buscarButton
-            // 
-            buscarButton.Location = new Point(277, 24);
-            buscarButton.Margin = new Padding(2);
-            buscarButton.Name = "buscarButton";
-            buscarButton.Size = new Size(74, 27);
-            buscarButton.TabIndex = 5;
-            buscarButton.Text = "Buscar";
-            buscarButton.UseVisualStyleBackColor = true;
-            buscarButton.Click += buscarButton_Click;
             // 
             // eliminarButton
             // 
@@ -114,8 +92,6 @@
             Controls.Add(agregarButton);
             Controls.Add(actualizarButton);
             Controls.Add(eliminarButton);
-            Controls.Add(buscarButton);
-            Controls.Add(buscarTextBox);
             Controls.Add(categoriasDataGridView);
             MaximizeBox = false;
             MinimizeBox = false;
@@ -125,14 +101,11 @@
             Load += CategoriaLista_Load;
             ((System.ComponentModel.ISupportInitialize)categoriasDataGridView).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
         private DataGridView categoriasDataGridView;
-        private TextBox buscarTextBox;
-        private Button buscarButton;
         private Button eliminarButton;
         private Button actualizarButton;
         private Button agregarButton;

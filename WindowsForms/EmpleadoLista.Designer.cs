@@ -32,8 +32,6 @@
             agregarButton = new Button();
             actualizarButton = new Button();
             eliminarButton = new Button();
-            buscarTextBox = new TextBox();
-            buscarButton = new Button();
             ((System.ComponentModel.ISupportInitialize)empleadosDataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -43,14 +41,14 @@
             empleadosDataGridView.AllowUserToDeleteRows = false;
             empleadosDataGridView.AllowUserToOrderColumns = true;
             empleadosDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            empleadosDataGridView.Location = new Point(26, 62);
+            empleadosDataGridView.Location = new Point(26, 11);
             empleadosDataGridView.Margin = new Padding(2);
             empleadosDataGridView.MultiSelect = false;
             empleadosDataGridView.Name = "empleadosDataGridView";
             empleadosDataGridView.ReadOnly = true;
             empleadosDataGridView.RowHeadersWidth = 82;
             empleadosDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            empleadosDataGridView.Size = new Size(858, 325);
+            empleadosDataGridView.Size = new Size(858, 376);
             empleadosDataGridView.TabIndex = 4;
             // 
             // agregarButton
@@ -86,32 +84,11 @@
             eliminarButton.UseVisualStyleBackColor = true;
             eliminarButton.Click += eliminarButton_Click;
             // 
-            // buscarTextBox
-            // 
-            buscarTextBox.Location = new Point(24, 24);
-            buscarTextBox.Margin = new Padding(2);
-            buscarTextBox.Name = "buscarTextBox";
-            buscarTextBox.PlaceholderText = "Buscar por nombre, apellido o email...";
-            buscarTextBox.Size = new Size(248, 27);
-            buscarTextBox.TabIndex = 8;
-            // 
-            // buscarButton
-            // 
-            buscarButton.Location = new Point(277, 24);
-            buscarButton.Margin = new Padding(2);
-            buscarButton.Name = "buscarButton";
-            buscarButton.Size = new Size(74, 27);
-            buscarButton.TabIndex = 9;
-            buscarButton.Text = "Buscar";
-            buscarButton.UseVisualStyleBackColor = true;
-            // 
             // EmpleadoLista
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(910, 448);
-            Controls.Add(buscarButton);
-            Controls.Add(buscarTextBox);
             Controls.Add(eliminarButton);
             Controls.Add(actualizarButton);
             Controls.Add(agregarButton);
@@ -124,7 +101,6 @@
             Load += EmpleadoLista_Load;
             ((System.ComponentModel.ISupportInitialize)empleadosDataGridView).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -133,7 +109,5 @@
         private Button agregarButton;
         private Button actualizarButton;
         private Button eliminarButton;
-        private TextBox buscarTextBox;
-        private Button buscarButton;
     }
 }
