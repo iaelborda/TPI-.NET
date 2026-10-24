@@ -157,6 +157,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("PagosActualizar", policy => policy.RequireClaim("permission", "pagos.actualizar"));
     options.AddPolicy("PagosEliminar", policy => policy.RequireClaim("permission", "pagos.eliminar"));
 
+    options.AddPolicy("ReportesLeer", policy => policy.RequireClaim("permission", "reportes.leer"));
 
 });
 

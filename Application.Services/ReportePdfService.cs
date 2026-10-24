@@ -136,5 +136,96 @@ namespace Application.Services
             new PngExporter { Width = 1600, Height = 800 }.Export(grafico, imagen);
             return imagen.ToArray();
         }
+
+        public byte[] GenerarReporteRankingBicicletas(
+            List<ReporteRankingBicicletaDTO> datos,
+            DateTime fechaDesde,
+            DateTime fechaHasta,
+            int? limite = null)
+        {
+            return Document.Create(documento =>
+            {
+                documento.Page(pagina =>
+                {
+                    pagina.Size(PageSizes.A4);
+                    pagina.Margin(30);
+                    pagina.DefaultTextStyle(x => x.FontSize(11));
+
+                    // Encabezado
+                    pagina.Header().Column(col =>
+                    {
+                        col.Item().Text("Ranking de bicicletas más alquiladas").Bold().FontSize(20);
+                        col.Item().Text($"Período: {fechaDesde:dd/MM/yyyy} al {fechaHasta:dd/MM/yyyy}").FontSize(12).FontColor(Colors.Grey.Darken1);
+                        if (limite.HasValue && limite.Value > 0)
+                        {
+                            col.Item().Text($"Criterio: Top {limite.Value}").FontSize(11).Italic();
+                        }
+                    });
+
+                    // Contenido
+                    pagina.Content().PaddingTop(15).Column(columna =>
+                    {
+                        columna.Spacing(15);
+
+                        if (datos.Count == 0)
+                        {
+                            columna.Item().Text("No se registraron alquileres de bicicletas en el período seleccionado.").Italic();
+                        }
+                        else
+                        {
+                            // Tabla del ranking
+                            columna.Item().Table(tabla =>
+                            {
+                                // Definición del ancho de las columnas
+                                tabla.ColumnsDefinition(columnas =>
+                                {
+                                    columnas.ConstantColumn(45);  // # Puesto
+                                    columnas.ConstantColumn(50);  // ID
+                                    columnas.RelativeColumn(3);   // Marca
+                                    columnas.RelativeColumn(3);   // Modelo
+                                    columnas.RelativeColumn(2);   // Cantidad
+                                });
+
+                                // Fila de encabezados
+                                tabla.Header(header =>
+                                {
+                                    header.Cell().Background(Colors.Grey.Lighten2).Padding(6).BorderBottom(1).BorderColor(Colors.Grey.Darken1).AlignCenter().Text("#").Bold();
+                                    header.Cell().Background(Colors.Grey.Lighten2).Padding(6).BorderBottom(1).BorderColor(Colors.Grey.Darken1).AlignCenter().Text("ID").Bold();
+                                    header.Cell().Background(Colors.Grey.Lighten2).Padding(6).BorderBottom(1).BorderColor(Colors.Grey.Darken1).Text("Marca").Bold();
+                                    header.Cell().Background(Colors.Grey.Lighten2).Padding(6).BorderBottom(1).BorderColor(Colors.Grey.Darken1).Text("Modelo").Bold();
+                                    header.Cell().Background(Colors.Grey.Lighten2).Padding(6).BorderBottom(1).BorderColor(Colors.Grey.Darken1).AlignRight().Text("Veces alquilada").Bold();
+                                });
+
+                                // Filas de datos
+                                for (int i = 0; i < datos.Count; i++)
+                                {
+                                    var fila = datos[i];
+                                    var colorFondo = i % 2 == 0 ? Colors.White : Colors.Grey.Lighten4;
+
+                                    tabla.Cell().Background(colorFondo).Padding(6).BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).AlignCenter().Text($"{fila.Puesto}°");
+                                    tabla.Cell().Background(colorFondo).Padding(6).BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).AlignCenter().Text(fila.IdBicicleta.ToString());
+                                    tabla.Cell().Background(colorFondo).Padding(6).BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Text(fila.Marca);
+                                    tabla.Cell().Background(colorFondo).Padding(6).BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).Text(fila.Modelo);
+                                    tabla.Cell().Background(colorFondo).Padding(6).BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).AlignRight().Text(fila.CantAlquileres.ToString()).Bold();
+                                }
+
+                            });
+                        }
+
+                        // Notas y totales al pie de la tabla
+                        columna.Item().Text("Se excluyen los alquileres cancelados.");
+                        columna.Item().Text($"Total de bicicletas en el ranking: {datos.Count}");
+                        columna.Item().Text($"Fecha de generación: {DateTime.Now:dd/MM/yyyy HH:mm}");
+                    });
+
+                    // Pie de página
+                    pagina.Footer().AlignCenter().Text(texto =>
+                    {
+                        texto.Span("Página ");
+                        texto.CurrentPageNumber();
+                    });
+                });
+            }).GeneratePdf();
+        }
     }
 }
