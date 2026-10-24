@@ -1,5 +1,6 @@
 ﻿using Domain.Model;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Policy;
 
 namespace Data
 {
@@ -147,6 +148,42 @@ namespace Data
                 .ThenBy(r => r.Mes)
                 .ThenBy(r => r.Sucursal)
                 .ToList();
+        }
+
+
+        public async Task<List<ReporteRankingBicicleta>> GetRankingBicicletasAsync(DateTime fechaDesde, DateTime fechaHasta, int? top = null)
+        {
+            DateTime desde = fechaDesde.Date;
+            DateTime hasta = fechaHasta.Date;
+            var query = _context.Alquileres.Where(a => a.FechaAlquiler >= desde && a.FechaAlquiler < hasta && a.EstadoAlquiler != EstadoDeAlquiler.Cancelado);
+
+            var bicicletasAlquiladas = await query.SelectMany(a =>
+            a.DetallesAlquiler).Select(d => new
+            {
+                d.BicicletaId,
+                Marca = d.Bicicleta != null ? d.Bicicleta.Marca : "Sin Marca",
+                Modelo = d.Bicicleta != null ? d.Bicicleta.Modelo : "Sin Modelo",
+            })
+            .ToListAsync();
+
+            var ranking = bicicletasAlquiladas.GroupBy(b => new
+            {
+                b.BicicletaId,
+                b.Marca,
+                b.Modelo,
+            }).Select(g => new ReporteRankingBicicleta
+            {
+                IdBicicleta = g.Key.BicicletaId,
+                Marca = g.Key.Marca,
+                Modelo = g.Key.Modelo,
+                CantAlquileres = g.Count()
+            }).OrderByDescending(r => r.CantAlquileres).ThenBy(r => r.Marca).ThenBy(r => r.Modelo);
+
+            if(top.HasValue && top.Value > 0)
+            {
+                return ranking.Take(top.Value).ToList();
+            }
+            return ranking.ToList();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace WebApi
     {
         public static void MapReporteEndpoints(this WebApplication app)
         {
-            app.MapPost("/reportes/alquileres", async (ReporteAlquileresCriteriaDTO criteria,IReporteService reporteService,ReportePdfService reportePdfService) =>
+            app.MapPost("/reportes/alquileres", async (ReporteAlquileresCriteriaDTO criteria, IReporteService reporteService, ReportePdfService reportePdfService) =>
             {
                 try
                 {
@@ -29,6 +29,29 @@ namespace WebApi
             .WithName("GetReporteAlquileres")
             .Produces(StatusCodes.Status200OK, contentType: "application/pdf")
             .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
+            .WithOpenApi()
+            .RequireAuthorization("AlquileresLeer");
+
+            app.MapPost("/reportes/ranking-bicicletas", async (ReporteRankingBicicletaCriteriaDTO criteria, IReporteService reporteService, ReportePdfService reportePdfService) =>
+            {
+                try
+                {
+                    var datos = await reporteService.ObtenerRankingBicicletasAsync(criteria);
+
+                    var pdf = reportePdfService.GenerarReporteRankingBicicletas(datos, criteria.FechaDesde!.Value, criteria.FechaHasta!.Value, criteria.Top);
+                    return Results.File(pdf, "application/pdf", "RankingBicicletas.pdf");
+                }
+                catch (ArgumentException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
+                catch (InvalidOperationException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
+            }).WithName("GetRankingBicicletas")
+            .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
             .WithOpenApi()
             .RequireAuthorization("AlquileresLeer");
