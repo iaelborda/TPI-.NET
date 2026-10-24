@@ -85,6 +85,35 @@ namespace Data.Migrations
                     b.HasIndex("SucursalId");
 
                     b.ToTable("Bicicletas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoriaId = 1,
+                            Estado = 0,
+                            Marca = "Venzo",
+                            Modelo = "Raptor",
+                            SucursalId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoriaId = 2,
+                            Estado = 0,
+                            Marca = "TopMega",
+                            Modelo = "City",
+                            SucursalId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoriaId = 3,
+                            Estado = 0,
+                            Marca = "Volta",
+                            Modelo = "E-Bike",
+                            SucursalId = 2
+                        });
                 });
 
             modelBuilder.Entity("Domain.Model.Categoria", b =>
@@ -173,6 +202,30 @@ namespace Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Clientes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Apellido = "Perez",
+                            Documento = "36111222",
+                            Email = "lucia@gmail.com",
+                            FechaAlta = new DateOnly(2026, 1, 10),
+                            Nombre = "Lucia",
+                            Telefono = "3414001001",
+                            TipoDocumento = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Apellido = "Gomez",
+                            Documento = "40222333",
+                            Email = "martin@gmail.com",
+                            FechaAlta = new DateOnly(2026, 2, 15),
+                            Nombre = "Martin",
+                            Telefono = "3414001002",
+                            TipoDocumento = 0
+                        });
                 });
 
             modelBuilder.Entity("Domain.Model.Empleado", b =>
@@ -223,6 +276,30 @@ namespace Data.Migrations
                     b.HasIndex("SucursalId");
 
                     b.ToTable("Empleados");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Apellido = "Lopez",
+                            Documento = "30111222",
+                            Legajo = 1001,
+                            Nombre = "Ana",
+                            SucursalId = 1,
+                            Telefono = "3414001010",
+                            TipoDocumento = 0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Apellido = "Diaz",
+                            Documento = "30222333",
+                            Legajo = 1002,
+                            Nombre = "Juan",
+                            SucursalId = 2,
+                            Telefono = "3414001011",
+                            TipoDocumento = 0
+                        });
                 });
 
             modelBuilder.Entity("Domain.Model.Pago", b =>
@@ -285,6 +362,24 @@ namespace Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Sucursales");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Capacidad = 20,
+                            Direccion = "Mitre 1200",
+                            Nombre = "BiciMania",
+                            Telefono = "3414001000"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Capacidad = 15,
+                            Direccion = "Zeballos 1500",
+                            Nombre = "Bicicletas Ya!",
+                            Telefono = "3414002000"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Model.Tarifa", b =>
@@ -312,6 +407,29 @@ namespace Data.Migrations
                     b.HasIndex("CategoriaId");
 
                     b.ToTable("Tarifas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoriaId = 1,
+                            FechaDesde = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PrecioHora = 1500m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoriaId = 2,
+                            FechaDesde = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PrecioHora = 2500m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoriaId = 3,
+                            FechaDesde = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PrecioHora = 3500m
+                        });
                 });
 
             modelBuilder.Entity("Domain.Model.Usuario", b =>
@@ -367,10 +485,10 @@ namespace Data.Migrations
                             Id = 1,
                             Activo = true,
                             Email = "admin@tpi.com",
-                            FechaCreacion = new DateTime(2026, 10, 21, 23, 27, 15, 651, DateTimeKind.Local).AddTicks(5063),
-                            PasswordHash = "Pbf5enu0L2D5iqmvpB5nkQ21A+fdiyvx+MSe75RMEWI=",
+                            FechaCreacion = new DateTime(2026, 10, 24, 14, 7, 33, 179, DateTimeKind.Local).AddTicks(7360),
+                            PasswordHash = "IJRqOq0OxrMAYbrBivtT6a0uDHQ3mREjjqXMViNy03w=",
                             Rol = 0,
-                            Salt = "dwXpeHGKn1WVhcLQJCaupbWpds7K7UG+rnqETWvuSOg=",
+                            Salt = "+dENJ8kHoIn6kXeiI6k4P474qYI5b4wqwmCpYR0tarw=",
                             Username = "admin"
                         },
                         new
@@ -378,10 +496,10 @@ namespace Data.Migrations
                             Id = 2,
                             Activo = true,
                             Email = "empleado@tpi.com",
-                            FechaCreacion = new DateTime(2026, 10, 21, 23, 27, 15, 654, DateTimeKind.Local).AddTicks(143),
-                            PasswordHash = "GZBOsiaZNdPLZhm2v/Tdy+6LaQaHZ9XfBcqs0MasNMk=",
+                            FechaCreacion = new DateTime(2026, 10, 24, 14, 7, 33, 182, DateTimeKind.Local).AddTicks(3958),
+                            PasswordHash = "+wqvzGEjwiU0q2iIHTSiHLs8GqwmTVjyvQ/VqTheu3Y=",
                             Rol = 1,
-                            Salt = "AipMYU6fxrodKdV6EGNwHZOnAGUe102x3aFUnSChQ/Y=",
+                            Salt = "9N37sC9Dw6wolltGrjBwjESZZuof8PJO2W3g3466618=",
                             Username = "empleado"
                         });
                 });

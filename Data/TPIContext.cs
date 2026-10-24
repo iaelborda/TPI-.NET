@@ -82,6 +82,11 @@ namespace Data
 
                 entity.Property(e => e.FechaAlta)
                     .IsRequired();
+
+                entity.HasData(
+                    new Cliente(1, "36111222", TipoDocumento.DNI, "Lucia", "Perez", "3414001001", "lucia@gmail.com", new DateOnly(2026, 1, 10)),
+                    new Cliente(2, "40222333", TipoDocumento.DNI, "Martin", "Gomez", "3414001002", "martin@gmail.com", new DateOnly(2026, 2, 15))
+                );
             });
 
             modelBuilder.Entity<Categoria>(entity =>
@@ -148,6 +153,12 @@ namespace Data
                     .WithMany()
                     .HasForeignKey(e => e.SucursalId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasData(
+                    new { Id = 1, Marca = "Venzo", Modelo = "Raptor", Estado = EstadoBicicleta.Disponible, CategoriaId = 1, SucursalId = 1 },
+                    new { Id = 2, Marca = "TopMega", Modelo = "City", Estado = EstadoBicicleta.Disponible, CategoriaId = 2, SucursalId = 1 },
+                    new { Id = 3, Marca = "Volta", Modelo = "E-Bike", Estado = EstadoBicicleta.Disponible, CategoriaId = 3, SucursalId = 2 }
+                );
             });
 
             modelBuilder.Entity<Sucursal>(entity =>
@@ -174,6 +185,11 @@ namespace Data
 
                 entity.HasIndex(e => e.Nombre)
                     .IsUnique();
+
+                entity.HasData(
+                    new { Id = 1, Nombre = "BiciMania", Direccion = "Mitre 1200", Telefono = "3414001000", Capacidad = 20 },
+                    new { Id = 2, Nombre = "Bicicletas Ya!", Direccion = "Zeballos 1500", Telefono = "3414002000", Capacidad = 15 }
+                );
             });
 
             modelBuilder.Entity<Alquiler>(entity =>
@@ -298,6 +314,11 @@ namespace Data
                     .WithMany()
                     .HasForeignKey(e => e.SucursalId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasData(
+                    new Empleado(1, "30111222", TipoDocumento.DNI, "Ana", "Lopez", "3414001010", 1001, 1),
+                    new Empleado(2, "30222333", TipoDocumento.DNI, "Juan", "Diaz", "3414001011", 1002, 2)
+                );
             });
 
             modelBuilder.Entity<Tarifa>(entity =>
@@ -310,6 +331,11 @@ namespace Data
                 entity.Property(t => t.CategoriaId).IsRequired().HasField("_categoriaId");
                 entity.HasOne(t => t.Categoria).WithMany(c => c.tarifas).HasForeignKey(t => t.CategoriaId).OnDelete(DeleteBehavior.Restrict);
                 entity.Navigation(t => t.Categoria).HasField("_categoria");
+                entity.HasData(
+                    new { Id = 1, PrecioHora = 1500m, FechaDesde = new DateTime(2026, 1, 1), FechaHasta = (DateTime?)null, CategoriaId = 1 },
+                    new { Id = 2, PrecioHora = 2500m, FechaDesde = new DateTime(2026, 1, 1), FechaHasta = (DateTime?)null, CategoriaId = 2 },
+                    new { Id = 3, PrecioHora = 3500m, FechaDesde = new DateTime(2026, 1, 1), FechaHasta = (DateTime?)null, CategoriaId = 3 }
+                );
             });
 
             modelBuilder.Entity<Usuario>(entity =>
