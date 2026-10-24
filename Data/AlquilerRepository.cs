@@ -148,5 +148,23 @@ namespace Data
                 .ThenBy(r => r.Sucursal)
                 .ToList();
         }
+        public async Task<IEnumerable<Alquiler>> GetByCriteriaAsync(DateTime fechaDesde, DateTime fechaHasta, int? sucursalId)
+        {
+            DateTime desde = fechaDesde.Date;
+            DateTime hasta = fechaHasta.Date.AddDays(1);
+
+            var query = _context.Alquileres
+                .Include(a => a.Cliente)
+                .Include(a => a.Empleado)
+                .Include(a => a.DetallesAlquiler)
+                    .ThenInclude(d => d.Bicicleta)
+                        .ThenInclude(b => b.Categoria)
+                .Where(a => a.FechaAlquiler >= desde && a.FechaAlquiler < hasta);
+
+            if (sucursalId.HasValue && sucursalId.Value > 0)
+                query = query.Where(a => a.Empleado!.SucursalId == sucursalId.Value);
+
+            return await query.ToListAsync();
+        }
     }
 }

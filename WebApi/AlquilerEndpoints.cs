@@ -104,6 +104,24 @@ namespace WebApi
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
             .RequireAuthorization("AlquileresEliminar");
+
+            app.MapGet("/alquileres/criteria", async ([AsParameters] ReporteAlquileresCriteriaDTO criteria, AlquilerService alquilerService) =>
+            {
+                try
+                {
+                    var alquileres = await alquilerService.GetByCriteriaAsync(criteria);
+                    return Results.Ok(alquileres);
+                }
+                catch (ArgumentException ex)
+                {
+                    return Results.BadRequest(new { error = ex.Message });
+                }
+            })
+            .WithName("GetAlquileresByCriteria")
+            .Produces<IEnumerable<AlquilerDTO>>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .WithOpenApi()
+            .RequireAuthorization("AlquileresLeer");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DTOs;
 using System;
+using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -155,6 +156,40 @@ namespace API.Clients
             catch (TaskCanceledException ex)
             {
                 throw new Exception($"Timeout al actualizar alquiler con Id {alquiler.Id}: {ex.Message}", ex);
+            }
+        }
+        public static async Task<IEnumerable<AlquilerDTO>> GetByCriteriaAsync(DateTime desde, DateTime hasta, int? sucursalId)
+        {
+            try
+            {
+                using var client = await CreateHttpClientAsync();
+
+                string url = $"alquileres/criteria?fechaDesde={desde.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}" +
+                             $"&fechaHasta={hasta.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}";
+
+                if (sucursalId.HasValue)
+                    url += $"&sucursalId={sucursalId.Value}";
+
+                HttpResponseMessage response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<IEnumerable<AlquilerDTO>>();
+                }
+                else
+                {
+                    string mensaje = await ObtenerMensajeErrorAsync(response);
+
+                    throw new Exception($"Error al filtrar alquileres. Status: {response.StatusCode}, Detalle: {mensaje}");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new Exception($"Error de conexión al filtrar alquileres: {ex.Message}", ex);
+            }
+            catch (TaskCanceledException ex)
+            {
+                throw new Exception($"Timeout al filtrar alquileres: {ex.Message}", ex);
             }
         }
     }

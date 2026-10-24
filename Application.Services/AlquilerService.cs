@@ -245,5 +245,37 @@ namespace Application.Services
             }
             return await alquilerRepository.UpdateAsync(alquiler);
         }
+        public async Task<IEnumerable<AlquilerDTO>> GetByCriteriaAsync(ReporteAlquileresCriteriaDTO criteria)
+        {
+            if (criteria.FechaDesde.Date > criteria.FechaHasta.Date)
+                throw new ArgumentException("La fecha desde no puede ser posterior a la fecha hasta.");
+
+            var alquileres = await alquilerRepository.GetByCriteriaAsync(criteria.FechaDesde, criteria.FechaHasta, criteria.SucursalId);
+
+            return alquileres.Select(alquiler => new AlquilerDTO
+            {
+                Id = alquiler.Id,
+                ClienteId = alquiler.ClienteId,
+                ClienteNombre = alquiler.Cliente?.Nombre,
+                ClienteApellido = alquiler.Cliente?.Apellido,
+                EmpleadoId = alquiler.EmpleadoId,
+                EmpleadoApellido = alquiler.Empleado?.Apellido,
+                EmpleadoLegajo = alquiler.Empleado?.Legajo,
+                FechaAlquiler = alquiler.FechaAlquiler,
+                EstadoAlquiler = alquiler.EstadoAlquiler,
+                Detalles = alquiler.DetallesAlquiler.Select(detalle => new DetalleAlquilerDTO
+                {
+                    AlquilerId = detalle.AlquilerId,
+                    BicicletaId = detalle.BicicletaId,
+                    BicicletaMarca = detalle.Bicicleta?.Marca,
+                    CategoriaDescripcion = detalle.Bicicleta?.Categoria?.Descripcion,
+                    HoraInicio = detalle.HoraInicio,
+                    HoraFin = detalle.HoraFin,
+                    Estado = detalle.Estado,
+                    PrecioHora = detalle.PrecioHora,
+                    Subtotal = detalle.Subtotal
+                }).ToList()
+            }).ToList();
+        }
     }
 }

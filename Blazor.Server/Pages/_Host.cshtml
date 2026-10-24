@@ -30,5 +30,16 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+
+    <script src="_framework/blazor.server.js"></script>
+    <script>
+        window.descargarArchivo = (nombre, contentType, base64) => {
+            const a = document.createElement('a');
+            a.href = `data:${contentType};base64,${base64}`;
+            a.download = nombre;
+            a.click();
+        };
+    </script>
+</body>
 </body>
 </html>

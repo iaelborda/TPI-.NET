@@ -29,6 +29,45 @@
         <div class="alert alert-danger">@errorMessage</div>
     }
 
+    @if (canRead)
+    {
+        <div class="row g-3 align-items-end mb-4">
+            <div class="col-md-3">
+                <label class="form-label">Fecha desde</label>
+                <input type="date" class="form-control"
+                       max="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       @bind="fechaDesde"
+                       @bind:after="CargarAlquileres" />
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Fecha hasta</label>
+                <input type="date" class="form-control"
+                       max="@DateTime.Today.ToString("yyyy-MM-dd")"
+                       @bind="fechaHasta"
+                       @bind:after="CargarAlquileres" />
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Sucursal</label>
+                <select class="form-select" @bind="sucursalId" @bind:after="CargarAlquileres">
+                    <option value="0">Todas</option>
+                    @foreach (var suc in sucursales)
+                    {
+                        <option value="@suc.Id">@suc.Nombre</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <button class="btn btn-success" @onclick="GenerarReporte" disabled="@generandoReporte">
+                    <i class="fas fa-file-pdf me-1"></i>
+                    @(generandoReporte ? "Generando..." : "Generar reporte")
+                </button>
+            </div>
+        </div>
+    }
+
     @if (loading)
     {
         <div class="d-flex justify-content-center">
@@ -39,7 +78,7 @@
     }
     else if (canRead && alquileres.Count == 0)
     {
-        <div class="alert alert-info">No hay alquileres registrados.</div>
+        <div class="alert alert-info">No hay alquileres para los filtros seleccionados.</div>
     }
     else if (canRead)
     {
@@ -85,12 +124,12 @@
                                     @(canUpdate ? "Ver / Editar" : "Ver")
                                 </button>
 
-                                @if (canUpdate && 
-                                     alquiler.EstadoAlquiler != EstadoDeAlquiler.Cancelado && 
-                                     alquiler.Detalles != null && 
-                                     alquiler.Detalles.Count > 0 && 
-                                     alquiler.Detalles.All(d => d.HoraFin.HasValue) &&
-                                     !alquileresConPago.Contains(alquiler.Id))
+                                @if (canUpdate &&
+                                                        alquiler.EstadoAlquiler != EstadoDeAlquiler.Cancelado &&
+                                                        alquiler.Detalles != null &&
+                                                        alquiler.Detalles.Count > 0 &&
+                                                        alquiler.Detalles.All(d => d.HoraFin.HasValue) &&
+                                                        !alquileresConPago.Contains(alquiler.Id))
                                 {
                                     <a class="btn btn-sm btn-success me-1" href="@($"pagos?alquilerId={alquiler.Id}")">
                                         <i class="fas fa-dollar-sign me-1"></i> Cobrar
@@ -124,10 +163,16 @@
 
 @code {
     private List<AlquilerDTO> alquileres = new();
+    private List<SucursalDTO> sucursales = new();
     private bool loading = true;
     private bool mostrarModal;
+    private bool generandoReporte;
     private int? alquilerSeleccionado;
     private string errorMessage = string.Empty;
+
+    private DateTime fechaDesde = DateTime.Today.AddMonths(-2);
+    private DateTime fechaHasta = DateTime.Today;
+    private int sucursalId;
 
     private bool canRead;
     private bool canAdd;
@@ -151,6 +196,8 @@
             return;
         }
 
+        sucursales = (await SucursalApiClient.GetAllAsync()).ToList();
+
         await CargarAlquileres();
     }
 
@@ -168,11 +215,16 @@
     {
         if (!canRead) return;
 
+        if (!FechasValidas()) return;
+
         try
         {
             loading = true;
             errorMessage = string.Empty;
-            alquileres = (await AlquilerApiClient.GetAllAsync()).ToList();
+            alquileres = (await AlquilerApiClient.GetByCriteriaAsync(
+                fechaDesde.Date,
+                fechaHasta.Date,
+                sucursalId > 0 ? sucursalId : null)).ToList();
 
             try
             {
@@ -191,6 +243,63 @@
         finally
         {
             loading = false;
+        }
+    }
+
+    private bool FechasValidas()
+    {
+        if (fechaDesde == DateTime.MinValue || fechaHasta == DateTime.MinValue)
+        {
+            errorMessage = "Debe ingresar ambas fechas.";
+            return false;
+        }
+
+        if (fechaDesde.Date > DateTime.Today || fechaHasta.Date > DateTime.Today)
+        {
+            errorMessage = "Las fechas no pueden ser futuras.";
+            return false;
+        }
+
+        if (fechaDesde.Date > fechaHasta.Date)
+        {
+            errorMessage = "La fecha desde no puede ser posterior a la fecha hasta.";
+            return false;
+        }
+
+        errorMessage = string.Empty;
+        return true;
+    }
+
+    private async Task GenerarReporte()
+    {
+        if (!canRead || !FechasValidas()) return;
+
+        try
+        {
+            generandoReporte = true;
+
+            var criteria = new ReporteAlquileresCriteriaDTO
+            {
+                FechaDesde = fechaDesde.Date,
+                FechaHasta = fechaHasta.Date,
+                SucursalId = sucursalId > 0 ? sucursalId : null
+            };
+
+            byte[] pdf = await ReporteApiClient.GetReporteAlquileresAsync(criteria);
+
+            await JSRuntime.InvokeVoidAsync(
+                "descargarArchivo",
+                $"ReporteAlquileres_{DateTime.Now:yyyyMMdd_HHmm}.pdf",
+                "application/pdf",
+                Convert.ToBase64String(pdf));
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"No se pudo generar el reporte: {ex.Message}";
+        }
+        finally
+        {
+            generandoReporte = false;
         }
     }
 
@@ -271,4 +380,3 @@
         }
     }
 }
-
