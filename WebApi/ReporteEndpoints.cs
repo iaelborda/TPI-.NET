@@ -30,8 +30,9 @@ namespace WebApi
             .Produces(StatusCodes.Status200OK, contentType: "application/pdf")
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .WithOpenApi()
-            .RequireAuthorization("AlquileresLeer");
+            .RequireAuthorization("ReportesLeer");
 
             app.MapPost("/reportes/ranking-bicicletas", async (ReporteRankingBicicletaCriteriaDTO criteria, IReporteService reporteService, ReportePdfService reportePdfService) =>
             {
@@ -53,8 +54,9 @@ namespace WebApi
             }).WithName("GetRankingBicicletas")
             .Produces(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized)
+            .Produces(StatusCodes.Status403Forbidden)
             .WithOpenApi()
-            .RequireAuthorization("AlquileresLeer");
+            .RequireAuthorization("ReportesLeer");
         }
     }
 }

@@ -85,7 +85,8 @@ namespace Application.Services
                 "alquileres.leer", "alquileres.agregar", "alquileres.actualizar", "alquileres.eliminar",
                 "tarifas.leer", "tarifas.agregar", "tarifas.actualizar", "tarifas.eliminar",
                 "usuarios.leer", "usuarios.agregar", "usuarios.actualizar", "usuarios.eliminar",
-                "pagos.leer", "pagos.agregar", "pagos.actualizar", "pagos.eliminar"
+                "pagos.leer", "pagos.agregar", "pagos.actualizar", "pagos.eliminar",
+                "reportes.leer"
             };
 
             if (rol == RolUsuario.Usuario)
@@ -99,6 +100,7 @@ namespace Application.Services
                 permisos.Add("pagos.leer");
                 permisos.Add("pagos.agregar");
                 permisos.Add("pagos.actualizar");
+                permisos.Remove("reportes.leer");
             }
 
             return permisos.Select(p => new Claim("permission", p)).ToList();
