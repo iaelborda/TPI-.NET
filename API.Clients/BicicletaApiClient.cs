@@ -1,4 +1,4 @@
-﻿using DTOs;
+using DTOs;
 using System.Net.Http.Json;
 
 namespace API.Clients
@@ -54,6 +54,32 @@ namespace API.Clients
             catch (TaskCanceledException ex)
             {
                 throw new Exception($"Timeout: {ex.Message}", ex);
+            }
+        }
+
+        public static async Task<IEnumerable<BicicletaDTO>> GetByCriteriaAsync(BicicletaCriteriaDTO dto)
+        {
+            try
+            {
+                using var client = await CreateHttpClientAsync();
+                HttpResponseMessage response = await client.PostAsJsonAsync("bicicletas/buscar", dto);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<IEnumerable<BicicletaDTO>>();
+                }
+                else
+                {
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error al buscar bicicletas. Status: {response.StatusCode}, Detalle: {errorContent}");
+                }
+            }
+            catch(HttpRequestException ex)
+            {
+                throw new Exception($"Error de conexion: {ex.Message}", ex);
+            }
+            catch(TaskCanceledException ex)
+            {
+                throw new Exception($"Timeout al buscar bicicletas: {ex.Message}", ex);
             }
         }
 

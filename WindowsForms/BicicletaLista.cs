@@ -13,6 +13,7 @@ namespace WindowsForms
             InitializeComponent();
             ConfigurarColumnas();
         }
+
         private void ConfigurarColumnas()
         {
             this.bicicletasDataGridView.AutoGenerateColumns = false;
@@ -67,7 +68,35 @@ namespace WindowsForms
         }
         private async void Bicicletas_Load(object sender, EventArgs e)
         {
+            await CargarCombos();
             await this.LoadBicicletas();
+        }
+
+        private async Task CargarCombos()
+        {
+            try
+            {
+                var categorias = (await CategoriaApiClient.GetAllAsync())?.ToList() ?? new();
+                categorias.Insert(0, new CategoriaDTO { Id = 0, Descripcion = "Todas las categorias" });
+                categoriaComboBox.DataSource = categorias;
+                categoriaComboBox.DisplayMember = "Descripcion";
+                categoriaComboBox.ValueMember = "Id";
+                categoriaComboBox.SelectedIndex = 0;
+
+                var sucursales = (await SucursalApiClient.GetAllAsync())?.ToList() ?? new();
+                sucursales.Insert(0, new SucursalDTO { Id = 0, Nombre = "Todas las sucursales" });
+                sucursalComboBox.DataSource = sucursales;
+                sucursalComboBox.DisplayMember = "Nombre";
+                sucursalComboBox.ValueMember = "Id";
+                sucursalComboBox.SelectedIndex = 0;
+
+                estadoComboBox.Items.Clear();
+                estadoComboBox.Items.AddRange(new object[] { "Todos", "Disponible", "EnUso", "EnMantenimiento" });
+                estadoComboBox.SelectedIndex = 0;
+            }catch(Exception ex)
+            {
+                MessageBox.Show($"Error al cargar filtros: {ex.Message}", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private async Task LoadBicicletas()

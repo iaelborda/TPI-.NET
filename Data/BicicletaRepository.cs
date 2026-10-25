@@ -68,5 +68,28 @@ namespace Data
 
             return false;
         }
+
+        public async Task<IEnumerable<Bicicleta>> GetByCriteriaAsync(BicicletaCriteria criteria)
+        {
+            var query = context.Bicicletas.Include(b => b.Categoria).Include(b => b.Sucursal).AsQueryable();
+            if (!string.IsNullOrWhiteSpace(criteria.Texto))
+            {
+                string t = criteria.Texto.Trim().ToLower();
+                query = query.Where(b => b.Marca.ToLower().Contains(t) || b.Modelo.ToLower().Contains(t));
+            }
+            if(criteria.CategoriaId.HasValue && criteria.CategoriaId > 0)
+            {
+                query = query.Where (b => b.CategoriaId == criteria.CategoriaId.Value);
+            }
+            if(criteria.SucursalId.HasValue && criteria.SucursalId > 0)
+            {
+                query = query.Where(b=> b.SucursalId == criteria.SucursalId.Value);
+            }
+            if (criteria.Estado.HasValue)
+            {
+                query = query.Where(b => b.Estado == criteria.Estado.Value);
+            }
+            return await query.ToListAsync();
+        }
     }
 }

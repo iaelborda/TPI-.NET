@@ -1,8 +1,9 @@
-﻿using Data;
+using Data;
 using Domain.Model;
 using DTOs;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Transactions;
 
 namespace Application.Services
 {
@@ -128,6 +129,31 @@ namespace Application.Services
             bicicleta.SetId(dto.Id);
 
             return await bicicletaRepository.UpdateAsync(bicicleta);
+        }
+
+        public async Task<IEnumerable<BicicletaDTO>> GetByCriteriaAsync(BicicletaCriteriaDTO dto)
+        {
+            var criteria = new BicicletaCriteria
+            (
+                dto.Busqueda,
+                dto.CategoriaId > 0 ? dto.CategoriaId : null,
+                dto.SucursalId > 0 ? dto.SucursalId : null,
+                dto.Estado
+            );
+
+            var bicicletas = await bicicletaRepository.GetByCriteriaAsync(criteria);
+
+            return bicicletas.Select(b => new BicicletaDTO
+            {
+                Id = b.Id,
+                Marca = b.Marca,
+                Modelo = b.Modelo,
+                Estado = b.Estado,
+                CategoriaId = b.CategoriaId,
+                SucursalId = b.SucursalId,
+                DescripcionCategoria = b.Categoria?.Descripcion,
+                DireccionSucursal = b.Sucursal?.Direccion
+            });
         }
     }
 }

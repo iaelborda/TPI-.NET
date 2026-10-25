@@ -9,5 +9,6 @@ namespace Application.Services
         Task<bool> UpdateAsync(BicicletaDTO dto);
         Task<BicicletaDTO?> GetAsync(int id);
         Task<IEnumerable<BicicletaDTO>> GetAllAsync();
+        Task<IEnumerable<BicicletaDTO>> GetByCriteriaAsync(BicicletaCriteriaDTO criteria);
     }
 }

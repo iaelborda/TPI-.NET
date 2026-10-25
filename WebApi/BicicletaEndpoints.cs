@@ -1,4 +1,4 @@
-﻿using Application.Services;
+using Application.Services;
 using DTOs;
 
 namespace WebApi
@@ -32,7 +32,7 @@ namespace WebApi
             .WithName("GetAllBicicletas")
             .Produces<List<BicicletaDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
-            .RequireAuthorization("BicicletasLeer"); 
+            .RequireAuthorization("BicicletasLeer");
 
             app.MapPost("/bicicletas", async (BicicletaDTO dto, IBicicletaService bicicletaService) =>
             {
@@ -91,6 +91,16 @@ namespace WebApi
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi()
             .RequireAuthorization("BicicletasEliminar"); 
+
+            app.MapPost("/bicicletas/buscar", async (BicicletaCriteriaDTO criteria, IBicicletaService bicicletaService) =>
+            {
+                var dtos = await bicicletaService.GetByCriteriaAsync(criteria);
+                return Results.Ok(dtos);
+            })
+            .WithName("GetBicicletasByCriteria")
+            .Produces<List<BicicletaDTO>>(StatusCodes.Status200OK)
+            .WithOpenApi()
+            .RequireAuthorization("BicicletasLeer");
         }
     }
 }

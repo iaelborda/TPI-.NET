@@ -9,5 +9,6 @@ namespace Data
         Task<Bicicleta?> GetAsync(int id);
         Task<IEnumerable<Bicicleta>> GetAllAsync();
         Task<bool> UpdateAsync(Bicicleta bicicleta);
+        Task<IEnumerable<Bicicleta>> GetByCriteriaAsync(BicicletaCriteria criteria);
     }
 }
