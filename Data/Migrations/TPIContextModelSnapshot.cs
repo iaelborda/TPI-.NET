@@ -49,6 +49,200 @@ namespace Data.Migrations
                     b.HasIndex("EmpleadoId");
 
                     b.ToTable("Alquileres");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClienteId = 1,
+                            EmpleadoId = 1,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 5, 10, 10, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClienteId = 2,
+                            EmpleadoId = 2,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 5, 22, 14, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ClienteId = 3,
+                            EmpleadoId = 3,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 6, 8, 11, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ClienteId = 4,
+                            EmpleadoId = 4,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 6, 25, 15, 30, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ClienteId = 5,
+                            EmpleadoId = 1,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 7, 5, 9, 30, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ClienteId = 6,
+                            EmpleadoId = 2,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 7, 16, 16, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ClienteId = 7,
+                            EmpleadoId = 3,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 7, 28, 10, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ClienteId = 8,
+                            EmpleadoId = 1,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 8, 4, 11, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ClienteId = 1,
+                            EmpleadoId = 2,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 8, 12, 14, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ClienteId = 2,
+                            EmpleadoId = 3,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 8, 18, 15, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 11,
+                            ClienteId = 3,
+                            EmpleadoId = 4,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 8, 23, 10, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 12,
+                            ClienteId = 4,
+                            EmpleadoId = 5,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 8, 29, 16, 30, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 13,
+                            ClienteId = 5,
+                            EmpleadoId = 1,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 9, 3, 10, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 14,
+                            ClienteId = 6,
+                            EmpleadoId = 2,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 9, 9, 14, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 15,
+                            ClienteId = 7,
+                            EmpleadoId = 3,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 9, 15, 11, 30, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 16,
+                            ClienteId = 8,
+                            EmpleadoId = 4,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 9, 21, 16, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 17,
+                            ClienteId = 1,
+                            EmpleadoId = 1,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 9, 26, 10, 30, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 18,
+                            ClienteId = 2,
+                            EmpleadoId = 2,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 9, 30, 15, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 19,
+                            ClienteId = 3,
+                            EmpleadoId = 1,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 10, 5, 10, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 20,
+                            ClienteId = 4,
+                            EmpleadoId = 2,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 10, 11, 14, 30, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 21,
+                            ClienteId = 5,
+                            EmpleadoId = 3,
+                            EstadoAlquiler = 1,
+                            FechaAlquiler = new DateTime(2026, 10, 17, 11, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 22,
+                            ClienteId = 6,
+                            EmpleadoId = 1,
+                            EstadoAlquiler = 2,
+                            FechaAlquiler = new DateTime(2026, 10, 20, 16, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 23,
+                            ClienteId = 7,
+                            EmpleadoId = 1,
+                            EstadoAlquiler = 0,
+                            FechaAlquiler = new DateTime(2026, 10, 24, 16, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 24,
+                            ClienteId = 8,
+                            EmpleadoId = 2,
+                            EstadoAlquiler = 0,
+                            FechaAlquiler = new DateTime(2026, 10, 24, 17, 30, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Domain.Model.Bicicleta", b =>
@@ -113,6 +307,114 @@ namespace Data.Migrations
                             Marca = "Volta",
                             Modelo = "E-Bike",
                             SucursalId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoriaId = 2,
+                            Estado = 0,
+                            Marca = "Trek",
+                            Modelo = "Marlin 5",
+                            SucursalId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoriaId = 2,
+                            Estado = 1,
+                            Marca = "Raleigh",
+                            Modelo = "Mojave 2.0",
+                            SucursalId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoriaId = 2,
+                            Estado = 0,
+                            Marca = "Specialized",
+                            Modelo = "Rockhopper",
+                            SucursalId = 3
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategoriaId = 4,
+                            Estado = 0,
+                            Marca = "Olmo",
+                            Modelo = "Amelie",
+                            SucursalId = 3
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CategoriaId = 1,
+                            Estado = 1,
+                            Marca = "SLP",
+                            Modelo = "50 Pro",
+                            SucursalId = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CategoriaId = 2,
+                            Estado = 0,
+                            Marca = "Scott",
+                            Modelo = "Aspect 950",
+                            SucursalId = 4
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CategoriaId = 5,
+                            Estado = 0,
+                            Marca = "Aurora",
+                            Modelo = "Folding",
+                            SucursalId = 4
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CategoriaId = 2,
+                            Estado = 2,
+                            Marca = "Vairo",
+                            Modelo = "XR 3.8",
+                            SucursalId = 3
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CategoriaId = 3,
+                            Estado = 0,
+                            Marca = "Philco",
+                            Modelo = "E-Comfort",
+                            SucursalId = 1
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CategoriaId = 2,
+                            Estado = 0,
+                            Marca = "Giant",
+                            Modelo = "Talon 3",
+                            SucursalId = 2
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CategoriaId = 1,
+                            Estado = 2,
+                            Marca = "Zenith",
+                            Modelo = "Riva",
+                            SucursalId = 4
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CategoriaId = 4,
+                            Estado = 0,
+                            Marca = "Firebird",
+                            Modelo = "Tour",
+                            SucursalId = 1
                         });
                 });
 
@@ -151,6 +453,16 @@ namespace Data.Migrations
                         {
                             Id = 3,
                             Descripcion = "Eléctrica"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Descripcion = "Paseo"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Descripcion = "Plegable"
                         });
                 });
 
@@ -224,6 +536,72 @@ namespace Data.Migrations
                             FechaAlta = new DateOnly(2026, 2, 15),
                             Nombre = "Martin",
                             Telefono = "3414001002",
+                            TipoDocumento = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Apellido = "Rossi",
+                            Documento = "38333444",
+                            Email = "maria.rossi@gmail.com",
+                            FechaAlta = new DateOnly(2026, 3, 1),
+                            Nombre = "Maria",
+                            Telefono = "3414001003",
+                            TipoDocumento = 0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Apellido = "Alvarez",
+                            Documento = "42555666",
+                            Email = "julian.alvarez@gmail.com",
+                            FechaAlta = new DateOnly(2026, 3, 20),
+                            Nombre = "Julian",
+                            Telefono = "3414001004",
+                            TipoDocumento = 0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Apellido = "Diaz",
+                            Documento = "39777888",
+                            Email = "valen.diaz@gmail.com",
+                            FechaAlta = new DateOnly(2026, 4, 12),
+                            Nombre = "Valentina",
+                            Telefono = "3414001005",
+                            TipoDocumento = 0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Apellido = "Romero",
+                            Documento = "37999000",
+                            Email = "facu.romero@gmail.com",
+                            FechaAlta = new DateOnly(2026, 5, 5),
+                            Nombre = "Facundo",
+                            Telefono = "3414001006",
+                            TipoDocumento = 0
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Apellido = "Benitez",
+                            Documento = "41111222",
+                            Email = "camila.b@gmail.com",
+                            FechaAlta = new DateOnly(2026, 6, 18),
+                            Nombre = "Camila",
+                            Telefono = "3414001007",
+                            TipoDocumento = 0
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Apellido = "Herrera",
+                            Documento = "43333444",
+                            Email = "nico.herrera@gmail.com",
+                            FechaAlta = new DateOnly(2026, 7, 22),
+                            Nombre = "Nicolas",
+                            Telefono = "3414001008",
                             TipoDocumento = 0
                         });
                 });
@@ -299,6 +677,39 @@ namespace Data.Migrations
                             SucursalId = 2,
                             Telefono = "3414001011",
                             TipoDocumento = 0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Apellido = "Rodriguez",
+                            Documento = "32444555",
+                            Legajo = 1003,
+                            Nombre = "Carlos",
+                            SucursalId = 3,
+                            Telefono = "3414001012",
+                            TipoDocumento = 0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Apellido = "Martinez",
+                            Documento = "35666777",
+                            Legajo = 1004,
+                            Nombre = "Sofia",
+                            SucursalId = 4,
+                            Telefono = "3414001013",
+                            TipoDocumento = 0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Apellido = "Fernandez",
+                            Documento = "33888999",
+                            Legajo = 1005,
+                            Nombre = "Lucas",
+                            SucursalId = 1,
+                            Telefono = "3414001014",
+                            TipoDocumento = 0
                         });
                 });
 
@@ -328,6 +739,176 @@ namespace Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Pagos");
+
+                    b.HasData(
+                        new
+                        {
+                            IdPago = 1,
+                            FechaPago = new DateTime(2026, 5, 10, 12, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 1,
+                            Metodo = 0,
+                            Monto = 8000m
+                        },
+                        new
+                        {
+                            IdPago = 2,
+                            FechaPago = new DateTime(2026, 5, 22, 17, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 2,
+                            Metodo = 2,
+                            Monto = 14500m
+                        },
+                        new
+                        {
+                            IdPago = 3,
+                            FechaPago = new DateTime(2026, 6, 8, 13, 10, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 3,
+                            Metodo = 3,
+                            Monto = 8600m
+                        },
+                        new
+                        {
+                            IdPago = 4,
+                            FechaPago = new DateTime(2026, 6, 25, 17, 35, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 4,
+                            Metodo = 1,
+                            Monto = 9000m
+                        },
+                        new
+                        {
+                            IdPago = 5,
+                            FechaPago = new DateTime(2026, 7, 5, 12, 35, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 5,
+                            Metodo = 0,
+                            Monto = 17500m
+                        },
+                        new
+                        {
+                            IdPago = 6,
+                            FechaPago = new DateTime(2026, 7, 16, 18, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 6,
+                            Metodo = 3,
+                            Monto = 15000m
+                        },
+                        new
+                        {
+                            IdPago = 7,
+                            FechaPago = new DateTime(2026, 7, 28, 13, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 7,
+                            Metodo = 2,
+                            Monto = 12500m
+                        },
+                        new
+                        {
+                            IdPago = 8,
+                            FechaPago = new DateTime(2026, 8, 4, 13, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 8,
+                            Metodo = 1,
+                            Monto = 13000m
+                        },
+                        new
+                        {
+                            IdPago = 9,
+                            FechaPago = new DateTime(2026, 8, 12, 16, 10, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 9,
+                            Metodo = 0,
+                            Monto = 12000m
+                        },
+                        new
+                        {
+                            IdPago = 10,
+                            FechaPago = new DateTime(2026, 8, 18, 18, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 10,
+                            Metodo = 3,
+                            Monto = 12400m
+                        },
+                        new
+                        {
+                            IdPago = 11,
+                            FechaPago = new DateTime(2026, 8, 23, 12, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 11,
+                            Metodo = 2,
+                            Monto = 10000m
+                        },
+                        new
+                        {
+                            IdPago = 12,
+                            FechaPago = new DateTime(2026, 8, 29, 18, 35, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 12,
+                            Metodo = 0,
+                            Monto = 13600m
+                        },
+                        new
+                        {
+                            IdPago = 13,
+                            FechaPago = new DateTime(2026, 9, 3, 12, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 13,
+                            Metodo = 1,
+                            Monto = 8000m
+                        },
+                        new
+                        {
+                            IdPago = 14,
+                            FechaPago = new DateTime(2026, 9, 9, 17, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 14,
+                            Metodo = 3,
+                            Monto = 14500m
+                        },
+                        new
+                        {
+                            IdPago = 15,
+                            FechaPago = new DateTime(2026, 9, 15, 13, 35, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 15,
+                            Metodo = 2,
+                            Monto = 8600m
+                        },
+                        new
+                        {
+                            IdPago = 16,
+                            FechaPago = new DateTime(2026, 9, 21, 18, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 16,
+                            Metodo = 0,
+                            Monto = 10000m
+                        },
+                        new
+                        {
+                            IdPago = 17,
+                            FechaPago = new DateTime(2026, 9, 26, 12, 35, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 17,
+                            Metodo = 1,
+                            Monto = 15000m
+                        },
+                        new
+                        {
+                            IdPago = 18,
+                            FechaPago = new DateTime(2026, 9, 30, 17, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 18,
+                            Metodo = 3,
+                            Monto = 8000m
+                        },
+                        new
+                        {
+                            IdPago = 19,
+                            FechaPago = new DateTime(2026, 10, 5, 12, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 19,
+                            Metodo = 0,
+                            Monto = 8000m
+                        },
+                        new
+                        {
+                            IdPago = 20,
+                            FechaPago = new DateTime(2026, 10, 11, 16, 35, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 20,
+                            Metodo = 2,
+                            Monto = 15000m
+                        },
+                        new
+                        {
+                            IdPago = 21,
+                            FechaPago = new DateTime(2026, 10, 17, 14, 5, 0, 0, DateTimeKind.Unspecified),
+                            IdAlquiler = 21,
+                            Metodo = 3,
+                            Monto = 10400m
+                        });
                 });
 
             modelBuilder.Entity("Domain.Model.Sucursal", b =>
@@ -379,6 +960,22 @@ namespace Data.Migrations
                             Direccion = "Zeballos 1500",
                             Nombre = "Bicicletas Ya!",
                             Telefono = "3414002000"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Capacidad = 25,
+                            Direccion = "Av. Del Huerto 1100",
+                            Nombre = "BiciPaseo Costanera",
+                            Telefono = "3414003000"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Capacidad = 18,
+                            Direccion = "Av. Pellegrini 2100",
+                            Nombre = "EcoBici Pellegrini",
+                            Telefono = "3414004000"
                         });
                 });
 
@@ -429,6 +1026,20 @@ namespace Data.Migrations
                             CategoriaId = 3,
                             FechaDesde = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             PrecioHora = 3500m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoriaId = 4,
+                            FechaDesde = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PrecioHora = 1800m
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoriaId = 5,
+                            FechaDesde = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PrecioHora = 2000m
                         });
                 });
 
@@ -485,10 +1096,10 @@ namespace Data.Migrations
                             Id = 1,
                             Activo = true,
                             Email = "admin@tpi.com",
-                            FechaCreacion = new DateTime(2026, 10, 24, 14, 7, 33, 179, DateTimeKind.Local).AddTicks(7360),
-                            PasswordHash = "IJRqOq0OxrMAYbrBivtT6a0uDHQ3mREjjqXMViNy03w=",
+                            FechaCreacion = new DateTime(2026, 10, 24, 22, 14, 17, 497, DateTimeKind.Local).AddTicks(9223),
+                            PasswordHash = "NCNMjylAV5fXMY7GV39k59Bi1kJQGP2HYFt2Xyy0XcE=",
                             Rol = 0,
-                            Salt = "+dENJ8kHoIn6kXeiI6k4P474qYI5b4wqwmCpYR0tarw=",
+                            Salt = "0od4+qfRLye6AoLyBKaw2ibHPM948F43EFEagxhMkZY=",
                             Username = "admin"
                         },
                         new
@@ -496,10 +1107,10 @@ namespace Data.Migrations
                             Id = 2,
                             Activo = true,
                             Email = "empleado@tpi.com",
-                            FechaCreacion = new DateTime(2026, 10, 24, 14, 7, 33, 182, DateTimeKind.Local).AddTicks(3958),
-                            PasswordHash = "+wqvzGEjwiU0q2iIHTSiHLs8GqwmTVjyvQ/VqTheu3Y=",
+                            FechaCreacion = new DateTime(2026, 10, 24, 22, 14, 17, 501, DateTimeKind.Local).AddTicks(5596),
+                            PasswordHash = "5UdEMInKkmNP+EjTkCJB6Xdyh3Lxggh2MuCCO4GlFWQ=",
                             Rol = 1,
-                            Salt = "9N37sC9Dw6wolltGrjBwjESZZuof8PJO2W3g3466618=",
+                            Salt = "N6YUz4XIOPrkQGDjBIVu+O4EhaH5MZO+ZMoNB/r+pDw=",
                             Username = "empleado"
                         });
                 });
@@ -563,6 +1174,566 @@ namespace Data.Migrations
                                 .IsRequired();
 
                             b1.Navigation("Bicicleta");
+
+                            b1.HasData(
+                                new
+                                {
+                                    AlquilerId = 1,
+                                    Id = 1,
+                                    BicicletaId = 1,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 5, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 5, 10, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1500m,
+                                    Subtotal = 3000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 1,
+                                    Id = 2,
+                                    BicicletaId = 2,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 5, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 5, 10, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 2,
+                                    Id = 3,
+                                    BicicletaId = 3,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 5, 22, 16, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 5, 22, 14, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 3500m,
+                                    Subtotal = 7000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 2,
+                                    Id = 4,
+                                    BicicletaId = 4,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 5, 22, 17, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 5, 22, 14, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 7500m
+                                },
+                                new
+                                {
+                                    AlquilerId = 3,
+                                    Id = 5,
+                                    BicicletaId = 6,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 6, 8, 13, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 6, 8, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 3,
+                                    Id = 6,
+                                    BicicletaId = 7,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 6, 8, 13, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 6, 8, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1800m,
+                                    Subtotal = 3600m
+                                },
+                                new
+                                {
+                                    AlquilerId = 4,
+                                    Id = 7,
+                                    BicicletaId = 9,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 6, 25, 17, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 6, 25, 15, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 4,
+                                    Id = 8,
+                                    BicicletaId = 10,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 6, 25, 17, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 6, 25, 15, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2000m,
+                                    Subtotal = 4000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 5,
+                                    Id = 9,
+                                    BicicletaId = 1,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 7, 5, 11, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 7, 5, 9, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1500m,
+                                    Subtotal = 3000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 5,
+                                    Id = 10,
+                                    BicicletaId = 5,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 7, 5, 12, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 7, 5, 9, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 7500m
+                                },
+                                new
+                                {
+                                    AlquilerId = 5,
+                                    Id = 11,
+                                    BicicletaId = 12,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 7, 5, 11, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 7, 5, 9, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 3500m,
+                                    Subtotal = 7000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 6,
+                                    Id = 12,
+                                    BicicletaId = 4,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 7, 16, 18, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 7, 16, 16, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 6,
+                                    Id = 13,
+                                    BicicletaId = 6,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 7, 16, 18, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 7, 16, 16, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 6,
+                                    Id = 14,
+                                    BicicletaId = 13,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 7, 16, 18, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 7, 16, 16, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 7,
+                                    Id = 15,
+                                    BicicletaId = 6,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 7, 28, 13, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 7, 28, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 7500m
+                                },
+                                new
+                                {
+                                    AlquilerId = 7,
+                                    Id = 16,
+                                    BicicletaId = 2,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 7, 28, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 7, 28, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 8,
+                                    Id = 17,
+                                    BicicletaId = 1,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 8, 4, 13, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 8, 4, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1500m,
+                                    Subtotal = 3000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 8,
+                                    Id = 18,
+                                    BicicletaId = 2,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 8, 4, 13, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 8, 4, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 8,
+                                    Id = 19,
+                                    BicicletaId = 5,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 8, 4, 13, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 8, 4, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 9,
+                                    Id = 20,
+                                    BicicletaId = 3,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 8, 12, 16, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 8, 12, 14, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 3500m,
+                                    Subtotal = 7000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 9,
+                                    Id = 21,
+                                    BicicletaId = 4,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 8, 12, 16, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 8, 12, 14, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 10,
+                                    Id = 22,
+                                    BicicletaId = 7,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 8, 18, 18, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 8, 18, 15, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1800m,
+                                    Subtotal = 5400m
+                                },
+                                new
+                                {
+                                    AlquilerId = 10,
+                                    Id = 23,
+                                    BicicletaId = 3,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 8, 18, 17, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 8, 18, 15, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 3500m,
+                                    Subtotal = 7000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 11,
+                                    Id = 24,
+                                    BicicletaId = 9,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 8, 23, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 8, 23, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 11,
+                                    Id = 25,
+                                    BicicletaId = 2,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 8, 23, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 8, 23, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 12,
+                                    Id = 26,
+                                    BicicletaId = 1,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 8, 29, 18, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 8, 29, 16, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1500m,
+                                    Subtotal = 3000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 12,
+                                    Id = 27,
+                                    BicicletaId = 15,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 8, 29, 18, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 8, 29, 16, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1800m,
+                                    Subtotal = 3600m
+                                },
+                                new
+                                {
+                                    AlquilerId = 12,
+                                    Id = 28,
+                                    BicicletaId = 12,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 8, 29, 18, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 8, 29, 16, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 3500m,
+                                    Subtotal = 7000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 13,
+                                    Id = 29,
+                                    BicicletaId = 1,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 3, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 3, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1500m,
+                                    Subtotal = 3000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 13,
+                                    Id = 30,
+                                    BicicletaId = 2,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 3, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 3, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 14,
+                                    Id = 31,
+                                    BicicletaId = 3,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 9, 16, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 9, 14, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 3500m,
+                                    Subtotal = 7000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 14,
+                                    Id = 32,
+                                    BicicletaId = 4,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 9, 17, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 9, 14, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 7500m
+                                },
+                                new
+                                {
+                                    AlquilerId = 15,
+                                    Id = 33,
+                                    BicicletaId = 6,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 15, 13, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 15, 11, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 15,
+                                    Id = 34,
+                                    BicicletaId = 7,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 15, 13, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 15, 11, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1800m,
+                                    Subtotal = 3600m
+                                },
+                                new
+                                {
+                                    AlquilerId = 16,
+                                    Id = 35,
+                                    BicicletaId = 9,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 21, 18, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 21, 16, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 16,
+                                    Id = 36,
+                                    BicicletaId = 4,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 21, 18, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 21, 16, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 17,
+                                    Id = 37,
+                                    BicicletaId = 1,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 26, 12, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 26, 10, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1500m,
+                                    Subtotal = 3000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 17,
+                                    Id = 38,
+                                    BicicletaId = 5,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 26, 12, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 26, 10, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 17,
+                                    Id = 39,
+                                    BicicletaId = 12,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 26, 12, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 26, 10, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 3500m,
+                                    Subtotal = 7000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 18,
+                                    Id = 40,
+                                    BicicletaId = 1,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 30, 17, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 30, 15, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1500m,
+                                    Subtotal = 3000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 18,
+                                    Id = 41,
+                                    BicicletaId = 4,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 9, 30, 17, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 9, 30, 15, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 19,
+                                    Id = 42,
+                                    BicicletaId = 1,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 10, 5, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 10, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1500m,
+                                    Subtotal = 3000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 19,
+                                    Id = 43,
+                                    BicicletaId = 2,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 10, 5, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 10, 5, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 20,
+                                    Id = 44,
+                                    BicicletaId = 3,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 10, 11, 16, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 10, 11, 14, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 3500m,
+                                    Subtotal = 7000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 20,
+                                    Id = 45,
+                                    BicicletaId = 4,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 10, 11, 16, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 10, 11, 14, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 20,
+                                    Id = 46,
+                                    BicicletaId = 8,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 10, 11, 16, 30, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 10, 11, 14, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1500m,
+                                    Subtotal = 3000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 21,
+                                    Id = 47,
+                                    BicicletaId = 6,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 10, 17, 13, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 10, 17, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 5000m
+                                },
+                                new
+                                {
+                                    AlquilerId = 21,
+                                    Id = 48,
+                                    BicicletaId = 7,
+                                    Estado = 1,
+                                    HoraFin = new DateTime(2026, 10, 17, 14, 0, 0, 0, DateTimeKind.Unspecified),
+                                    HoraInicio = new DateTime(2026, 10, 17, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1800m,
+                                    Subtotal = 5400m
+                                },
+                                new
+                                {
+                                    AlquilerId = 22,
+                                    Id = 49,
+                                    BicicletaId = 2,
+                                    Estado = 0,
+                                    HoraInicio = new DateTime(2026, 10, 20, 16, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 0m
+                                },
+                                new
+                                {
+                                    AlquilerId = 23,
+                                    Id = 50,
+                                    BicicletaId = 5,
+                                    Estado = 0,
+                                    HoraInicio = new DateTime(2026, 10, 24, 16, 0, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 2500m,
+                                    Subtotal = 0m
+                                },
+                                new
+                                {
+                                    AlquilerId = 24,
+                                    Id = 51,
+                                    BicicletaId = 8,
+                                    Estado = 0,
+                                    HoraInicio = new DateTime(2026, 10, 24, 17, 30, 0, 0, DateTimeKind.Unspecified),
+                                    PrecioHora = 1500m,
+                                    Subtotal = 0m
+                                });
                         });
 
                     b.Navigation("Cliente");
