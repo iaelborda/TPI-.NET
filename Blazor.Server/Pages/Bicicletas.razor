@@ -1,5 +1,6 @@
-﻿@page "/bicicletas"
+@page "/bicicletas"
 @using DTOs
+@using Domain.Model
 @using API.Clients
 @using Blazor.Server.Components
 @inject IJSRuntime JSRuntime
@@ -29,22 +30,78 @@
                 </div>
             }
 
-            @if (canAdd)
-            {
-                <div class="mb-3">
+            <!-- Botones superiores -->
+            <div class="d-flex gap-2 mb-3">
+                @if (canAdd)
+                {
                     <button class="btn btn-primary" @onclick="OpenAddModal">
                         <i class="fas fa-plus"></i> Agregar
                     </button>
+                }
+                @if (canReport)
+                {
+                    <button class="btn btn-success" @onclick="GenerarReporte" disabled="@generandoReporte">
+                        <i class="fas fa-file-pdf me-1"></i>
+                        @(generandoReporte ? "Generando..." : "Reporte Top 10")
+                    </button>
+                }
+            </div>
+
+            <!-- Barra de filtros -->
+            @if (canRead)
+            {
+                <div class="card mb-3 p-3 bg-light">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label small">Marca o Modelo</label>
+                            <input type="text" class="form-control" placeholder="Buscar texto..." @bind="filtroTexto" />
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small">Categoría</label>
+                            <select class="form-select" @bind="filtroCategoriaId">
+                                <option value="0">Todas</option>
+                                @if (categorias != null)
+                                {
+                                    @foreach (var c in categorias)
+                                    {
+                                        <option value="@c.Id">@c.Descripcion</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small">Sucursal</label>
+                            <select class="form-select" @bind="filtroSucursalId">
+                                <option value="0">Todas</option>
+                                @if (sucursales != null)
+                                {
+                                    @foreach (var s in sucursales)
+                                    {
+                                        <option value="@s.Id">@s.Direccion</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label small">Estado</label>
+                            <select class="form-select" @bind="filtroEstadoStr">
+                                <option value="">Todos</option>
+                                <option value="Disponible">Disponible</option>
+                                <option value="EnUso">En Uso</option>
+                                <option value="EnMantenimiento">En Mantenimiento</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex gap-2">
+                            <button class="btn btn-outline-secondary" @onclick="LimpiarFiltros">
+                                <i class="fas fa-undo me-1"></i> Limpiar
+                            </button>
+                            <button class="btn btn-primary" @onclick="AplicarFiltros">
+                                <i class="fas fa-search me-1"></i> Filtrar
+                            </button>
+                        </div>
+                    </div>
                 </div>
             }
-            @if (canReport)
-            {
-                <button class="btn btn-success" @onclick="GenerarReporte" disabled="@generandoReporte">
-                    <i class="fas fa-file-pdf me-1"></i>
-                    @(generandoReporte ? "Generando..." : "Reporte Top 10")
-                </button>
-            }
-
 
             @if (loading)
             {
@@ -104,33 +161,6 @@
                                     <td colspan="7" class="text-center text-muted py-3">No hay bicicletas registradas.</td>
                                 </tr>
                             }
-
-
-                            @if (mostrarVisorModal)
-                            {
-                                <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
-                                    <div class="modal-dialog modal-xl modal-dialog-centered">
-                                        <div class="modal-content" style="height: 85vh;">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">
-                                                    <i class="fas fa-file-pdf text-danger me-2"></i>Reporte Top 10 Bicicletas (@DateTime.Now.Year)
-                                                </h5>
-                                                <button type="button" class="btn-close" @onclick="CerrarVisorModal"></button>
-                                            </div>
-                                            <div class="modal-body p-0" style="height: calc(100% - 120px);">
-                                                <iframe src="@pdfBase64Url" style="width: 100%; height: 100%; border: none;"></iframe>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-secondary" @onclick="CerrarVisorModal">Cerrar</button>
-                                                <button class="btn btn-success" @onclick="DescargarPdf">
-                                                    <i class="fas fa-download me-1"></i>Descargar PDF
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-
                         </tbody>
                     </table>
                 </div>
@@ -138,6 +168,31 @@
         </div>
     </div>
 </div>
+
+@if (mostrarVisorModal)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content" style="height: 85vh;">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-file-pdf text-danger me-2"></i>Reporte Top 10 Bicicletas (@DateTime.Now.Year)
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CerrarVisorModal"></button>
+                </div>
+                <div class="modal-body p-0" style="height: calc(100% - 120px);">
+                    <iframe src="@pdfBase64Url" style="width: 100%; height: 100%; border: none;"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CerrarVisorModal">Cerrar</button>
+                    <button class="btn btn-success" @onclick="DescargarPdf">
+                        <i class="fas fa-download me-1"></i>Descargar PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 <BicicletaModal @ref="bicicletaModal" OnBicicletaChanged="OnBicicletaSaved" />
 
@@ -152,17 +207,25 @@
     private byte[]? pdfBytes;
     private string pdfBase64Url = string.Empty;
 
+    // Filtros
+    private string filtroTexto = string.Empty;
+    private int filtroCategoriaId = 0;
+    private int filtroSucursalId = 0;
+    private string filtroEstadoStr = string.Empty;
+    private List<CategoriaDTO> categorias = new();
+    private List<SucursalDTO> sucursales = new();
+
     // Permisos de autorización
     private bool canRead = false;
     private bool canAdd = false;
     private bool canUpdate = false;
     private bool canDelete = false;
     private bool canReport = false;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            // Verificar autenticación antes de cargar datos
             var isAuthenticated = await AuthService.IsAuthenticatedAsync();
             if (!isAuthenticated)
             {
@@ -170,12 +233,18 @@
                 return;
             }
 
-            // Verificar permisos
             await LoadPermissions();
 
-            // Solo cargar datos si tiene permiso de lectura
             if (canRead)
             {
+                try
+                {
+                    categorias = (await CategoriaApiClient.GetAllAsync())?.ToList() ?? new();
+                    sucursales = (await SucursalApiClient.GetAllAsync())?.ToList() ?? new();
+                }
+                catch
+                {
+                }
                 await LoadBicicletas();
             }
             else
@@ -212,6 +281,47 @@
         {
             loading = false;
         }
+    }
+
+    private async Task AplicarFiltros()
+    {
+        try
+        {
+            loading = true;
+
+            EstadoBicicleta? estadoEnum = null;
+            if (!string.IsNullOrEmpty(filtroEstadoStr) && Enum.TryParse<EstadoBicicleta>(filtroEstadoStr, out var est))
+            {
+                estadoEnum = est;
+            }
+
+            var criteria = new BicicletaCriteriaDTO
+            {
+                Busqueda = string.IsNullOrWhiteSpace(filtroTexto) ? null : filtroTexto,
+                CategoriaId = filtroCategoriaId > 0 ? filtroCategoriaId : null,
+                SucursalId = filtroSucursalId > 0 ? filtroSucursalId : null,
+                Estado = estadoEnum
+            };
+
+            bicicletas = (await BicicletaApiClient.GetByCriteriaAsync(criteria))?.ToList();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al filtrar bicicletas: {ex.Message}";
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private async Task LimpiarFiltros()
+    {
+        filtroTexto = string.Empty;
+        filtroCategoriaId = 0;
+        filtroSucursalId = 0;
+        filtroEstadoStr = string.Empty;
+        await LoadBicicletas();
     }
 
     private async Task OnBicicletaSaved()
@@ -264,9 +374,10 @@
             pdfBytes = await ReporteApiClient.GetTop10BicicletasAnioAsync();
             pdfBase64Url = $"data:application/pdf;base64,{Convert.ToBase64String(pdfBytes)}";
             mostrarVisorModal = true;
-        }catch(Exception ex)
+        }
+        catch (Exception ex)
         {
-            errorMessage = $"No se puedo generar el reporte: {ex.Message}";
+            errorMessage = $"No se pudo generar el reporte: {ex.Message}";
         }
         finally
         {

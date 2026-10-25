@@ -35,6 +35,10 @@
             buscarTextBox = new TextBox();
             buscarButton = new Button();
             generarReporteButton = new Button();
+            categoriaComboBox = new ComboBox();
+            sucursalComboBox = new ComboBox();
+            estadoComboBox = new ComboBox();
+            limpiarButton = new Button();
             ((System.ComponentModel.ISupportInitialize)bicicletasDataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -45,19 +49,19 @@
             bicicletasDataGridView.AllowUserToOrderColumns = true;
             bicicletasDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             bicicletasDataGridView.Location = new Point(30, 70);
-            bicicletasDataGridView.Margin = new Padding(2, 2, 2, 2);
+            bicicletasDataGridView.Margin = new Padding(2);
             bicicletasDataGridView.MultiSelect = false;
             bicicletasDataGridView.Name = "bicicletasDataGridView";
             bicicletasDataGridView.ReadOnly = true;
             bicicletasDataGridView.RowHeadersWidth = 62;
             bicicletasDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            bicicletasDataGridView.Size = new Size(782, 314);
+            bicicletasDataGridView.Size = new Size(936, 314);
             bicicletasDataGridView.TabIndex = 0;
             // 
             // agregarButton
             // 
-            agregarButton.Location = new Point(722, 403);
-            agregarButton.Margin = new Padding(2, 2, 2, 2);
+            agregarButton.Location = new Point(895, 403);
+            agregarButton.Margin = new Padding(2);
             agregarButton.Name = "agregarButton";
             agregarButton.Size = new Size(90, 27);
             agregarButton.TabIndex = 1;
@@ -67,8 +71,8 @@
             // 
             // actualizarButton
             // 
-            actualizarButton.Location = new Point(619, 403);
-            actualizarButton.Margin = new Padding(2, 2, 2, 2);
+            actualizarButton.Location = new Point(792, 403);
+            actualizarButton.Margin = new Padding(2);
             actualizarButton.Name = "actualizarButton";
             actualizarButton.Size = new Size(90, 27);
             actualizarButton.TabIndex = 2;
@@ -78,8 +82,8 @@
             // 
             // eliminarButton
             // 
-            eliminarButton.Location = new Point(513, 403);
-            eliminarButton.Margin = new Padding(2, 2, 2, 2);
+            eliminarButton.Location = new Point(686, 403);
+            eliminarButton.Margin = new Padding(2);
             eliminarButton.Name = "eliminarButton";
             eliminarButton.Size = new Size(90, 27);
             eliminarButton.TabIndex = 3;
@@ -90,21 +94,23 @@
             // buscarTextBox
             // 
             buscarTextBox.Location = new Point(30, 28);
-            buscarTextBox.Margin = new Padding(2, 2, 2, 2);
+            buscarTextBox.Margin = new Padding(2);
             buscarTextBox.Name = "buscarTextBox";
             buscarTextBox.PlaceholderText = "Buscar por marca, categoría o estado...";
             buscarTextBox.Size = new Size(256, 27);
             buscarTextBox.TabIndex = 4;
+            buscarTextBox.Text = "Buscar por marca o modelo...";
             // 
             // buscarButton
             // 
-            buscarButton.Location = new Point(290, 28);
-            buscarButton.Margin = new Padding(2, 2, 2, 2);
+            buscarButton.Location = new Point(895, 28);
+            buscarButton.Margin = new Padding(2);
             buscarButton.Name = "buscarButton";
             buscarButton.Size = new Size(90, 27);
             buscarButton.TabIndex = 5;
-            buscarButton.Text = "Buscar";
+            buscarButton.Text = "FIltrar";
             buscarButton.UseVisualStyleBackColor = true;
+            buscarButton.Click += buscarButton_Click;
             // 
             // generarReporteButton
             // 
@@ -118,11 +124,53 @@
             generarReporteButton.UseVisualStyleBackColor = false;
             generarReporteButton.Click += generarReporteButton_Click;
             // 
+            // categoriaComboBox
+            // 
+            categoriaComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            categoriaComboBox.FormattingEnabled = true;
+            categoriaComboBox.Location = new Point(311, 27);
+            categoriaComboBox.Name = "categoriaComboBox";
+            categoriaComboBox.Size = new Size(151, 28);
+            categoriaComboBox.TabIndex = 14;
+            // 
+            // sucursalComboBox
+            // 
+            sucursalComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            sucursalComboBox.FormattingEnabled = true;
+            sucursalComboBox.Location = new Point(468, 27);
+            sucursalComboBox.Name = "sucursalComboBox";
+            sucursalComboBox.Size = new Size(151, 28);
+            sucursalComboBox.TabIndex = 15;
+            // 
+            // estadoComboBox
+            // 
+            estadoComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            estadoComboBox.FormattingEnabled = true;
+            estadoComboBox.Location = new Point(625, 27);
+            estadoComboBox.Name = "estadoComboBox";
+            estadoComboBox.Size = new Size(151, 28);
+            estadoComboBox.TabIndex = 16;
+            // 
+            // limpiarButton
+            // 
+            limpiarButton.Location = new Point(792, 28);
+            limpiarButton.Margin = new Padding(2);
+            limpiarButton.Name = "limpiarButton";
+            limpiarButton.Size = new Size(90, 27);
+            limpiarButton.TabIndex = 17;
+            limpiarButton.Text = "Limpiar";
+            limpiarButton.UseVisualStyleBackColor = true;
+            limpiarButton.Click += limpiarButton_Click;
+            // 
             // BicicletaLista
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(845, 453);
+            ClientSize = new Size(996, 453);
+            Controls.Add(limpiarButton);
+            Controls.Add(estadoComboBox);
+            Controls.Add(sucursalComboBox);
+            Controls.Add(categoriaComboBox);
             Controls.Add(generarReporteButton);
             Controls.Add(buscarButton);
             Controls.Add(buscarTextBox);
@@ -130,7 +178,7 @@
             Controls.Add(eliminarButton);
             Controls.Add(actualizarButton);
             Controls.Add(bicicletasDataGridView);
-            Margin = new Padding(2, 2, 2, 2);
+            Margin = new Padding(2);
             Name = "BicicletaLista";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Bicicletas";
@@ -149,5 +197,9 @@
         private TextBox buscarTextBox;
         private Button buscarButton;
         private Button generarReporteButton;
+        private ComboBox categoriaComboBox;
+        private ComboBox sucursalComboBox;
+        private ComboBox estadoComboBox;
+        private Button limpiarButton;
     }
 }
