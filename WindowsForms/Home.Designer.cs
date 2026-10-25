@@ -64,68 +64,68 @@
             // clientesToolStripMenuItem
             // 
             clientesToolStripMenuItem.Name = "clientesToolStripMenuItem";
-            clientesToolStripMenuItem.Size = new Size(224, 26);
+            clientesToolStripMenuItem.Size = new Size(179, 26);
             clientesToolStripMenuItem.Text = "Clientes";
             clientesToolStripMenuItem.Click += clientesToolStripMenuItem_Click;
             // 
             // categoriasToolStripMenuItem
             // 
             categoriasToolStripMenuItem.Name = "categoriasToolStripMenuItem";
-            categoriasToolStripMenuItem.Size = new Size(224, 26);
+            categoriasToolStripMenuItem.Size = new Size(179, 26);
             categoriasToolStripMenuItem.Text = "Categorias";
             categoriasToolStripMenuItem.Click += categoriasToolStripMenuItem_Click;
             // 
             // tarifasToolStripMenuItem
             // 
             tarifasToolStripMenuItem.Name = "tarifasToolStripMenuItem";
-            tarifasToolStripMenuItem.Size = new Size(224, 26);
+            tarifasToolStripMenuItem.Size = new Size(179, 26);
             tarifasToolStripMenuItem.Text = "Tarifas";
             tarifasToolStripMenuItem.Click += tarifasToolStripMenuItem_Click;
             // 
             // bicicletasToolStripMenuItem
             // 
             bicicletasToolStripMenuItem.Name = "bicicletasToolStripMenuItem";
-            bicicletasToolStripMenuItem.Size = new Size(224, 26);
+            bicicletasToolStripMenuItem.Size = new Size(179, 26);
             bicicletasToolStripMenuItem.Text = "Bicicletas";
             bicicletasToolStripMenuItem.Click += bicicletasToolStripMenuItem_Click;
             // 
             // sucursalesToolStripMenuItem
             // 
             sucursalesToolStripMenuItem.Name = "sucursalesToolStripMenuItem";
-            sucursalesToolStripMenuItem.Size = new Size(224, 26);
+            sucursalesToolStripMenuItem.Size = new Size(179, 26);
             sucursalesToolStripMenuItem.Text = "Sucursales";
             sucursalesToolStripMenuItem.Click += sucursalesToolStripMenuItem_Click;
             // 
             // alquileresToolStripMenuItem
             // 
             alquileresToolStripMenuItem.Name = "alquileresToolStripMenuItem";
-            alquileresToolStripMenuItem.Size = new Size(224, 26);
+            alquileresToolStripMenuItem.Size = new Size(179, 26);
             alquileresToolStripMenuItem.Text = "Alquileres";
             alquileresToolStripMenuItem.Click += alquileresToolStripMenuItem_Click;
             // 
             // empleadosToolStripMenuItem
             // 
             empleadosToolStripMenuItem.Name = "empleadosToolStripMenuItem";
-            empleadosToolStripMenuItem.Size = new Size(224, 26);
+            empleadosToolStripMenuItem.Size = new Size(179, 26);
             empleadosToolStripMenuItem.Text = "Empleados";
             empleadosToolStripMenuItem.Click += empleadosToolStripMenuItem_Click;
             // 
             // pagosToolStripMenuItem
             // 
             pagosToolStripMenuItem.Name = "pagosToolStripMenuItem";
-            pagosToolStripMenuItem.Size = new Size(224, 26);
+            pagosToolStripMenuItem.Size = new Size(179, 26);
             pagosToolStripMenuItem.Text = "Pagos";
             pagosToolStripMenuItem.Click += pagosToolStripMenuItem_Click;
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(221, 6);
+            toolStripMenuItem1.Size = new Size(176, 6);
             // 
             // cerrarSesionToolStripMenuItem
             // 
             cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
-            cerrarSesionToolStripMenuItem.Size = new Size(224, 26);
+            cerrarSesionToolStripMenuItem.Size = new Size(179, 26);
             cerrarSesionToolStripMenuItem.Text = "Cerrar Sesion";
             cerrarSesionToolStripMenuItem.Click += cerrarSesionToolStripMenuItem_Click;
             // 
@@ -145,6 +145,8 @@
             Controls.Add(menuStrip1);
             IsMdiContainer = true;
             MainMenuStrip = menuStrip1;
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "Home";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Home";

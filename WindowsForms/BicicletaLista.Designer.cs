@@ -179,6 +179,8 @@
             Controls.Add(actualizarButton);
             Controls.Add(bicicletasDataGridView);
             Margin = new Padding(2);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "BicicletaLista";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Bicicletas";

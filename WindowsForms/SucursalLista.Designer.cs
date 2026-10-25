@@ -41,20 +41,22 @@
             sucursalesDataGridView.AllowUserToDeleteRows = false;
             sucursalesDataGridView.AllowUserToOrderColumns = true;
             sucursalesDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            sucursalesDataGridView.Location = new Point(37, 37);
+            sucursalesDataGridView.Location = new Point(30, 30);
+            sucursalesDataGridView.Margin = new Padding(2, 2, 2, 2);
             sucursalesDataGridView.MultiSelect = false;
             sucursalesDataGridView.Name = "sucursalesDataGridView";
             sucursalesDataGridView.ReadOnly = true;
             sucursalesDataGridView.RowHeadersWidth = 62;
             sucursalesDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            sucursalesDataGridView.Size = new Size(978, 444);
+            sucursalesDataGridView.Size = new Size(782, 355);
             sucursalesDataGridView.TabIndex = 0;
             // 
             // agregarButton
             // 
-            agregarButton.Location = new Point(903, 504);
+            agregarButton.Location = new Point(722, 403);
+            agregarButton.Margin = new Padding(2, 2, 2, 2);
             agregarButton.Name = "agregarButton";
-            agregarButton.Size = new Size(112, 34);
+            agregarButton.Size = new Size(90, 27);
             agregarButton.TabIndex = 1;
             agregarButton.Text = "Agregar";
             agregarButton.UseVisualStyleBackColor = true;
@@ -62,9 +64,10 @@
             // 
             // actualizarButton
             // 
-            actualizarButton.Location = new Point(774, 504);
+            actualizarButton.Location = new Point(619, 403);
+            actualizarButton.Margin = new Padding(2, 2, 2, 2);
             actualizarButton.Name = "actualizarButton";
-            actualizarButton.Size = new Size(112, 34);
+            actualizarButton.Size = new Size(90, 27);
             actualizarButton.TabIndex = 2;
             actualizarButton.Text = "Actualizar";
             actualizarButton.UseVisualStyleBackColor = true;
@@ -72,9 +75,10 @@
             // 
             // eliminarButton
             // 
-            eliminarButton.Location = new Point(641, 504);
+            eliminarButton.Location = new Point(513, 403);
+            eliminarButton.Margin = new Padding(2, 2, 2, 2);
             eliminarButton.Name = "eliminarButton";
-            eliminarButton.Size = new Size(112, 34);
+            eliminarButton.Size = new Size(90, 27);
             eliminarButton.TabIndex = 3;
             eliminarButton.Text = "Eliminar";
             eliminarButton.UseVisualStyleBackColor = true;
@@ -82,13 +86,16 @@
             // 
             // SucursalLista
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1056, 566);
+            ClientSize = new Size(845, 453);
             Controls.Add(eliminarButton);
             Controls.Add(actualizarButton);
             Controls.Add(agregarButton);
             Controls.Add(sucursalesDataGridView);
+            Margin = new Padding(2, 2, 2, 2);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "SucursalLista";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Sucursales";
