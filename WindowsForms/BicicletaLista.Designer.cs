@@ -99,16 +99,18 @@
             buscarTextBox.PlaceholderText = "Buscar por marca, categoría o estado...";
             buscarTextBox.Size = new Size(256, 27);
             buscarTextBox.TabIndex = 4;
+            buscarTextBox.Text = "Buscar por marca o modelo...";
             // 
             // buscarButton
             // 
-            buscarButton.Location = new Point(788, 28);
+            buscarButton.Location = new Point(895, 28);
             buscarButton.Margin = new Padding(2);
             buscarButton.Name = "buscarButton";
             buscarButton.Size = new Size(90, 27);
             buscarButton.TabIndex = 5;
             buscarButton.Text = "FIltrar";
             buscarButton.UseVisualStyleBackColor = true;
+            buscarButton.Click += buscarButton_Click;
             // 
             // generarReporteButton
             // 
@@ -151,13 +153,14 @@
             // 
             // limpiarButton
             // 
-            limpiarButton.Location = new Point(891, 28);
+            limpiarButton.Location = new Point(792, 28);
             limpiarButton.Margin = new Padding(2);
             limpiarButton.Name = "limpiarButton";
             limpiarButton.Size = new Size(90, 27);
             limpiarButton.TabIndex = 17;
             limpiarButton.Text = "Limpiar";
             limpiarButton.UseVisualStyleBackColor = true;
+            limpiarButton.Click += limpiarButton_Click;
             // 
             // BicicletaLista
             // 

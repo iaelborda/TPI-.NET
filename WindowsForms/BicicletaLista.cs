@@ -3,6 +3,7 @@ using Domain.Model;
 using DTOs;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace WindowsForms
 {
@@ -84,16 +85,17 @@ namespace WindowsForms
                 categoriaComboBox.SelectedIndex = 0;
 
                 var sucursales = (await SucursalApiClient.GetAllAsync())?.ToList() ?? new();
-                sucursales.Insert(0, new SucursalDTO { Id = 0, Nombre = "Todas las sucursales" });
+                sucursales.Insert(0, new SucursalDTO { Id = 0, Direccion = "Todas las sucursales" });
                 sucursalComboBox.DataSource = sucursales;
-                sucursalComboBox.DisplayMember = "Nombre";
+                sucursalComboBox.DisplayMember = "Direccion";
                 sucursalComboBox.ValueMember = "Id";
                 sucursalComboBox.SelectedIndex = 0;
 
                 estadoComboBox.Items.Clear();
                 estadoComboBox.Items.AddRange(new object[] { "Todos", "Disponible", "EnUso", "EnMantenimiento" });
                 estadoComboBox.SelectedIndex = 0;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar filtros: {ex.Message}", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -234,12 +236,13 @@ namespace WindowsForms
                     Title = "Guardar Top 10 Bicicletas"
                 };
 
-                if(dialogo.ShowDialog() == DialogResult.OK)
+                if (dialogo.ShowDialog() == DialogResult.OK)
                 {
                     await File.WriteAllBytesAsync(dialogo.FileName, pdf);
                     Process.Start(new ProcessStartInfo(dialogo.FileName) { UseShellExecute = true });
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show($"Error al generar el reporte: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -247,7 +250,51 @@ namespace WindowsForms
             {
                 generarReporteButton.Enabled = true;
             }
-        
+
+        }
+
+        private async void limpiarButton_Click(object sender, EventArgs e)
+        {
+            buscarTextBox.Text = string.Empty;
+            estadoComboBox.SelectedIndex = 0;
+            sucursalComboBox.SelectedIndex = 0;
+            categoriaComboBox.SelectedIndex = 0;
+            await LoadBicicletas();
+        }
+
+        private async void buscarButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DeshabilitarControles();
+                this.bicicletasDataGridView.DataSource = null;
+                string? texto = string.IsNullOrWhiteSpace(buscarTextBox.Text) ? null : buscarTextBox.Text.Trim();
+                int? categoriaId = categoriaComboBox.SelectedValue is int cId && cId > 0 ? cId : null;
+                int? sucursalId = sucursalComboBox.SelectedValue is int sId && sId > 0 ? sId : null;
+                EstadoBicicleta? estado = null;
+                string? estadoStr = estadoComboBox.SelectedItem?.ToString();
+                if (!string.IsNullOrEmpty(estadoStr) && estadoStr != "Todos" && Enum.TryParse<EstadoBicicleta>(estadoStr, out var est))
+                {
+                    estado = est;
+                }
+                var criteria = new BicicletaCriteriaDTO
+                {
+                    Busqueda = texto,
+                    CategoriaId = categoriaId,
+                    SucursalId = sucursalId,
+                    Estado = estado
+                };
+
+                var bicicletas = await BicicletaApiClient.GetByCriteriaAsync(criteria);
+                this.bicicletasDataGridView.DataSource = bicicletas.ToList();
+            }catch(Exception ex)
+            {
+                MessageBox.Show($"Error al filtrar bicicletas: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HabilitarControles();
+            }
         }
     }
 }
