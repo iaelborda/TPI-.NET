@@ -48,22 +48,22 @@
             alquileresDataGridView.AllowUserToAddRows = false;
             alquileresDataGridView.AllowUserToDeleteRows = false;
             alquileresDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            alquileresDataGridView.Location = new Point(30, 66);
+            alquileresDataGridView.Location = new Point(24, 53);
             alquileresDataGridView.Margin = new Padding(2);
             alquileresDataGridView.MultiSelect = false;
             alquileresDataGridView.Name = "alquileresDataGridView";
             alquileresDataGridView.ReadOnly = true;
             alquileresDataGridView.RowHeadersWidth = 82;
             alquileresDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            alquileresDataGridView.Size = new Size(1072, 373);
+            alquileresDataGridView.Size = new Size(858, 298);
             alquileresDataGridView.TabIndex = 0;
             // 
             // eliminarButton
             // 
-            eliminarButton.Location = new Point(722, 472);
+            eliminarButton.Location = new Point(578, 378);
             eliminarButton.Margin = new Padding(2);
             eliminarButton.Name = "eliminarButton";
-            eliminarButton.Size = new Size(115, 36);
+            eliminarButton.Size = new Size(92, 29);
             eliminarButton.TabIndex = 2;
             eliminarButton.Text = "Eliminar";
             eliminarButton.UseVisualStyleBackColor = true;
@@ -71,10 +71,10 @@
             // 
             // actualizarButton
             // 
-            actualizarButton.Location = new Point(855, 472);
+            actualizarButton.Location = new Point(684, 378);
             actualizarButton.Margin = new Padding(2);
             actualizarButton.Name = "actualizarButton";
-            actualizarButton.Size = new Size(115, 36);
+            actualizarButton.Size = new Size(92, 29);
             actualizarButton.TabIndex = 3;
             actualizarButton.Text = "Actualizar";
             actualizarButton.UseVisualStyleBackColor = true;
@@ -82,10 +82,10 @@
             // 
             // agregarButton
             // 
-            agregarButton.Location = new Point(988, 472);
+            agregarButton.Location = new Point(790, 378);
             agregarButton.Margin = new Padding(2);
             agregarButton.Name = "agregarButton";
-            agregarButton.Size = new Size(115, 36);
+            agregarButton.Size = new Size(92, 29);
             agregarButton.TabIndex = 3;
             agregarButton.Text = "Agregar";
             agregarButton.UseVisualStyleBackColor = true;
@@ -93,10 +93,9 @@
             // 
             // cobrarButton
             // 
-            cobrarButton.Location = new Point(578, 472);
-            cobrarButton.Margin = new Padding(4);
+            cobrarButton.Location = new Point(462, 378);
             cobrarButton.Name = "cobrarButton";
-            cobrarButton.Size = new Size(118, 36);
+            cobrarButton.Size = new Size(94, 29);
             cobrarButton.TabIndex = 4;
             cobrarButton.Text = "Cobrar";
             cobrarButton.UseVisualStyleBackColor = true;
@@ -105,44 +104,49 @@
             // fechaDesdeLabel
             // 
             fechaDesdeLabel.AutoSize = true;
-            fechaDesdeLabel.Location = new Point(30, 23);
+            fechaDesdeLabel.Location = new Point(24, 18);
+            fechaDesdeLabel.Margin = new Padding(2, 0, 2, 0);
             fechaDesdeLabel.Name = "fechaDesdeLabel";
-            fechaDesdeLabel.Size = new Size(110, 25);
+            fechaDesdeLabel.Size = new Size(91, 20);
             fechaDesdeLabel.TabIndex = 6;
             fechaDesdeLabel.Text = "Fecha desde";
             // 
             // fechaHastaLabel
             // 
             fechaHastaLabel.AutoSize = true;
-            fechaHastaLabel.Location = new Point(310, 23);
+            fechaHastaLabel.Location = new Point(248, 18);
+            fechaHastaLabel.Margin = new Padding(2, 0, 2, 0);
             fechaHastaLabel.Name = "fechaHastaLabel";
-            fechaHastaLabel.Size = new Size(104, 25);
+            fechaHastaLabel.Size = new Size(86, 20);
             fechaHastaLabel.TabIndex = 7;
             fechaHastaLabel.Text = "Fecha hasta";
             // 
             // sucursalLabel
             // 
             sucursalLabel.AutoSize = true;
-            sucursalLabel.Location = new Point(578, 23);
+            sucursalLabel.Location = new Point(462, 18);
+            sucursalLabel.Margin = new Padding(2, 0, 2, 0);
             sucursalLabel.Name = "sucursalLabel";
-            sucursalLabel.Size = new Size(77, 25);
+            sucursalLabel.Size = new Size(63, 20);
             sucursalLabel.TabIndex = 8;
             sucursalLabel.Text = "Sucursal";
             // 
             // fechaDesdeDateTimePicker
             // 
             fechaDesdeDateTimePicker.Format = DateTimePickerFormat.Short;
-            fechaDesdeDateTimePicker.Location = new Point(146, 18);
+            fechaDesdeDateTimePicker.Location = new Point(117, 14);
+            fechaDesdeDateTimePicker.Margin = new Padding(2, 2, 2, 2);
             fechaDesdeDateTimePicker.Name = "fechaDesdeDateTimePicker";
-            fechaDesdeDateTimePicker.Size = new Size(138, 31);
+            fechaDesdeDateTimePicker.Size = new Size(111, 27);
             fechaDesdeDateTimePicker.TabIndex = 9;
             // 
             // fechaHastaDateTimePicker
             // 
             fechaHastaDateTimePicker.Format = DateTimePickerFormat.Short;
-            fechaHastaDateTimePicker.Location = new Point(420, 17);
+            fechaHastaDateTimePicker.Location = new Point(336, 14);
+            fechaHastaDateTimePicker.Margin = new Padding(2, 2, 2, 2);
             fechaHastaDateTimePicker.Name = "fechaHastaDateTimePicker";
-            fechaHastaDateTimePicker.Size = new Size(138, 31);
+            fechaHastaDateTimePicker.Size = new Size(111, 27);
             fechaHastaDateTimePicker.TabIndex = 10;
             fechaHastaDateTimePicker.Value = new DateTime(2026, 10, 23, 21, 28, 33, 0);
             // 
@@ -150,17 +154,19 @@
             // 
             sucursalComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             sucursalComboBox.FormattingEnabled = true;
-            sucursalComboBox.Location = new Point(661, 15);
+            sucursalComboBox.Location = new Point(529, 12);
+            sucursalComboBox.Margin = new Padding(2, 2, 2, 2);
             sucursalComboBox.Name = "sucursalComboBox";
-            sucursalComboBox.Size = new Size(190, 33);
+            sucursalComboBox.Size = new Size(153, 28);
             sucursalComboBox.TabIndex = 11;
             // 
             // generarReporteButton
             // 
             generarReporteButton.BackColor = Color.YellowGreen;
-            generarReporteButton.Location = new Point(30, 472);
+            generarReporteButton.Location = new Point(24, 378);
+            generarReporteButton.Margin = new Padding(2, 2, 2, 2);
             generarReporteButton.Name = "generarReporteButton";
-            generarReporteButton.Size = new Size(174, 34);
+            generarReporteButton.Size = new Size(139, 27);
             generarReporteButton.TabIndex = 12;
             generarReporteButton.Text = "Generar Reporte";
             generarReporteButton.UseVisualStyleBackColor = false;
@@ -168,9 +174,9 @@
             // 
             // AlquilerLista
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1138, 534);
+            ClientSize = new Size(910, 427);
             Controls.Add(generarReporteButton);
             Controls.Add(sucursalComboBox);
             Controls.Add(fechaHastaDateTimePicker);
@@ -184,6 +190,8 @@
             Controls.Add(eliminarButton);
             Controls.Add(alquileresDataGridView);
             Margin = new Padding(2);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "AlquilerLista";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Alquileres";

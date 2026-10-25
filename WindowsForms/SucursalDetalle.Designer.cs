@@ -60,7 +60,7 @@
             // 
             idTextBox.BackColor = SystemColors.Control;
             idTextBox.Location = new Point(146, 42);
-            idTextBox.Margin = new Padding(2, 2, 2, 2);
+            idTextBox.Margin = new Padding(2);
             idTextBox.Name = "idTextBox";
             idTextBox.ReadOnly = true;
             idTextBox.Size = new Size(121, 27);
@@ -110,7 +110,7 @@
             // nombreTextBox
             // 
             nombreTextBox.Location = new Point(146, 89);
-            nombreTextBox.Margin = new Padding(2, 2, 2, 2);
+            nombreTextBox.Margin = new Padding(2);
             nombreTextBox.Name = "nombreTextBox";
             nombreTextBox.Size = new Size(121, 27);
             nombreTextBox.TabIndex = 0;
@@ -118,7 +118,7 @@
             // direccionTextBox
             // 
             direccionTextBox.Location = new Point(146, 142);
-            direccionTextBox.Margin = new Padding(2, 2, 2, 2);
+            direccionTextBox.Margin = new Padding(2);
             direccionTextBox.Name = "direccionTextBox";
             direccionTextBox.Size = new Size(174, 27);
             direccionTextBox.TabIndex = 0;
@@ -126,7 +126,7 @@
             // telefonoTextBox
             // 
             telefonoTextBox.Location = new Point(146, 194);
-            telefonoTextBox.Margin = new Padding(2, 2, 2, 2);
+            telefonoTextBox.Margin = new Padding(2);
             telefonoTextBox.Name = "telefonoTextBox";
             telefonoTextBox.Size = new Size(174, 27);
             telefonoTextBox.TabIndex = 0;
@@ -134,7 +134,7 @@
             // capacidadNumericUpDown
             // 
             capacidadNumericUpDown.Location = new Point(146, 243);
-            capacidadNumericUpDown.Margin = new Padding(2, 2, 2, 2);
+            capacidadNumericUpDown.Margin = new Padding(2);
             capacidadNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             capacidadNumericUpDown.Name = "capacidadNumericUpDown";
             capacidadNumericUpDown.Size = new Size(120, 27);
@@ -144,7 +144,7 @@
             // aceptarButton
             // 
             aceptarButton.Location = new Point(143, 343);
-            aceptarButton.Margin = new Padding(2, 2, 2, 2);
+            aceptarButton.Margin = new Padding(2);
             aceptarButton.Name = "aceptarButton";
             aceptarButton.Size = new Size(90, 27);
             aceptarButton.TabIndex = 2;
@@ -155,7 +155,7 @@
             // cancelarButton
             // 
             cancelarButton.Location = new Point(249, 343);
-            cancelarButton.Margin = new Padding(2, 2, 2, 2);
+            cancelarButton.Margin = new Padding(2);
             cancelarButton.Name = "cancelarButton";
             cancelarButton.Size = new Size(90, 27);
             cancelarButton.TabIndex = 2;
@@ -184,7 +184,9 @@
             Controls.Add(nombreLabel);
             Controls.Add(idTextBox);
             Controls.Add(idLabel);
-            Margin = new Padding(2, 2, 2, 2);
+            Margin = new Padding(2);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "SucursalDetalle";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Sucursal";

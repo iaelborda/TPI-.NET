@@ -52,114 +52,126 @@
             // idLabel
             // 
             idLabel.AutoSize = true;
-            idLabel.Location = new Point(47, 59);
+            idLabel.Location = new Point(38, 47);
             idLabel.Margin = new Padding(2, 0, 2, 0);
             idLabel.Name = "idLabel";
-            idLabel.Size = new Size(28, 25);
+            idLabel.Size = new Size(22, 20);
             idLabel.TabIndex = 11;
             idLabel.Text = "Id";
             // 
             // idTextBox
             // 
             idTextBox.BackColor = SystemColors.Control;
-            idTextBox.Location = new Point(182, 53);
+            idTextBox.Location = new Point(146, 42);
+            idTextBox.Margin = new Padding(2, 2, 2, 2);
             idTextBox.Name = "idTextBox";
             idTextBox.ReadOnly = true;
-            idTextBox.Size = new Size(150, 31);
+            idTextBox.Size = new Size(121, 27);
             idTextBox.TabIndex = 0;
             idTextBox.TabStop = false;
             // 
             // marcaLabel
             // 
             marcaLabel.AutoSize = true;
-            marcaLabel.Location = new Point(47, 117);
+            marcaLabel.Location = new Point(38, 94);
+            marcaLabel.Margin = new Padding(2, 0, 2, 0);
             marcaLabel.Name = "marcaLabel";
-            marcaLabel.Size = new Size(60, 25);
+            marcaLabel.Size = new Size(50, 20);
             marcaLabel.TabIndex = 11;
             marcaLabel.Text = "Marca";
             // 
             // categoriaLabel
             // 
             categoriaLabel.AutoSize = true;
-            categoriaLabel.Location = new Point(47, 180);
+            categoriaLabel.Location = new Point(38, 144);
+            categoriaLabel.Margin = new Padding(2, 0, 2, 0);
             categoriaLabel.Name = "categoriaLabel";
-            categoriaLabel.Size = new Size(88, 25);
+            categoriaLabel.Size = new Size(74, 20);
             categoriaLabel.TabIndex = 11;
             categoriaLabel.Text = "Categoría";
             // 
             // modeloLabel
             // 
             modeloLabel.AutoSize = true;
-            modeloLabel.Location = new Point(47, 246);
+            modeloLabel.Location = new Point(38, 197);
+            modeloLabel.Margin = new Padding(2, 0, 2, 0);
             modeloLabel.Name = "modeloLabel";
-            modeloLabel.Size = new Size(74, 25);
+            modeloLabel.Size = new Size(61, 20);
             modeloLabel.TabIndex = 11;
             modeloLabel.Text = "Modelo";
             // 
             // estadoLabel
             // 
             estadoLabel.AutoSize = true;
-            estadoLabel.Location = new Point(47, 306);
+            estadoLabel.Location = new Point(38, 245);
+            estadoLabel.Margin = new Padding(2, 0, 2, 0);
             estadoLabel.Name = "estadoLabel";
-            estadoLabel.Size = new Size(66, 25);
+            estadoLabel.Size = new Size(54, 20);
             estadoLabel.TabIndex = 11;
             estadoLabel.Text = "Estado";
             // 
             // sucursalLabel
             // 
             sucursalLabel.AutoSize = true;
-            sucursalLabel.Location = new Point(47, 365);
+            sucursalLabel.Location = new Point(38, 292);
+            sucursalLabel.Margin = new Padding(2, 0, 2, 0);
             sucursalLabel.Name = "sucursalLabel";
-            sucursalLabel.Size = new Size(77, 25);
+            sucursalLabel.Size = new Size(63, 20);
             sucursalLabel.TabIndex = 11;
             sucursalLabel.Text = "Sucursal";
             // 
             // marcaTextBox
             // 
-            marcaTextBox.Location = new Point(182, 111);
+            marcaTextBox.Location = new Point(146, 89);
+            marcaTextBox.Margin = new Padding(2, 2, 2, 2);
             marcaTextBox.Name = "marcaTextBox";
-            marcaTextBox.Size = new Size(217, 31);
+            marcaTextBox.Size = new Size(174, 27);
             marcaTextBox.TabIndex = 0;
             // 
             // categoriaComboBox
             // 
             categoriaComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             categoriaComboBox.FormattingEnabled = true;
-            categoriaComboBox.Location = new Point(182, 177);
+            categoriaComboBox.Location = new Point(146, 142);
+            categoriaComboBox.Margin = new Padding(2, 2, 2, 2);
             categoriaComboBox.Name = "categoriaComboBox";
-            categoriaComboBox.Size = new Size(217, 33);
+            categoriaComboBox.Size = new Size(174, 28);
             categoriaComboBox.TabIndex = 1;
             // 
             // modeloTextBox
             // 
-            modeloTextBox.Location = new Point(182, 243);
+            modeloTextBox.Location = new Point(146, 194);
+            modeloTextBox.Margin = new Padding(2, 2, 2, 2);
             modeloTextBox.Name = "modeloTextBox";
-            modeloTextBox.Size = new Size(217, 31);
+            modeloTextBox.Size = new Size(174, 27);
             modeloTextBox.TabIndex = 2;
             // 
             // estadoComboBox
             // 
             estadoComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             estadoComboBox.FormattingEnabled = true;
-            estadoComboBox.Location = new Point(182, 303);
+            estadoComboBox.Location = new Point(146, 242);
+            estadoComboBox.Margin = new Padding(2, 2, 2, 2);
             estadoComboBox.Name = "estadoComboBox";
-            estadoComboBox.Size = new Size(217, 33);
+            estadoComboBox.Size = new Size(174, 28);
             estadoComboBox.TabIndex = 3;
             // 
             // sucursalComboBox
             // 
             sucursalComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             sucursalComboBox.FormattingEnabled = true;
-            sucursalComboBox.Location = new Point(182, 362);
+            sucursalComboBox.Location = new Point(146, 290);
+            sucursalComboBox.Margin = new Padding(2, 2, 2, 2);
             sucursalComboBox.Name = "sucursalComboBox";
-            sucursalComboBox.Size = new Size(217, 33);
+            sucursalComboBox.Size = new Size(174, 28);
             sucursalComboBox.TabIndex = 4;
             // 
             // aceptarButton
             // 
-            aceptarButton.Location = new Point(366, 424);
+            aceptarButton.Location = new Point(293, 339);
+            aceptarButton.Margin = new Padding(2, 2, 2, 2);
             aceptarButton.Name = "aceptarButton";
-            aceptarButton.Size = new Size(112, 34);
+            aceptarButton.Size = new Size(90, 27);
             aceptarButton.TabIndex = 5;
             aceptarButton.Text = "Aceptar";
             aceptarButton.UseVisualStyleBackColor = true;
@@ -167,9 +179,10 @@
             // 
             // cancelarButton
             // 
-            cancelarButton.Location = new Point(499, 424);
+            cancelarButton.Location = new Point(399, 339);
+            cancelarButton.Margin = new Padding(2, 2, 2, 2);
             cancelarButton.Name = "cancelarButton";
-            cancelarButton.Size = new Size(112, 34);
+            cancelarButton.Size = new Size(90, 27);
             cancelarButton.TabIndex = 6;
             cancelarButton.Text = "Cancelar";
             cancelarButton.UseVisualStyleBackColor = true;
@@ -181,9 +194,9 @@
             // 
             // BicicletaDetalle
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(623, 497);
+            ClientSize = new Size(498, 398);
             Controls.Add(cancelarButton);
             Controls.Add(aceptarButton);
             Controls.Add(sucursalComboBox);
@@ -198,6 +211,9 @@
             Controls.Add(categoriaLabel);
             Controls.Add(marcaLabel);
             Controls.Add(idLabel);
+            Margin = new Padding(2, 2, 2, 2);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "BicicletaDetalle";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Bicicleta";

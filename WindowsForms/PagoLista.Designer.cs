@@ -89,6 +89,8 @@
             Controls.Add(actualizarButton);
             Controls.Add(agregarButton);
             Controls.Add(pagosDataGridView);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "PagoLista";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Pagos";
