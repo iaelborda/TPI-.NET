@@ -111,8 +111,6 @@ namespace WindowsForms
 
         private void DeshabilitarControles()
         {
-            buscarButton.Enabled = false;
-            buscarTextBox.Enabled = false;
             clientesDataGridView.Enabled = false;
             eliminarButton.Enabled = false;
             agregarButton.Enabled = false;
@@ -122,8 +120,6 @@ namespace WindowsForms
         private async void HabilitarControles()
         {
             bool esAdmin = await AuthServiceProvider.Instance.GetRolAsync() == RolUsuario.Administrador;
-            buscarButton.Enabled = true;
-            buscarTextBox.Enabled = true;
             agregarButton.Enabled = true;
             clientesDataGridView.Enabled = true;
             if (clientesDataGridView.Rows.Count > 0)
@@ -161,11 +157,6 @@ namespace WindowsForms
             {
                 HabilitarControles();
             }
-        }
-
-        private async void buscarButton_Click(object sender, EventArgs e)
-        {
-            await this.CargarClientes();
         }
 
         private async void actualizarButton_Click(object sender, EventArgs e)

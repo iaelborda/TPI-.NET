@@ -73,5 +73,16 @@ namespace Data
 
             return await busqueda.AnyAsync();
         }
+        public async Task<bool> DireccionExistsAsync(string direccion, int? excludeId = null)
+        {
+            var busqueda = context.Sucursales.Where(s => s.Direccion.ToLower() == direccion.ToLower());
+
+            if (excludeId.HasValue)
+            {
+                busqueda = busqueda.Where(s => s.Id != excludeId.Value);
+            }
+
+            return await busqueda.AnyAsync();
+        }
     }
 }

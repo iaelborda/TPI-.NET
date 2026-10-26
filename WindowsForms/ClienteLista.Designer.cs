@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            buscarTextBox = new TextBox();
-            buscarButton = new Button();
             clientesDataGridView = new DataGridView();
             eliminarButton = new Button();
             actualizarButton = new Button();
@@ -37,40 +35,20 @@
             ((System.ComponentModel.ISupportInitialize)clientesDataGridView).BeginInit();
             SuspendLayout();
             // 
-            // buscarTextBox
-            // 
-            buscarTextBox.Location = new Point(24, 24);
-            buscarTextBox.Margin = new Padding(2);
-            buscarTextBox.Name = "buscarTextBox";
-            buscarTextBox.PlaceholderText = "Buscar por nombre, apellido o email...";
-            buscarTextBox.Size = new Size(248, 27);
-            buscarTextBox.TabIndex = 4;
-            // 
-            // buscarButton
-            // 
-            buscarButton.Location = new Point(277, 24);
-            buscarButton.Margin = new Padding(2);
-            buscarButton.Name = "buscarButton";
-            buscarButton.Size = new Size(74, 27);
-            buscarButton.TabIndex = 5;
-            buscarButton.Text = "Buscar";
-            buscarButton.UseVisualStyleBackColor = true;
-            buscarButton.Click += buscarButton_Click;
-            // 
             // clientesDataGridView
             // 
             clientesDataGridView.AllowUserToAddRows = false;
             clientesDataGridView.AllowUserToDeleteRows = false;
             clientesDataGridView.AllowUserToOrderColumns = true;
             clientesDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            clientesDataGridView.Location = new Point(24, 56);
+            clientesDataGridView.Location = new Point(24, 11);
             clientesDataGridView.Margin = new Padding(2);
             clientesDataGridView.MultiSelect = false;
             clientesDataGridView.Name = "clientesDataGridView";
             clientesDataGridView.ReadOnly = true;
             clientesDataGridView.RowHeadersWidth = 82;
             clientesDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            clientesDataGridView.Size = new Size(858, 325);
+            clientesDataGridView.Size = new Size(858, 370);
             clientesDataGridView.TabIndex = 3;
             // 
             // eliminarButton
@@ -115,8 +93,6 @@
             Controls.Add(actualizarButton);
             Controls.Add(eliminarButton);
             Controls.Add(clientesDataGridView);
-            Controls.Add(buscarButton);
-            Controls.Add(buscarTextBox);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "ClienteLista";
@@ -125,12 +101,9 @@
             Load += ClienteLista_Load;
             ((System.ComponentModel.ISupportInitialize)clientesDataGridView).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-        private TextBox buscarTextBox;
-        private Button buscarButton;
         private DataGridView clientesDataGridView;
         private Button eliminarButton;
         private Button actualizarButton;
