@@ -364,6 +364,13 @@ namespace WindowsForms
             {
                 DeshabilitarControles();
 
+                var pagoExistente = await PagoApiClient.GetByAlquilerIdAsync(alquiler.Id);
+                if (pagoExistente != null)
+                {
+                    MessageBox.Show($"El alquiler #{alquiler.Id} ya cuenta con un pago registrado.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
                 AlquilerDTO? alquilerCompleto = await AlquilerApiClient.GetAsync(alquiler.Id);
                 if (alquilerCompleto == null) return;
 
@@ -376,6 +383,8 @@ namespace WindowsForms
                 PagoDTO nuevoPago = new PagoDTO
                 {
                     IdAlquiler = alquilerCompleto.Id,
+                    ClienteNombre = alquilerCompleto.ClienteNombre,
+                    ClienteApellido = alquilerCompleto.ClienteApellido,
                     Monto = alquilerCompleto.Detalles != null ? alquilerCompleto.Detalles.Sum(d => d.Subtotal) : 0m
                 };
                 PagoDetalle pagoDetalle = new PagoDetalle(FormMode.Add, nuevoPago);

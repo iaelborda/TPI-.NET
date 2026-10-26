@@ -1,4 +1,4 @@
-﻿using Domain.Model;
+using Domain.Model;
 using Data;
 using DTOs;
 
@@ -207,14 +207,18 @@ namespace Application.Services
                 if (await alquilerRepository.BicicletaEnAlquilerActivoAsync(bicicleta.Id, dto.Id))
                     throw new ArgumentException($"La bicicleta {bicicleta.Id} ya está en otro alquiler activo.");
 
-                var tarifa = await tarifaRepository.GetTarifaVigenteAsync(bicicleta.CategoriaId);
-
-                if (tarifa == null)
-                    throw new ArgumentException($"No hay una tarifa vigente para la bicicleta {bicicleta.Id}.");
+                decimal precioHora = detalleDto.PrecioHora;
+                if (precioHora <= 0)
+                {
+                    var tarifa = await tarifaRepository.GetTarifaVigenteAsync(bicicleta.CategoriaId);
+                    if (tarifa == null)
+                        throw new ArgumentException($"No hay una tarifa vigente para la bicicleta {bicicleta.Id}.");
+                    precioHora = tarifa.PrecioHora;
+                }
 
                 var detalle = new DetalleAlquiler(dto.Id, bicicleta.Id);
                 detalle.SetHoraInicio(detalleDto.HoraInicio);
-                detalle.SetPrecioHora(tarifa.PrecioHora);
+                detalle.SetPrecioHora(precioHora);
 
                 if (detalleDto.HoraFin.HasValue || dto.EstadoAlquiler == EstadoDeAlquiler.Finalizado || dto.EstadoAlquiler == EstadoDeAlquiler.Cancelado)
                 {
@@ -228,7 +232,7 @@ namespace Application.Services
                     {
                         var fin = detalleDto.HoraFin ?? DateTime.Now;
                         detalle.SetHoraFin(fin);
-                        detalle.CalcularSubTotal(tarifa.PrecioHora);
+                        detalle.CalcularSubTotal(precioHora);
                         detalle.SetEstado(EstadoDetalleAlquiler.Devuelto);
                     }
                     bicicleta.SetEstado(EstadoBicicleta.Disponible);

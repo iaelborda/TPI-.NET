@@ -75,7 +75,7 @@ namespace WindowsForms
                 idTextBox.Visible = false;
                 fechaPagoLabel.Visible = false;
                 fechaPagoTextBox.Visible = false;
-                alquilerComboBox.Enabled = true;
+                alquilerComboBox.Enabled = pago == null || pago.IdAlquiler <= 0;
                 this.Text = "Registrar Pago";
             }
 
@@ -92,15 +92,21 @@ namespace WindowsForms
 
         private async void PagoDetalle_Load(object sender, EventArgs e)
         {
-            if (mode == FormMode.Add)
+            if (mode == FormMode.Add && (pago == null || pago.IdAlquiler <= 0))
             {
                 await CargarAlquileresPendientes();
             }
             else
             {
+                alquilerComboBox.DataSource = null;
                 alquilerComboBox.Items.Clear();
-                alquilerComboBox.Items.Add($"Alquiler #{pago.IdAlquiler} - {pago.ClienteNombre} {pago.ClienteApellido}");
+                string cliente = !string.IsNullOrWhiteSpace(pago.ClienteNombre) || !string.IsNullOrWhiteSpace(pago.ClienteApellido)
+                    ? $"{pago.ClienteNombre} {pago.ClienteApellido}".Trim()
+                    : $"Cliente";
+                alquilerComboBox.Items.Add($"Alquiler #{pago.IdAlquiler} - {cliente}");
                 alquilerComboBox.SelectedIndex = 0;
+                alquilerComboBox.Enabled = false;
+                aceptarButton.Enabled = true;
             }
         }
 
@@ -190,7 +196,10 @@ namespace WindowsForms
                     }
                     else
                     {
-                        this.pago.IdAlquiler = (int)alquilerComboBox.SelectedValue;
+                        if (this.pago.IdAlquiler <= 0 && alquilerComboBox.SelectedValue is int alqId)
+                        {
+                            this.pago.IdAlquiler = alqId;
+                        }
                         await PagoApiClient.AddAsync(this.pago);
                     }
 
@@ -213,7 +222,10 @@ namespace WindowsForms
             errorProvider.SetError(alquilerComboBox, string.Empty);
             errorProvider.SetError(metodoComboBox, string.Empty);
 
-            if (mode == FormMode.Add && (alquilerComboBox.SelectedValue == null || (int)alquilerComboBox.SelectedValue <= 0))
+            bool tieneAlquilerValido = (pago != null && pago.IdAlquiler > 0) ||
+                                       (alquilerComboBox.SelectedValue is int alqId && alqId > 0);
+
+            if (mode == FormMode.Add && !tieneAlquilerValido)
             {
                 isValid = false;
                 errorProvider.SetError(alquilerComboBox, "Debe seleccionar un alquiler válido");
@@ -238,7 +250,11 @@ namespace WindowsForms
 
         private void HabilitarControles()
         {
-            if (mode == FormMode.Add) alquilerComboBox.Enabled = true;
+            if (mode == FormMode.Add && (pago == null || pago.IdAlquiler <= 0))
+                alquilerComboBox.Enabled = true;
+            else
+                alquilerComboBox.Enabled = false;
+
             metodoComboBox.Enabled = true;
             aceptarButton.Enabled = true;
             cancelarButton.Enabled = true;

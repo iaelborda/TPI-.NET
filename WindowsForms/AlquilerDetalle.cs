@@ -308,6 +308,8 @@ namespace WindowsForms
                 PagoDTO nuevoPago = new PagoDTO 
                 { 
                     IdAlquiler = this.Alquiler.Id,
+                    ClienteNombre = this.Alquiler.ClienteNombre,
+                    ClienteApellido = this.Alquiler.ClienteApellido,
                     Monto = detallesLocales.Sum(d => d.Subtotal)
                 };
                 PagoDetalle pagoDetalle = new PagoDetalle(FormMode.Add, nuevoPago);
@@ -634,6 +636,8 @@ namespace WindowsForms
                     PagoDTO nuevoPago = new PagoDTO 
                     { 
                         IdAlquiler = this.Alquiler.Id,
+                        ClienteNombre = this.Alquiler.ClienteNombre,
+                        ClienteApellido = this.Alquiler.ClienteApellido,
                         Monto = detallesLocales.Sum(d => d.Subtotal)
                     };
                     PagoDetalle pagoDetalle = new PagoDetalle(FormMode.Add, nuevoPago);
