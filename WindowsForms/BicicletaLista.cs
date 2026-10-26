@@ -1,4 +1,4 @@
-﻿using API.Clients;
+using API.Clients;
 using Domain.Model;
 using DTOs;
 using System.Diagnostics;
@@ -90,7 +90,7 @@ namespace WindowsForms
                 sucursalComboBox.SelectedIndex = 0;
 
                 estadoComboBox.Items.Clear();
-                estadoComboBox.Items.AddRange(new object[] { "Todos", "Disponible", "EnUso", "EnMantenimiento" });
+                estadoComboBox.Items.AddRange(new object[] { "Todos", "Disponible", "EnUso", "EnMantenimiento", "DeBaja" });
                 estadoComboBox.SelectedIndex = 0;
             }
             catch (Exception ex)

@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApi
 {
@@ -78,13 +79,21 @@ namespace WebApi
 
             app.MapDelete("/empleados/{id}", async (int id, IEmpleadoService empleadoService) =>
             {
-                var deleted = await empleadoService.DeleteAsync(id);
-                if (!deleted)
+                try
                 {
-                    return Results.NotFound();
+                    var deleted = await empleadoService.DeleteAsync(id);
+                    if (!deleted)
+                    {
+                        return Results.NotFound();
+                    }
+
+                    return Results.NoContent();
+                }
+                catch (DbUpdateException)
+                {
+                    return Results.BadRequest(new { error = "No se puede eliminar el empleado porque tiene alquileres registrados a su nombre" });
                 }
 
-                return Results.NoContent();
             })
             .WithName("DeleteEmpleado")
             .Produces(StatusCodes.Status204NoContent)

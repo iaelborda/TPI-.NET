@@ -4,7 +4,8 @@
     {
         Disponible,
         EnUso,
-        EnMantenimiento
+        EnMantenimiento,
+        DeBaja
     }
     public class Bicicleta
     {

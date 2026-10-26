@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApi
 {
@@ -87,6 +88,10 @@ namespace WebApi
                 catch (InvalidOperationException ex)
                 {
                     return Results.BadRequest(ex.Message);
+                }
+                catch (DbUpdateException)
+                {
+                    return Results.BadRequest(new { error = "No se puede eliminar la categoria porque tiene bicicletas o tarifas vinculadas" });
                 }
             })
             .WithName("DeleteCategoria")
