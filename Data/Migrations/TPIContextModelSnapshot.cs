@@ -1096,10 +1096,10 @@ namespace Data.Migrations
                             Id = 1,
                             Activo = true,
                             Email = "admin@tpi.com",
-                            FechaCreacion = new DateTime(2026, 10, 24, 22, 14, 17, 497, DateTimeKind.Local).AddTicks(9223),
-                            PasswordHash = "NCNMjylAV5fXMY7GV39k59Bi1kJQGP2HYFt2Xyy0XcE=",
+                            FechaCreacion = new DateTime(2026, 10, 26, 11, 35, 15, 762, DateTimeKind.Local).AddTicks(8759),
+                            PasswordHash = "Pu1e30vgLoBNdvSfktvYhvHWoTvYx9vdxXF18/msp40=",
                             Rol = 0,
-                            Salt = "0od4+qfRLye6AoLyBKaw2ibHPM948F43EFEagxhMkZY=",
+                            Salt = "3aPtUGe6vqpQhVysYBnNn3I3Nnz4QDX+UcjaiBe2f7I=",
                             Username = "admin"
                         },
                         new
@@ -1107,10 +1107,10 @@ namespace Data.Migrations
                             Id = 2,
                             Activo = true,
                             Email = "empleado@tpi.com",
-                            FechaCreacion = new DateTime(2026, 10, 24, 22, 14, 17, 501, DateTimeKind.Local).AddTicks(5596),
-                            PasswordHash = "5UdEMInKkmNP+EjTkCJB6Xdyh3Lxggh2MuCCO4GlFWQ=",
+                            FechaCreacion = new DateTime(2026, 10, 26, 11, 35, 15, 765, DateTimeKind.Local).AddTicks(5388),
+                            PasswordHash = "UbuztOnQIHqU1kGCx5RqwWvNPnZMBdMfWfcGQkw0oIQ=",
                             Rol = 1,
-                            Salt = "N6YUz4XIOPrkQGDjBIVu+O4EhaH5MZO+ZMoNB/r+pDw=",
+                            Salt = "zHzSu7S3YvTZcjNJVqVEqnKECJf5EVR8CyOd2OPA9gI=",
                             Username = "empleado"
                         });
                 });
@@ -1120,13 +1120,13 @@ namespace Data.Migrations
                     b.HasOne("Domain.Model.Cliente", "Cliente")
                         .WithMany()
                         .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Model.Empleado", "Empleado")
                         .WithMany()
                         .HasForeignKey("EmpleadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.OwnsMany("Domain.Model.DetalleAlquiler", "DetallesAlquiler", b1 =>
@@ -1170,7 +1170,7 @@ namespace Data.Migrations
                             b1.HasOne("Domain.Model.Bicicleta", "Bicicleta")
                                 .WithMany()
                                 .HasForeignKey("BicicletaId")
-                                .OnDelete(DeleteBehavior.Cascade)
+                                .OnDelete(DeleteBehavior.Restrict)
                                 .IsRequired();
 
                             b1.Navigation("Bicicleta");

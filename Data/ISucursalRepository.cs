@@ -10,5 +10,6 @@ namespace Data
         Task<IEnumerable<Sucursal>> GetAllAsync();
         Task<bool> UpdateAsync(Sucursal sucursal);
         Task<bool> NombreExistsAsync(string nombre, int? excludeId = null);
+        Task<bool> DireccionExistsAsync(string direccion, int? excludeId = null);
     }
 }

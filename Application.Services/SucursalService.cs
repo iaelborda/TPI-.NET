@@ -20,6 +20,11 @@ namespace Application.Services
             {
                 throw new ArgumentException($"Ya existe una sucursal con el nombre '{dto.Nombre}'.");
             }
+            if (await sucursalRepository.DireccionExistsAsync(dto.Direccion))
+            {
+                throw new ArgumentException($"Ya existe una sucursal con la dirección '{dto.Direccion}'.");
+            }
+
             Sucursal sucursal = new Sucursal(0, dto.Nombre, dto.Direccion, dto.Telefono, dto.Capacidad);
             await sucursalRepository.AddAsync(sucursal);
             dto.Id = sucursal.Id;
@@ -84,6 +89,11 @@ namespace Application.Services
             {
                 throw new ArgumentException($"Ya existe una sucursal con el nombre '{dto.Nombre}'");
             }
+            if (await sucursalRepository.DireccionExistsAsync(dto.Direccion, dto.Id))
+            {
+                throw new ArgumentException($"Ya existe una sucursal con la dirección '{dto.Direccion}'.");
+            }
+
             Sucursal sucursal = new Sucursal(dto.Id, dto.Nombre, dto.Direccion, dto.Telefono, dto.Capacidad);
             return await sucursalRepository.UpdateAsync(sucursal);
         }

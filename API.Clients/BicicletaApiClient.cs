@@ -136,7 +136,8 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception($"Error al eliminar bicicleta con Id {id}. Status: {response.StatusCode}");
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error al eliminar bicicleta con Id {id}. Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
             }
             catch (HttpRequestException ex)

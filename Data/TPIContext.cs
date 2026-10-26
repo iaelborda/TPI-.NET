@@ -240,11 +240,13 @@ namespace Data
 
                 entity.HasOne(e => e.Cliente)
                     .WithMany()
-                    .HasForeignKey(e => e.ClienteId);
+                    .HasForeignKey(e => e.ClienteId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(e => e.Empleado)
                     .WithMany()
-                    .HasForeignKey(e => e.EmpleadoId);
+                    .HasForeignKey(e => e.EmpleadoId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
                 entity.OwnsMany(e => e.DetallesAlquiler, detalle =>
                 {
@@ -273,7 +275,8 @@ namespace Data
 
                     detalle.HasOne(i => i.Bicicleta)
                         .WithMany()
-                        .HasForeignKey(i => i.BicicletaId);
+                        .HasForeignKey(i => i.BicicletaId)
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     detalle.HasData(
                         // Alquiler 1

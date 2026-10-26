@@ -1,4 +1,4 @@
-﻿using DTOs;
+using DTOs;
 using System.Net.Http.Json;
 
 namespace API.Clients
@@ -66,7 +66,8 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Error al crear sucursal. Status: " + response.StatusCode);
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error al crear sucursal. Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
             }
             catch (HttpRequestException ex)
@@ -88,7 +89,8 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("Error al actualizar sucursal. Status: " + response.StatusCode);
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error al actualizar sucursal. Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
             }
             catch (HttpRequestException ex)

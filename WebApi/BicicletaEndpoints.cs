@@ -1,5 +1,7 @@
 using Application.Services;
 using DTOs;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace WebApi
 {
@@ -78,13 +80,20 @@ namespace WebApi
 
             app.MapDelete("/bicicletas/{id}", async (int id, IBicicletaService bicicletaService) =>
             {
-                var deleted = await bicicletaService.DeleteAsync(id);
-
-                if (!deleted)
+                try
                 {
-                    return Results.NotFound();
+                    var deleted = await bicicletaService.DeleteAsync(id);
+
+                    if (!deleted)
+                    {
+                        return Results.NotFound();
+                    }
+                    return Results.NoContent();
                 }
-                return Results.NoContent();
+                catch (DbUpdateException)
+                {
+                    return Results.BadRequest(new { error = "No se puede eliminar esta bicicleta porque tiene historial de alquileres" });
+                }
             })
             .WithName("DeleteBicicleta")
             .Produces(StatusCodes.Status204NoContent)

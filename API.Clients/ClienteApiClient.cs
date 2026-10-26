@@ -1,4 +1,4 @@
-﻿using DTOs;
+using DTOs;
 using System.Net.Http.Json;
 
 namespace API.Clients
@@ -115,7 +115,7 @@ namespace API.Clients
                 if (!response.IsSuccessStatusCode)
                 {
                     string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al eliminar cliente con Id {id}. Status: {response.StatusCode}");
+                    throw new Exception($"Error al eliminar cliente con Id {id}. Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
             }
             catch (HttpRequestException ex)
