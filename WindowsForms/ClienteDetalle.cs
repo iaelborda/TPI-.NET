@@ -1,16 +1,7 @@
 ﻿using API.Clients;
 using Domain.Model;
 using DTOs;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace WindowsForms
 {
@@ -159,7 +150,8 @@ namespace WindowsForms
             {
                 isValid = false;
                 errorProvider.SetError(documentoTextBox, "El documento solo puede contener números");
-            }else if(documentoTextBox.Text.Length < 8)
+            }
+            else if (documentoTextBox.Text.Length < 8)
             {
                 isValid = false;
                 errorProvider.SetError(documentoTextBox, "El documento debe tener al menos 8 dígitos");
@@ -232,7 +224,7 @@ namespace WindowsForms
             aceptarButton.Enabled = false;
             cancelarButton.Enabled = false;
             documentoTextBox.Enabled = false;
-            tipoDocumentoComboBox.Enabled = false; 
+            tipoDocumentoComboBox.Enabled = false;
             nombreTextBox.Enabled = false;
             apellidoTextBox.Enabled = false;
             emailTextBox.Enabled = false;

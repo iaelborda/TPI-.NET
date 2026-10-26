@@ -1,7 +1,4 @@
-﻿using Domain.Model;
-
-
-namespace DTOs
+﻿namespace DTOs
 {
     public class TarifaDTO
     {

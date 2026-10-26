@@ -13,13 +13,13 @@
         public int Id { get; private set; }
         public DateTime FechaAlquiler { get; private set; }
         public EstadoDeAlquiler EstadoAlquiler { get; private set; }
-        
+
         private int _clienteId;
         private Cliente? _cliente;
-        public int ClienteId 
+        public int ClienteId
         {
-            get => _cliente?.Id ?? _clienteId; 
-            private set => _clienteId = value; 
+            get => _cliente?.Id ?? _clienteId;
+            private set => _clienteId = value;
         }
 
         public Cliente? Cliente
@@ -28,7 +28,7 @@
             private set
             {
                 _cliente = value;
-                if(value != null && _clienteId != value.Id)
+                if (value != null && _clienteId != value.Id)
                 {
                     _clienteId = value.Id;
                 }
@@ -37,10 +37,10 @@
 
         private int _empleadoId;
         private Empleado? _empleado;
-        public int EmpleadoId 
-        { 
+        public int EmpleadoId
+        {
             get => _empleado?.Id ?? _empleadoId;
-            private set => _empleadoId = value; 
+            private set => _empleadoId = value;
         }
         public Empleado? Empleado
         {
@@ -82,40 +82,23 @@
 
             _clienteId = clienteId;
 
-            if(_cliente != null && _cliente.Id != clienteId)
+            if (_cliente != null && _cliente.Id != clienteId)
             {
                 _cliente = null;
             }
         }
 
-        public void SetCliente(Cliente cliente)
-        {
-            ArgumentNullException.ThrowIfNull(cliente);
-            _cliente = cliente;
-            _clienteId = cliente.Id;
-        }
-
         public void SetEmpleadoId(int empleadoId)
         {
-            if(empleadoId <= 0)
+            if (empleadoId <= 0)
                 throw new ArgumentException("El id del empleado debe ser mayor que cero.", nameof(empleadoId));
 
             _empleadoId = empleadoId;
 
-            if(_empleado != null && _empleado.Id != empleadoId)
+            if (_empleado != null && _empleado.Id != empleadoId)
             {
                 _empleado = null;
             }
-        }
-        public void SetEmpleado(Empleado empleado)
-        {
-            ArgumentNullException.ThrowIfNull(empleado);
-            _empleado = empleado;
-            _empleadoId = empleado.Id;
-        }
-        public void SetFechaAlquiler(DateTime fechaAlquiler)
-        {
-            FechaAlquiler = fechaAlquiler;
         }
 
         public void SetEstadoAlquiler(EstadoDeAlquiler estado)
@@ -134,12 +117,6 @@
             ArgumentNullException.ThrowIfNull(detalle);
             _detallesAlquiler.Remove(detalle);
         }
-
-        public void ClearDetalles()
-        {
-            _detallesAlquiler.Clear();
-        }
-
         public void CancelarAlquiler()
         {
             if (EstadoAlquiler != EstadoDeAlquiler.Activo)
@@ -148,36 +125,6 @@
             }
 
             EstadoAlquiler = EstadoDeAlquiler.Cancelado;
-        }
-
-        public void FinalizarAlquiler()
-        {
-            if (EstadoAlquiler == EstadoDeAlquiler.Finalizado)
-            {
-                throw new InvalidOperationException("El alquiler ya ha sido finalizado.");
-            }
-
-            if (EstadoAlquiler == EstadoDeAlquiler.Cancelado)
-            {
-                throw new InvalidOperationException("No se puede finalizar un alquiler que fue cancelado.");
-            }
-
-            if (_detallesAlquiler.Count == 0)
-            {
-                throw new InvalidOperationException("No se puede finalizar un alquiler sin detalles.");
-            }
-
-            if (_detallesAlquiler.Any(d => d.HoraFin == null))
-            {
-                throw new InvalidOperationException("No se puede finalizar el alquiler mientras haya bicicletas sin devolver.");
-            }
-
-            EstadoAlquiler = EstadoDeAlquiler.Finalizado;
-        }
-
-        public bool TieneBicicletasSinEntregar()
-        {
-            return _detallesAlquiler.Any(d => d.HoraFin == null);
         }
     }
 }

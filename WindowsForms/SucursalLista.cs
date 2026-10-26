@@ -95,7 +95,7 @@ namespace WindowsForms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar sucursales: {ex.Message}","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar sucursales: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {

@@ -1,7 +1,6 @@
 ﻿using Application.Services;
 using DTOs;
 
-
 namespace WebApi
 {
     public static class SucursalEndpoints
@@ -21,7 +20,7 @@ namespace WebApi
             .Produces<SucursalDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi()
-            .RequireAuthorization("SucursalesLeer"); 
+            .RequireAuthorization("SucursalesLeer");
 
             app.MapGet("/sucursales", async (ISucursalService sucursalService) =>
             {
@@ -30,7 +29,7 @@ namespace WebApi
             }).WithName("GetAllSucursales")
               .Produces<List<SucursalDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
-            .RequireAuthorization("SucursalesLeer"); 
+            .RequireAuthorization("SucursalesLeer");
 
             app.MapPost("/sucursales", async (SucursalDTO dto, ISucursalService sucursalService) =>
             {
@@ -48,7 +47,7 @@ namespace WebApi
             .Produces<SucursalDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization("SucursalesAgregar"); 
+            .RequireAuthorization("SucursalesAgregar");
 
             app.MapDelete("/sucursales/{id}", async (int id, ISucursalService sucursalService) =>
             {
@@ -63,7 +62,7 @@ namespace WebApi
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi()
-            .RequireAuthorization("SucursalesEliminar"); 
+            .RequireAuthorization("SucursalesEliminar");
 
             app.MapPut("/sucursales", async (SucursalDTO dto, ISucursalService sucursalService) =>
             {
@@ -85,7 +84,7 @@ namespace WebApi
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization("SucursalesActualizar"); 
+            .RequireAuthorization("SucursalesActualizar");
         }
     }
 }

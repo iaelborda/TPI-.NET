@@ -305,8 +305,8 @@ namespace WindowsForms
                 RefreshDetallesGrid();
                 MessageBox.Show("El alquiler se ha finalizado correctamente. Se abrirá la ventana de cobro.", "Alquiler Finalizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                PagoDTO nuevoPago = new PagoDTO 
-                { 
+                PagoDTO nuevoPago = new PagoDTO
+                {
                     IdAlquiler = this.Alquiler.Id,
                     ClienteNombre = this.Alquiler.ClienteNombre,
                     ClienteApellido = this.Alquiler.ClienteApellido,
@@ -633,8 +633,8 @@ namespace WindowsForms
                     await AlquilerApiClient.UpdateAsync(this.Alquiler);
 
                     MessageBox.Show("Todas las bicicletas han sido devueltas. El alquiler ha finalizado. Se abrirá la ventana de cobro.", "Alquiler Finalizado", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    PagoDTO nuevoPago = new PagoDTO 
-                    { 
+                    PagoDTO nuevoPago = new PagoDTO
+                    {
                         IdAlquiler = this.Alquiler.Id,
                         ClienteNombre = this.Alquiler.ClienteNombre,
                         ClienteApellido = this.Alquiler.ClienteApellido,

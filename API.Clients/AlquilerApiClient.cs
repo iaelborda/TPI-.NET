@@ -1,9 +1,6 @@
 ﻿using DTOs;
-using System;
 using System.Globalization;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 
 namespace API.Clients
 {
@@ -14,7 +11,7 @@ namespace API.Clients
             try
             {
                 using var client = await CreateHttpClientAsync();
-                HttpResponseMessage response =await client.GetAsync("alquileres/" + id);
+                HttpResponseMessage response = await client.GetAsync("alquileres/" + id);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -22,18 +19,18 @@ namespace API.Clients
                 }
                 else
                 {
-                    string errorContent =await response.Content.ReadAsStringAsync();
+                    string errorContent = await response.Content.ReadAsStringAsync();
 
-                    throw new Exception($"Error al obtener alquiler con Id {id}. " +$"Status: {response.StatusCode}, Detalle: {errorContent}");
+                    throw new Exception($"Error al obtener alquiler con Id {id}. " + $"Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al obtener alquiler con Id {id}: {ex.Message}",ex);
+                throw new Exception($"Error de conexión al obtener alquiler con Id {id}: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al obtener alquiler con Id {id}: {ex.Message}",ex);
+                throw new Exception($"Timeout al obtener alquiler con Id {id}: {ex.Message}", ex);
             }
         }
 
@@ -42,7 +39,7 @@ namespace API.Clients
             try
             {
                 using var client = await CreateHttpClientAsync();
-                HttpResponseMessage response =await client.GetAsync("alquileres");
+                HttpResponseMessage response = await client.GetAsync("alquileres");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -50,11 +47,9 @@ namespace API.Clients
                 }
                 else
                 {
-                    //await HandleUnauthorizedResponseAsync(response);
+                    string errorContent = await response.Content.ReadAsStringAsync();
 
-                    string errorContent =await response.Content.ReadAsStringAsync();
-
-                    throw new Exception($"Error al obtener lista de alquileres. " +$"Status: {response.StatusCode}, Detalle: {errorContent}");
+                    throw new Exception($"Error al obtener lista de alquileres. " + $"Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
             }
             catch (HttpRequestException ex)
@@ -63,7 +58,7 @@ namespace API.Clients
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al obtener lista de alquileres: {ex.Message}",ex);
+                throw new Exception($"Timeout al obtener lista de alquileres: {ex.Message}", ex);
             }
         }
         private static async Task<string> ObtenerMensajeErrorAsync(HttpResponseMessage response)
@@ -89,7 +84,7 @@ namespace API.Clients
             {
                 using var client = await CreateHttpClientAsync();
 
-                HttpResponseMessage response =await client.PostAsJsonAsync("alquileres", alquiler);
+                HttpResponseMessage response = await client.PostAsJsonAsync("alquileres", alquiler);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -99,12 +94,12 @@ namespace API.Clients
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al crear alquiler: {ex.Message}",ex
+                throw new Exception($"Error de conexión al crear alquiler: {ex.Message}", ex
                 );
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al crear alquiler: {ex.Message}",ex
+                throw new Exception($"Timeout al crear alquiler: {ex.Message}", ex
                 );
             }
         }
@@ -115,23 +110,23 @@ namespace API.Clients
             {
                 using var client = await CreateHttpClientAsync();
 
-                HttpResponseMessage response =await client.DeleteAsync("alquileres/" + id);
+                HttpResponseMessage response = await client.DeleteAsync("alquileres/" + id);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent =await response.Content.ReadAsStringAsync();
+                    string errorContent = await response.Content.ReadAsStringAsync();
 
-                    throw new Exception($"Error al eliminar alquiler con Id {id}. " +$"Status: {response.StatusCode}, Detalle: {errorContent}"
+                    throw new Exception($"Error al eliminar alquiler con Id {id}. " + $"Status: {response.StatusCode}, Detalle: {errorContent}"
                     );
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al eliminar alquiler con Id {id}: {ex.Message}",ex);
+                throw new Exception($"Error de conexión al eliminar alquiler con Id {id}: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al eliminar alquiler con Id {id}: {ex.Message}",ex);
+                throw new Exception($"Timeout al eliminar alquiler con Id {id}: {ex.Message}", ex);
             }
         }
 
@@ -151,7 +146,7 @@ namespace API.Clients
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al actualizar alquiler con Id {alquiler.Id}: {ex.Message}",ex);
+                throw new Exception($"Error de conexión al actualizar alquiler con Id {alquiler.Id}: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {

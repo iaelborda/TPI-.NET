@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Model
+﻿namespace Domain.Model
 {
     public class Empleado : Persona
     {
@@ -57,14 +51,6 @@ namespace Domain.Model
             {
                 _sucursal = null;
             }
-        }
-
-        public void SetSucursal(Sucursal sucursal)
-        {
-            ArgumentNullException.ThrowIfNull(sucursal);
-
-            _sucursal = sucursal;
-            _sucursalId = sucursal.Id;
         }
     }
 }

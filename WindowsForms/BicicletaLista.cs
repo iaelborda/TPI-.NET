@@ -2,8 +2,6 @@
 using Domain.Model;
 using DTOs;
 using System.Diagnostics;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace WindowsForms
 {
@@ -287,7 +285,8 @@ namespace WindowsForms
 
                 var bicicletas = await BicicletaApiClient.GetByCriteriaAsync(criteria);
                 this.bicicletasDataGridView.DataSource = bicicletas.ToList();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show($"Error al filtrar bicicletas: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

@@ -1,9 +1,6 @@
 using Data;
 using Domain.Model;
 using DTOs;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using System.Transactions;
 
 namespace Application.Services
 {
@@ -98,7 +95,7 @@ namespace Application.Services
 
             if (existing == null) return false;
             var categoria = await categoriaRepository.GetAsync(dto.CategoriaId);
-            if(categoria == null)
+            if (categoria == null)
             {
                 throw new ArgumentException($"Categoria con ID {dto.CategoriaId} no existe.");
             }

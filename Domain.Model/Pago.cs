@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Model
+﻿namespace Domain.Model
 
 {
     public enum MetodoPago
@@ -32,16 +26,6 @@ namespace Domain.Model
             Monto = 0;
             SetMetodoPago(metodo);
         }
-
-        public void SetId(int id)
-        {
-            if (id <= 0)
-            {
-                throw new ArgumentException("El id del pago debe ser mayor que 0", nameof(id));
-            }
-            IdPago = id;
-        }
-
         public void SetAlquilerId(int id)
         {
             if (id <= 0)

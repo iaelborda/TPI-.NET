@@ -1,8 +1,5 @@
 ﻿using DTOs;
-using System;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 
 namespace API.Clients
 {
@@ -48,7 +45,6 @@ namespace API.Clients
                 }
                 else
                 {
-                    //await HandleUnauthorizedResponseAsync(response);
                     string errorContent = await response.Content.ReadAsStringAsync();
                     throw new Exception($"Error al obtener lista de empleados. " + $"Status: {response.StatusCode}, Detalle: {errorContent}");
                 }

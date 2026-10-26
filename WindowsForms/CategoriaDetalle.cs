@@ -1,5 +1,5 @@
-﻿using DTOs;
-using API.Clients;
+﻿using API.Clients;
+using DTOs;
 
 namespace WindowsForms
 {
@@ -37,7 +37,7 @@ namespace WindowsForms
         {
             this.Mode = mode;
             this.Categoria = categoria;
-        }   
+        }
 
         public void CargarCategoria()
         {
@@ -48,7 +48,7 @@ namespace WindowsForms
 
         private void SetFormMode(FormMode mode)
         {
-            if(mode == FormMode.Add)
+            if (mode == FormMode.Add)
             {
                 idLabel.Visible = false;
                 idTextBox.Visible = false;
@@ -57,7 +57,7 @@ namespace WindowsForms
                 this.Text = "Agregar Categoria";
             }
 
-            if(mode == FormMode.Update)
+            if (mode == FormMode.Update)
             {
                 idLabel.Visible = true;
                 idTextBox.Visible = true;

@@ -5,7 +5,7 @@ namespace DTOs
     public class AlquilerDTO
     {
         public int Id { get; set; }
-        public DateTime FechaAlquiler {  get; set; }
+        public DateTime FechaAlquiler { get; set; }
         public EstadoDeAlquiler EstadoAlquiler { get; set; }
         public int ClienteId { get; set; }
         public string? ClienteNombre { get; set; }

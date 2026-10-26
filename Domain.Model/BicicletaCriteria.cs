@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Model
+﻿namespace Domain.Model
 {
     public class BicicletaCriteria
     {
@@ -13,9 +7,10 @@ namespace Domain.Model
         public int? SucursalId { get; private set; }
         public EstadoBicicleta? Estado { get; private set; }
 
-        public BicicletaCriteria(string? texto, int? categoriaId, int? sucursalId, EstadoBicicleta? estado) {
+        public BicicletaCriteria(string? texto, int? categoriaId, int? sucursalId, EstadoBicicleta? estado)
+        {
             Texto = texto;
-            CategoriaId = categoriaId; 
+            CategoriaId = categoriaId;
             SucursalId = sucursalId;
             Estado = estado;
         }

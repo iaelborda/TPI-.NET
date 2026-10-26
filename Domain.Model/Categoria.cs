@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Model
+﻿namespace Domain.Model
 {
     public class Categoria
     {
@@ -34,19 +28,6 @@ namespace Domain.Model
                 throw new ArgumentException("La descripcion no puede ser nula o vacia.", nameof(descripcion));
             }
             Descripcion = descripcion;
-        }
-        public void AgregarTarifa(Tarifa tarifa)
-        {
-            ArgumentNullException.ThrowIfNull(tarifa);
-
-            tarifas.Add(tarifa);
-        }
-
-        public void EliminarTarifa(Tarifa tarifa)
-        {
-            ArgumentNullException.ThrowIfNull(tarifa);
-
-            tarifas.Remove(tarifa);
         }
     }
 }

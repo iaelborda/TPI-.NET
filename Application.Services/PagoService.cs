@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Data;
+﻿using Data;
 using Domain.Model;
 using DTOs;
 
@@ -22,16 +17,16 @@ namespace Application.Services
 
         public async Task<PagoDTO> AddAsync(PagoDTO dto)
         {
-            if(dto.IdAlquiler <= 0)
+            if (dto.IdAlquiler <= 0)
             {
                 throw new ArgumentException("El Id de alquiler debe ser mayor que cero.");
             }
             var alquiler = await alquilerRepository.GetAsync(dto.IdAlquiler);
-            if(alquiler == null)
+            if (alquiler == null)
             {
                 throw new ArgumentException($"No se encontró el alquiler con Id {dto.IdAlquiler}.");
             }
-            if(await pagoRepository.AlquilerTienePagoAsync(dto.IdAlquiler))
+            if (await pagoRepository.AlquilerTienePagoAsync(dto.IdAlquiler))
             {
                 throw new InvalidOperationException($"El alquiler {dto.IdAlquiler} ya cuenta con un pago registrado.");
             }

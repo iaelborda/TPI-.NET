@@ -1,6 +1,6 @@
+using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Domain.Model;
 
 namespace Data
 {
@@ -228,12 +228,12 @@ namespace Data
                 entity.Navigation(e => e.Cliente)
                     .HasField("_cliente");
 
-                 entity.Property(e => e.EmpleadoId)
-                    .IsRequired()
-                    .HasField("_empleadoId");
+                entity.Property(e => e.EmpleadoId)
+                   .IsRequired()
+                   .HasField("_empleadoId");
 
                 entity.Navigation(e => e.Empleado)
-                    .HasField("_empleado"); 
+                    .HasField("_empleado");
 
                 entity.Property(e => e.FechaAlquiler)
                     .IsRequired();

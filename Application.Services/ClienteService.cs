@@ -1,5 +1,5 @@
-﻿using Domain.Model;
-using Data;
+﻿using Data;
+using Domain.Model;
 using DTOs;
 
 namespace Application.Services
@@ -65,7 +65,7 @@ namespace Application.Services
 
             return clientes.Select(cliente => new ClienteDTO
             {
-                Id = cliente.Id, 
+                Id = cliente.Id,
                 Documento = cliente.Documento,
                 TipoDocumento = cliente.TipoDocumento,
                 Nombre = cliente.Nombre,

@@ -11,7 +11,7 @@
         public int Id { get; private set; }
         public string Marca { get; private set; }
         public string Modelo { get; private set; }
-        public EstadoBicicleta Estado {  get; private set; }
+        public EstadoBicicleta Estado { get; private set; }
 
         private int _categoriaId;
         private Categoria? _categoria;
@@ -32,7 +32,7 @@
             {
                 _categoria = value;
 
-                if(value != null && _categoriaId != value.Id)
+                if (value != null && _categoriaId != value.Id)
                 {
                     _categoriaId = value.Id;
                 }
@@ -94,22 +94,15 @@
 
         public void SetCategoriaId(int categoriaId)
         {
-            if(categoriaId <= 0)
+            if (categoriaId <= 0)
                 throw new ArgumentException("La categoria es obligatoria. ", nameof(categoriaId));
 
             _categoriaId = categoriaId;
 
-            if(_categoria != null && _categoria.Id != categoriaId)
+            if (_categoria != null && _categoria.Id != categoriaId)
             {
                 _categoria = null;
             }
-        }
-
-        public void SetCategoria(Categoria categoria)
-        {
-            ArgumentNullException.ThrowIfNull(categoria);
-            _categoria = categoria;
-            _categoriaId = categoria.Id;
         }
         public void SetSucursalId(int sucursalId)
         {
@@ -123,14 +116,6 @@
             {
                 _sucursal = null;
             }
-        }
-
-        public void SetSucursal(Sucursal sucursal)
-        {
-            ArgumentNullException.ThrowIfNull(sucursal);
-
-            _sucursal = sucursal;
-            _sucursalId = sucursal.Id;
         }
     }
 }

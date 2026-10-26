@@ -73,11 +73,11 @@ namespace API.Clients
                     throw new Exception($"Error al buscar bicicletas. Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
             }
-            catch(HttpRequestException ex)
+            catch (HttpRequestException ex)
             {
                 throw new Exception($"Error de conexion: {ex.Message}", ex);
             }
-            catch(TaskCanceledException ex)
+            catch (TaskCanceledException ex)
             {
                 throw new Exception($"Timeout al buscar bicicletas: {ex.Message}", ex);
             }

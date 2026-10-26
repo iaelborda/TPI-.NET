@@ -1,6 +1,5 @@
 ﻿using Data;
 using DTOs;
-using Microsoft.Identity.Client;
 using System.Data;
 
 namespace Application.Services
@@ -28,7 +27,7 @@ namespace Application.Services
 
             if (criteria.FechaDesde.Date > criteria.FechaHasta.Date)
                 throw new ArgumentException("La fecha desde no puede ser posterior a la fecha hasta.");
-            
+
             int? sucursalId = criteria.SucursalId > 0 ? criteria.SucursalId : null;
 
             var alquileres = await _alquilerRepository.GetReporteAlquileresMensualAsync(

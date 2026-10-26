@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Domain.Model;
+﻿using Domain.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
@@ -77,13 +77,13 @@ namespace Data
                 string t = criteria.Texto.Trim().ToLower();
                 query = query.Where(b => b.Marca.ToLower().Contains(t) || b.Modelo.ToLower().Contains(t));
             }
-            if(criteria.CategoriaId.HasValue && criteria.CategoriaId > 0)
+            if (criteria.CategoriaId.HasValue && criteria.CategoriaId > 0)
             {
-                query = query.Where (b => b.CategoriaId == criteria.CategoriaId.Value);
+                query = query.Where(b => b.CategoriaId == criteria.CategoriaId.Value);
             }
-            if(criteria.SucursalId.HasValue && criteria.SucursalId > 0)
+            if (criteria.SucursalId.HasValue && criteria.SucursalId > 0)
             {
-                query = query.Where(b=> b.SucursalId == criteria.SucursalId.Value);
+                query = query.Where(b => b.SucursalId == criteria.SucursalId.Value);
             }
             if (criteria.Estado.HasValue)
             {

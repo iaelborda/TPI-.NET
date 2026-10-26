@@ -1,6 +1,5 @@
 ﻿using Domain.Model;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Policy;
 
 namespace Data
 {
@@ -201,7 +200,7 @@ namespace Data
                 .OrderByDescending(r => r.CantAlquileres)
                 .ThenBy(r => r.Marca)
                 .ThenBy(r => r.Modelo)
-                .Take(10) 
+                .Take(10)
                 .ToList();
         }
 

@@ -1,7 +1,7 @@
 ﻿using API.Clients;
+using Domain.Model;
 using DTOs;
 using System.IdentityModel.Tokens.Jwt;
-using Domain.Model;
 using System.Security.Claims;
 
 namespace API.Auth.WindowsForms

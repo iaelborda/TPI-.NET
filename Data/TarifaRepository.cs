@@ -21,7 +21,7 @@ namespace Data
         public async Task<bool> DeleteAsync(int id)
         {
             var tarifa = await context.Tarifas.FindAsync(id);
-            if(tarifa != null)
+            if (tarifa != null)
             {
                 context.Tarifas.Remove(tarifa);
                 await context.SaveChangesAsync();
@@ -48,7 +48,7 @@ namespace Data
         public async Task<bool> UpdateAsync(Tarifa tarifa)
         {
             var existing = await context.Tarifas.FirstOrDefaultAsync(t => t.Id == tarifa.Id);
-            if(existing != null)
+            if (existing != null)
             {
                 existing.SetPrecioHora(tarifa.PrecioHora);
                 existing.SetFechaDesde(tarifa.FechaDesde);
@@ -81,4 +81,3 @@ namespace Data
         }
     }
 }
-    

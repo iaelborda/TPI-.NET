@@ -38,8 +38,8 @@ namespace WindowsForms
                 Width = 200,
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
-                    Format = "N2",              
-                    NullValue = "Sin tarifa",   
+                    Format = "N2",
+                    NullValue = "Sin tarifa",
                     Alignment = DataGridViewContentAlignment.MiddleRight
                 }
             });

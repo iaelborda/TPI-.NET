@@ -1,11 +1,4 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Model
+﻿namespace Domain.Model
 {
     public class Tarifa
     {
@@ -81,14 +74,6 @@ namespace Domain.Model
             {
                 _categoria = null;
             }
-        }
-
-        public void SetCategoria(Categoria categoria)
-        {
-            ArgumentNullException.ThrowIfNull(categoria);
-
-            _categoria = categoria;
-            _categoriaId = categoria.Id;
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Domain.Model
 {
@@ -13,16 +8,16 @@ namespace Domain.Model
         public DateOnly FechaAlta { get; private set; }
 
         public Cliente(int id, string documento, TipoDocumento tipoDocumento, string nombre, string apellido, string telefono, string email)
-            :base(id, documento, tipoDocumento, nombre, apellido, telefono)
+            : base(id, documento, tipoDocumento, nombre, apellido, telefono)
         {
             SetEmail(email);
             FechaAlta = DateOnly.FromDateTime(DateTime.Now);
-        
+
         }
 
         public Cliente(int id, string documento, TipoDocumento tipoDocumento,
                string nombre, string apellido, string telefono, string email, DateOnly fechaAlta)
-    : base(id, documento, tipoDocumento, nombre, apellido, telefono)
+            : base(id, documento, tipoDocumento, nombre, apellido, telefono)
         {
             SetEmail(email);
             SetFechaAlta(fechaAlta);
@@ -31,7 +26,7 @@ namespace Domain.Model
 
         public void SetEmail(string email)
         {
-            if(!EsEmailValido(email))
+            if (!EsEmailValido(email))
                 throw new ArgumentException("El email no tiene un formato válido.", nameof(email));
             Email = email;
         }
@@ -49,8 +44,5 @@ namespace Domain.Model
                 throw new ArgumentException("La fecha de alta no puede ser nula.", nameof(fechaAlta));
             FechaAlta = fechaAlta;
         }
-
-
-
     }
 }

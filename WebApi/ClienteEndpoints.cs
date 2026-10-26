@@ -22,7 +22,7 @@ namespace WebApi
             .Produces<ClienteDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi()
-            .RequireAuthorization("ClientesLeer"); 
+            .RequireAuthorization("ClientesLeer");
 
             app.MapGet("/clientes", async (IClienteService clienteService) =>
             {
@@ -33,7 +33,7 @@ namespace WebApi
             .WithName("GetAllClientes")
             .Produces<List<ClienteDTO>>(StatusCodes.Status200OK)
             .WithOpenApi()
-            .RequireAuthorization("ClientesLeer"); 
+            .RequireAuthorization("ClientesLeer");
 
             app.MapPost("/clientes", async (ClienteDTO dto, IClienteService clienteService) =>
             {
@@ -52,7 +52,7 @@ namespace WebApi
             .Produces<ClienteDTO>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization("ClientesAgregar"); 
+            .RequireAuthorization("ClientesAgregar");
 
             app.MapPut("/clientes", async (ClienteDTO dto, IClienteService clienteService) =>
             {
@@ -76,7 +76,7 @@ namespace WebApi
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
             .WithOpenApi()
-            .RequireAuthorization("ClientesActualizar"); 
+            .RequireAuthorization("ClientesActualizar");
 
             app.MapDelete("/clientes/{id}", async (int id, IClienteService clienteService) =>
             {
@@ -93,7 +93,7 @@ namespace WebApi
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi()
-            .RequireAuthorization("ClientesEliminar"); 
+            .RequireAuthorization("ClientesEliminar");
         }
     }
 }

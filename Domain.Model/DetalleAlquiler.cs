@@ -72,14 +72,6 @@
                 _bicicleta = null;
             }
         }
-
-        public void SetBicicleta(Bicicleta bicicleta)
-        {
-            ArgumentNullException.ThrowIfNull(bicicleta);
-            _bicicleta = bicicleta;
-            _bicicletaId = bicicleta.Id;
-        }
-
         public void SetHoraInicio(DateTime horaInicio)
         {
             HoraInicio = horaInicio;
@@ -114,23 +106,6 @@
 
             Subtotal = subtotal;
         }
-
-        public void DevolverBicicleta()
-        {
-            if (HoraFin != null)
-            {
-                throw new InvalidOperationException("La bicicleta ya fue devuelta.");
-            }
-
-            if (Estado == EstadoDetalleAlquiler.Devuelto)
-            {
-                throw new InvalidOperationException("El detalle indica que la bicicleta ya fue devuelta.");
-            }
-
-            HoraFin = DateTime.Now;
-            Estado = EstadoDetalleAlquiler.Devuelto;
-        }
-
         public void CalcularSubTotal(decimal precioHora)
         {
             if (HoraFin == null)

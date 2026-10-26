@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using DTOs;
-using API.Clients;
-using API.Auth.WindowsForms;
+﻿using API.Clients;
 using Domain.Model;
+using DTOs;
 
 
 namespace WindowsForms
@@ -117,7 +107,7 @@ namespace WindowsForms
                     this.eliminarButton.Enabled = false;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show($"Error al cargar los empleados: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

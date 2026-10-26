@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Model;
+﻿using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data
@@ -25,7 +20,7 @@ namespace Data
         public async Task<bool> DeleteAsync(int id)
         {
             var pago = await context.Pagos.FindAsync(id);
-            if(pago == null)
+            if (pago == null)
             {
                 return false;
             }
@@ -57,7 +52,7 @@ namespace Data
         public async Task<bool> UpdateAsync(Pago pago)
         {
             var existing = await context.Pagos.FindAsync(pago.IdPago);
-            if(existing == null)
+            if (existing == null)
             {
                 return false;
             }

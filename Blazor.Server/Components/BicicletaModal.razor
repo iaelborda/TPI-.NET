@@ -160,7 +160,6 @@
     public async Task ShowEditModal(BicicletaDTO bicicleta)
     {
         mode = FormMode.Update;
-        // Clonamos para evitar mutaciones directas en la grilla antes de confirmar
         currentBicicleta = new BicicletaDTO
         {
             Id = bicicleta.Id,

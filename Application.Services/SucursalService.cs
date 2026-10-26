@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Data;
 using Domain.Model;
 using DTOs;
-using Data;
 
 namespace Application.Services
 {
@@ -13,7 +8,7 @@ namespace Application.Services
     {
         private readonly ISucursalRepository sucursalRepository;
         private readonly IBicicletaRepository bicicletaRepository;
-        public SucursalService(ISucursalRepository sucursalRepository,IBicicletaRepository bicicletaRepository)
+        public SucursalService(ISucursalRepository sucursalRepository, IBicicletaRepository bicicletaRepository)
         {
             this.sucursalRepository = sucursalRepository;
             this.bicicletaRepository = bicicletaRepository;
@@ -85,7 +80,7 @@ namespace Application.Services
             {
                 return false;
             }
-            if(await sucursalRepository.NombreExistsAsync(dto.Nombre, dto.Id))
+            if (await sucursalRepository.NombreExistsAsync(dto.Nombre, dto.Id))
             {
                 throw new ArgumentException($"Ya existe una sucursal con el nombre '{dto.Nombre}'");
             }

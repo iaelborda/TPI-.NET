@@ -1,7 +1,5 @@
 using API.Auth.WindowsForms;
 using API.Clients;
-using System.Globalization;
-using System.Runtime.CompilerServices;
 
 namespace WindowsForms
 {

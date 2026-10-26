@@ -109,7 +109,7 @@ namespace API.Auth.Blazor.Server
 
         public async Task CheckTokenExpirationAsync()
         {
-            if(!await IsAuthenticatedAsync())
+            if (!await IsAuthenticatedAsync())
             {
                 await LogoutAsync();
             }

@@ -17,7 +17,6 @@ namespace Application.Services
 
         public async Task<TarifaDTO> AddAsync(TarifaDTO dto)
         {
-            // 1. Validar que la categoría exista
             var categoria = await categoriaRepository.GetAsync(dto.CategoriaId);
             if (categoria == null)
             {
@@ -26,7 +25,6 @@ namespace Application.Services
 
             var ahora = DateTime.Now;
 
-            // 2. Si ya hay una tarifa vigente para esta categoría, se cierra fijando su FechaHasta
             var tarifaVigente = await tarifaRepository.GetTarifaVigenteAsync(dto.CategoriaId);
             if (tarifaVigente != null)
             {
@@ -34,7 +32,6 @@ namespace Application.Services
                 await tarifaRepository.UpdateAsync(tarifaVigente);
             }
 
-            // 3. Crear la nueva tarifa con FechaDesde = ahora y FechaHasta = null (abierta/vigente)
             Tarifa nuevaTarifa = new Tarifa(
                 dto.PrecioHora,
                 ahora,

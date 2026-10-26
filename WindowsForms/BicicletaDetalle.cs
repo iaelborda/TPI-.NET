@@ -1,7 +1,6 @@
 ﻿using API.Clients;
 using Domain.Model;
 using DTOs;
-using System.Windows.Forms;
 
 namespace WindowsForms
 {
@@ -104,7 +103,7 @@ namespace WindowsForms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al guardar bicicleta: {ex.Message}","Error",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    MessageBox.Show($"Error al guardar bicicleta: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {

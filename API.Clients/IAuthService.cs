@@ -1,5 +1,4 @@
-﻿using DTOs;
-using Domain.Model;
+﻿using Domain.Model;
 
 namespace API.Clients
 {

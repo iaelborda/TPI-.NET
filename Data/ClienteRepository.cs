@@ -17,11 +17,11 @@ namespace Data
             context.Clientes.Add(cliente);
             await context.SaveChangesAsync();
         }
-        public async Task<bool> DeleteAsync(int id) 
+        public async Task<bool> DeleteAsync(int id)
         {
             var cliente = await context.Clientes.FindAsync(id);
 
-            if(cliente != null)
+            if (cliente != null)
             {
                 context.Clientes.Remove(cliente);
                 await context.SaveChangesAsync();
@@ -31,9 +31,9 @@ namespace Data
             return false;
         }
 
-        public async Task<Cliente?> GetAsync(int id) 
+        public async Task<Cliente?> GetAsync(int id)
         {
-            return await context.Clientes.FirstOrDefaultAsync(c => c.Id ==id);
+            return await context.Clientes.FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<IEnumerable<Cliente>> GetAllAsync()
@@ -60,8 +60,8 @@ namespace Data
         public async Task<bool> EmailExistsAsync(string email, string? excludeDocumento = null)
         {
             var query = context.Clientes.Where(c => c.Email.ToLower() == email.ToLower());
-            
-            if(!string.IsNullOrEmpty(excludeDocumento))
+
+            if (!string.IsNullOrEmpty(excludeDocumento))
             {
                 query = query.Where(c => c.Documento != excludeDocumento);
             }

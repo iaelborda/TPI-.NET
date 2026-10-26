@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Domain.Model
 {
@@ -15,7 +10,7 @@ namespace Domain.Model
         public string Telefono { get; private set; }
         public int Capacidad { get; private set; }
 
-        public Sucursal (int id, string nombre, string direccion, string telefono, int capacidad)
+        public Sucursal(int id, string nombre, string direccion, string telefono, int capacidad)
         {
             SetId(id);
             SetNombre(nombre);
@@ -69,7 +64,7 @@ namespace Domain.Model
 
         public void SetCapacidad(int capacidad)
         {
-            if(capacidad <= 0)
+            if (capacidad <= 0)
             {
                 throw new ArgumentException("La capacidad debe ser mayor que 0.", nameof(capacidad));
             }

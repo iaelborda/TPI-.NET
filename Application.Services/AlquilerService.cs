@@ -1,5 +1,5 @@
-using Domain.Model;
 using Data;
+using Domain.Model;
 using DTOs;
 
 namespace Application.Services

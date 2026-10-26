@@ -1,5 +1,4 @@
 using API.Clients;
-using API.Auth.WindowsForms;
 
 namespace WindowsForms
 {

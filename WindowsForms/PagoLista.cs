@@ -1,12 +1,6 @@
-﻿using API.Auth.WindowsForms;
-using API.Clients;
+﻿using API.Clients;
 using Domain.Model;
 using DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace WindowsForms
 {
