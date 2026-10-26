@@ -61,23 +61,7 @@ namespace API.Clients
                 throw new Exception($"Timeout al obtener lista de alquileres: {ex.Message}", ex);
             }
         }
-        private static async Task<string> ObtenerMensajeErrorAsync(HttpResponseMessage response)
-        {
-            string contenido = await response.Content.ReadAsStringAsync();
 
-            try
-            {
-                var error = System.Text.Json.JsonDocument.Parse(contenido);
-
-                if (error.RootElement.TryGetProperty("error", out var mensaje))
-                    return mensaje.GetString() ?? contenido;
-            }
-            catch
-            {
-            }
-
-            return contenido;
-        }
         public static async Task AddAsync(AlquilerDTO alquiler)
         {
             try
@@ -88,8 +72,8 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string mensaje = await ObtenerMensajeErrorAsync(response);
-                    throw new Exception(mensaje);
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error al crear alquiler. Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
             }
             catch (HttpRequestException ex)
@@ -140,9 +124,10 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string mensaje = await ObtenerMensajeErrorAsync(response);
-                    throw new Exception(mensaje);
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error al actualizar alquiler con Id {alquiler.Id}. Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
+
             }
             catch (HttpRequestException ex)
             {
@@ -173,10 +158,10 @@ namespace API.Clients
                 }
                 else
                 {
-                    string mensaje = await ObtenerMensajeErrorAsync(response);
-
-                    throw new Exception($"Error al filtrar alquileres. Status: {response.StatusCode}, Detalle: {mensaje}");
+                    string errorContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Error al filtrar alquileres. Status: {response.StatusCode}, Detalle: {errorContent}");
                 }
+
             }
             catch (HttpRequestException ex)
             {
