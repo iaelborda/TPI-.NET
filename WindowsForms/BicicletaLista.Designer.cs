@@ -48,22 +48,22 @@
             bicicletasDataGridView.AllowUserToDeleteRows = false;
             bicicletasDataGridView.AllowUserToOrderColumns = true;
             bicicletasDataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            bicicletasDataGridView.Location = new Point(30, 70);
+            bicicletasDataGridView.Location = new Point(38, 88);
             bicicletasDataGridView.Margin = new Padding(2);
             bicicletasDataGridView.MultiSelect = false;
             bicicletasDataGridView.Name = "bicicletasDataGridView";
             bicicletasDataGridView.ReadOnly = true;
             bicicletasDataGridView.RowHeadersWidth = 62;
             bicicletasDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            bicicletasDataGridView.Size = new Size(936, 314);
+            bicicletasDataGridView.Size = new Size(1170, 392);
             bicicletasDataGridView.TabIndex = 0;
             // 
             // agregarButton
             // 
-            agregarButton.Location = new Point(895, 403);
+            agregarButton.Location = new Point(1119, 504);
             agregarButton.Margin = new Padding(2);
             agregarButton.Name = "agregarButton";
-            agregarButton.Size = new Size(90, 27);
+            agregarButton.Size = new Size(112, 34);
             agregarButton.TabIndex = 1;
             agregarButton.Text = "Agregar";
             agregarButton.UseVisualStyleBackColor = true;
@@ -71,10 +71,10 @@
             // 
             // actualizarButton
             // 
-            actualizarButton.Location = new Point(792, 403);
+            actualizarButton.Location = new Point(990, 504);
             actualizarButton.Margin = new Padding(2);
             actualizarButton.Name = "actualizarButton";
-            actualizarButton.Size = new Size(90, 27);
+            actualizarButton.Size = new Size(112, 34);
             actualizarButton.TabIndex = 2;
             actualizarButton.Text = "Actualizar";
             actualizarButton.UseVisualStyleBackColor = true;
@@ -82,10 +82,10 @@
             // 
             // eliminarButton
             // 
-            eliminarButton.Location = new Point(686, 403);
+            eliminarButton.Location = new Point(858, 504);
             eliminarButton.Margin = new Padding(2);
             eliminarButton.Name = "eliminarButton";
-            eliminarButton.Size = new Size(90, 27);
+            eliminarButton.Size = new Size(112, 34);
             eliminarButton.TabIndex = 3;
             eliminarButton.Text = "Eliminar";
             eliminarButton.UseVisualStyleBackColor = true;
@@ -93,20 +93,19 @@
             // 
             // buscarTextBox
             // 
-            buscarTextBox.Location = new Point(30, 28);
+            buscarTextBox.Location = new Point(38, 35);
             buscarTextBox.Margin = new Padding(2);
             buscarTextBox.Name = "buscarTextBox";
-            buscarTextBox.PlaceholderText = "Buscar por marca, categoría o estado...";
-            buscarTextBox.Size = new Size(256, 27);
+            buscarTextBox.PlaceholderText = "Buscar por marca o modelo...";
+            buscarTextBox.Size = new Size(319, 31);
             buscarTextBox.TabIndex = 4;
-            buscarTextBox.Text = "Buscar por marca o modelo...";
             // 
             // buscarButton
             // 
-            buscarButton.Location = new Point(895, 28);
+            buscarButton.Location = new Point(1119, 35);
             buscarButton.Margin = new Padding(2);
             buscarButton.Name = "buscarButton";
-            buscarButton.Size = new Size(90, 27);
+            buscarButton.Size = new Size(112, 34);
             buscarButton.TabIndex = 5;
             buscarButton.Text = "FIltrar";
             buscarButton.UseVisualStyleBackColor = true;
@@ -115,10 +114,10 @@
             // generarReporteButton
             // 
             generarReporteButton.BackColor = Color.YellowGreen;
-            generarReporteButton.Location = new Point(30, 403);
+            generarReporteButton.Location = new Point(38, 504);
             generarReporteButton.Margin = new Padding(2);
             generarReporteButton.Name = "generarReporteButton";
-            generarReporteButton.Size = new Size(139, 27);
+            generarReporteButton.Size = new Size(174, 34);
             generarReporteButton.TabIndex = 13;
             generarReporteButton.Text = "Generar Reporte";
             generarReporteButton.UseVisualStyleBackColor = false;
@@ -128,35 +127,38 @@
             // 
             categoriaComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             categoriaComboBox.FormattingEnabled = true;
-            categoriaComboBox.Location = new Point(311, 27);
+            categoriaComboBox.Location = new Point(389, 34);
+            categoriaComboBox.Margin = new Padding(4, 4, 4, 4);
             categoriaComboBox.Name = "categoriaComboBox";
-            categoriaComboBox.Size = new Size(151, 28);
+            categoriaComboBox.Size = new Size(188, 33);
             categoriaComboBox.TabIndex = 14;
             // 
             // sucursalComboBox
             // 
             sucursalComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             sucursalComboBox.FormattingEnabled = true;
-            sucursalComboBox.Location = new Point(468, 27);
+            sucursalComboBox.Location = new Point(585, 34);
+            sucursalComboBox.Margin = new Padding(4, 4, 4, 4);
             sucursalComboBox.Name = "sucursalComboBox";
-            sucursalComboBox.Size = new Size(151, 28);
+            sucursalComboBox.Size = new Size(188, 33);
             sucursalComboBox.TabIndex = 15;
             // 
             // estadoComboBox
             // 
             estadoComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             estadoComboBox.FormattingEnabled = true;
-            estadoComboBox.Location = new Point(625, 27);
+            estadoComboBox.Location = new Point(781, 34);
+            estadoComboBox.Margin = new Padding(4, 4, 4, 4);
             estadoComboBox.Name = "estadoComboBox";
-            estadoComboBox.Size = new Size(151, 28);
+            estadoComboBox.Size = new Size(188, 33);
             estadoComboBox.TabIndex = 16;
             // 
             // limpiarButton
             // 
-            limpiarButton.Location = new Point(792, 28);
+            limpiarButton.Location = new Point(990, 35);
             limpiarButton.Margin = new Padding(2);
             limpiarButton.Name = "limpiarButton";
-            limpiarButton.Size = new Size(90, 27);
+            limpiarButton.Size = new Size(112, 34);
             limpiarButton.TabIndex = 17;
             limpiarButton.Text = "Limpiar";
             limpiarButton.UseVisualStyleBackColor = true;
@@ -164,9 +166,9 @@
             // 
             // BicicletaLista
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(996, 453);
+            ClientSize = new Size(1245, 566);
             Controls.Add(limpiarButton);
             Controls.Add(estadoComboBox);
             Controls.Add(sucursalComboBox);
