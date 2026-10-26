@@ -23,10 +23,14 @@ namespace Application.Services
             {
                 throw new ArgumentException($"La descripcion '{dto.Descripcion}' ya existe");
             }
-            if (!dto.PrecioHoraInicial.HasValue || dto.PrecioHoraInicial.Value <= 0)
+
+            if (!dto.PrecioHoraInicial.HasValue)
             {
-                throw new ArgumentException("Debe ingresar un precio por hora inicial mayor a cero para la categoría.");
+                throw new ArgumentException("Debe ingresar un precio por hora inicial.");
             }
+
+            Tarifa.ValidarPrecioHora(dto.PrecioHoraInicial.Value);
+            
             Categoria categoria = new Categoria(dto.Descripcion);
             await categoriaRepository.AddAsync(categoria);
             var tarifaInicial = new Tarifa(

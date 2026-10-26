@@ -260,9 +260,9 @@
             validationErrors["Documento"] = "El documento debe tener al menos 8 dígitos";
             isValid = false;
         }
-        else if (currentEmpleado.Documento.Length > 20)
+        else if (currentEmpleado.Documento.Length > 10)
         {
-            validationErrors["Documento"] = "El documento debe tener menos de 20 caracteres";
+            validationErrors["Documento"] = "El documento debe tener menos de 10 caracteres";
             isValid = false;
         }
 

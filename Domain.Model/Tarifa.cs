@@ -41,12 +41,15 @@
 
             Id = id;
         }
+        public static void ValidarPrecioHora(decimal precioHora)
+        {
+            if (precioHora <= 0 || precioHora > 1000000)
+                throw new ArgumentException("El precio por hora debe ser mayor que 0 y no superar 1.000.000.", nameof(precioHora));
+        }
 
         public void SetPrecioHora(decimal precioHora)
         {
-            if (precioHora <= 0)
-                throw new ArgumentException("El precio por hora debe ser mayor que 0.", nameof(precioHora));
-
+            ValidarPrecioHora(precioHora);
             PrecioHora = precioHora;
         }
 

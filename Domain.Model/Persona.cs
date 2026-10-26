@@ -46,9 +46,8 @@ namespace Domain.Model
             if (!Regex.IsMatch(documento, @"^\d+$"))
                 throw new ArgumentException("El documento solo puede contener números", nameof(documento));
 
-            if (documento.Length > 20)
-                throw new ArgumentException(
-                    "El documento debe tener menos de 20 caracteres", nameof(documento));
+            if (documento.Length > 10)
+                throw new ArgumentException("El documento debe tener menos de 10 caracteres", nameof(documento));
 
             Documento = documento;
         }
