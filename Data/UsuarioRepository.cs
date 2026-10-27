@@ -1,4 +1,4 @@
-﻿using Domain.Model;
+using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data
@@ -6,6 +6,10 @@ namespace Data
     public class UsuarioRepository
     {
         private readonly TPIContext context;
+
+        public UsuarioRepository() : this(new TPIContext())
+        {
+        }
 
         public UsuarioRepository(TPIContext context)
         {

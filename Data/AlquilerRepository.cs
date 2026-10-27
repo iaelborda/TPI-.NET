@@ -1,15 +1,23 @@
-﻿using Domain.Model;
+using System.Data;
+using Domain.Model;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
 
 namespace Data
 {
     public class AlquilerRepository
     {
         private readonly TPIContext _context;
+        private readonly string _connectionString;
 
-        public AlquilerRepository(TPIContext context)
+        public AlquilerRepository(TPIContext context, IConfiguration? configuration = null)
         {
             _context = context;
+            _connectionString = configuration?.GetConnectionString("DefaultConnection")
+                ?? _context.Database.GetConnectionString()
+                ?? throw new InvalidOperationException("No se encontró la cadena de conexión 'DefaultConnection'.");
         }
 
         public async Task AddAsync(Alquiler alquiler)
@@ -106,48 +114,6 @@ namespace Data
             await _context.SaveChangesAsync();
             return true;
         }
-        public async Task<List<ReporteAlquileresMensual>> GetReporteAlquileresMensualAsync(DateTime fechaDesde, DateTime fechaHasta, int? sucursalId)
-        {
-            DateTime desde = fechaDesde.Date;
-            DateTime hasta = fechaHasta.Date.AddDays(1);
-
-            var query = _context.Alquileres.Where(a => a.FechaAlquiler >= desde && a.FechaAlquiler < hasta && a.EstadoAlquiler != EstadoDeAlquiler.Cancelado);
-
-            if (sucursalId.HasValue)
-                query = query.Where(a => a.Empleado != null && a.Empleado.SucursalId == sucursalId.Value);
-
-            var alquileres = await query
-                .Select(a => new
-                {
-                    a.FechaAlquiler,
-                    SucursalId = a.Empleado != null ? (int?)a.Empleado.SucursalId : null,
-                    Sucursal = a.Empleado != null && a.Empleado.Sucursal != null
-                        ? a.Empleado.Sucursal.Nombre
-                        : null
-                })
-                .ToListAsync();
-
-            return alquileres
-                .GroupBy(a => new
-                {
-                    Anio = a.FechaAlquiler.Year,
-                    Mes = a.FechaAlquiler.Month,
-                    SucursalId = a.SucursalId ?? 0,
-                    Sucursal = a.Sucursal ?? "Sin sucursal"
-                })
-                .Select(g => new ReporteAlquileresMensual
-                {
-                    Anio = g.Key.Anio,
-                    Mes = g.Key.Mes,
-                    SucursalId = g.Key.SucursalId,
-                    Sucursal = g.Key.Sucursal,
-                    CantidadAlquileres = g.Count()
-                })
-                .OrderBy(r => r.Anio)
-                .ThenBy(r => r.Mes)
-                .ThenBy(r => r.Sucursal)
-                .ToList();
-        }
         public async Task<IEnumerable<Alquiler>> GetByCriteriaAsync(DateTime fechaDesde, DateTime fechaHasta, int? sucursalId)
         {
             DateTime desde = fechaDesde.Date;
@@ -204,5 +170,47 @@ namespace Data
                 .ToList();
         }
 
+        public async Task<List<ReporteAlquileresMensual>> GetReporteAlquileresMensualAsync(DateTime fechaDesde, DateTime fechaHasta, int? sucursalId)
+        {
+            DateTime desde = fechaDesde.Date;
+            DateTime hasta = fechaHasta.Date.AddDays(1);
+            const string sql = @"
+                SELECT 
+                    YEAR(a.FechaAlquiler) AS Anio,
+                    MONTH(a.FechaAlquiler) AS Mes,
+                    ISNULL(e.SucursalId, 0) AS SucursalId,
+                    ISNULL(s.Nombre, 'Sin sucursal') AS Sucursal,
+                    COUNT(a.Id) AS CantidadAlquileres
+                FROM Alquileres a
+                LEFT JOIN Empleados e ON a.EmpleadoId = e.Id
+                LEFT JOIN Sucursales s ON e.SucursalId = s.Id
+                WHERE a.FechaAlquiler >= @FechaDesde 
+                  AND a.FechaAlquiler < @FechaHasta 
+                  AND a.EstadoAlquiler <> 2 -- Excluye cancelados (EstadoDeAlquiler.Cancelado)
+                  AND (@SucursalId IS NULL OR e.SucursalId = @SucursalId)
+                GROUP BY YEAR(a.FechaAlquiler), MONTH(a.FechaAlquiler), e.SucursalId, s.Nombre
+                ORDER BY Anio, Mes, Sucursal;";
+
+            var resultado = new List<ReporteAlquileresMensual>();
+            await using var connection = new SqlConnection(_connectionString);
+            await connection.OpenAsync();
+            await using var command = new SqlCommand(sql, connection);
+            command.Parameters.Add(new SqlParameter("@FechaDesde", SqlDbType.DateTime2) { Value = desde });
+            command.Parameters.Add(new SqlParameter("@FechaHasta", SqlDbType.DateTime2) { Value = hasta });
+            command.Parameters.Add(new SqlParameter("@SucursalId", SqlDbType.Int) { Value = (object?)sucursalId ?? DBNull.Value });
+            await using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                resultado.Add(new ReporteAlquileresMensual
+                {
+                    Anio = reader.GetInt32(reader.GetOrdinal("Anio")),
+                    Mes = reader.GetInt32(reader.GetOrdinal("Mes")),
+                    SucursalId = reader.GetInt32(reader.GetOrdinal("SucursalId")),
+                    Sucursal = reader.IsDBNull(reader.GetOrdinal("Sucursal")) ? "Sin sucursal" : reader.GetString(reader.GetOrdinal("Sucursal")),
+                    CantidadAlquileres = reader.GetInt32(reader.GetOrdinal("CantidadAlquileres"))
+                });
+            }
+            return resultado;
+        }
     }
 }

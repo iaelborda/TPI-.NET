@@ -14,9 +14,9 @@ namespace Application.Services
         private readonly UsuarioRepository usuarioRepository;
         private readonly IConfiguration configuration;
 
-        public AuthService(IConfiguration configuration)
+        public AuthService(UsuarioRepository usuarioRepository, IConfiguration configuration)
         {
-            usuarioRepository = new UsuarioRepository();
+            this.usuarioRepository = usuarioRepository;
             this.configuration = configuration;
         }
 

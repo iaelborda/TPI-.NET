@@ -1,4 +1,4 @@
-﻿using Application.Services;
+using Application.Services;
 using DTOs;
 
 namespace WebAPI
@@ -7,11 +7,8 @@ namespace WebAPI
     {
         public static void MapAuthEndpoints(this WebApplication app)
         {
-            app.MapPost("/login", async (LoginRequestDTO request) =>
+            app.MapPost("/login", async (LoginRequestDTO request, AuthService authService) =>
             {
-                AuthService authService = new AuthService(
-                    app.Services.GetRequiredService<IConfiguration>());
-
                 var response = await authService.LoginAsync(request);
 
                 if (response == null)
