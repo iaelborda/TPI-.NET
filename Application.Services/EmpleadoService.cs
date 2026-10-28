@@ -1,20 +1,28 @@
 ﻿using Data;
 using Domain.Model;
 using DTOs;
+using Microsoft.Identity.Client;
+using System.Xml;
 
 namespace Application.Services
 {
     public class EmpleadoService : IEmpleadoService
     {
         private readonly IEmpleadoRepository empleadoRepository;
+        private readonly ISucursalRepository sucursalRepository;
 
-        public EmpleadoService(IEmpleadoRepository empleadoRepository)
+        public EmpleadoService(IEmpleadoRepository empleadoRepository, ISucursalRepository sucursalRepository)
         {
             this.empleadoRepository = empleadoRepository;
+            this.sucursalRepository = sucursalRepository;
         }
 
         public async Task<EmpleadoDTO> AddAsync(EmpleadoDTO dto)
         {
+            if(await sucursalRepository.GetAsync(dto.SucursalId) == null)
+            {
+                throw new ArgumentException($"La sucursal con Id {dto.SucursalId} no existe.");
+            }
             if (await empleadoRepository.DocumentoExistsAsync(dto.Documento))
             {
                 throw new ArgumentException($"Ya existe un empleado con el documento '{dto.Documento}'.");
@@ -87,6 +95,10 @@ namespace Application.Services
 
         public async Task<bool> UpdateAsync(EmpleadoDTO dto)
         {
+            if(await sucursalRepository.GetAsync(dto.SucursalId) == null)
+            {
+                throw new ArgumentException($"La sucursal con el Id {dto.SucursalId} no existe.");
+            }
             var existing = await empleadoRepository.GetAsync(dto.Id);
             if (existing == null)
                 return false;
