@@ -86,6 +86,10 @@ namespace WindowsForms
                 fechaAltaLabel.Visible = true;
                 fechaAltaTextBox.Visible = true;
                 this.Text = "Actualizar Cliente";
+                tipoDocumentoComboBox.Enabled = false;
+                tipoDocumentoComboBox.BackColor = Color.LightGray;
+                documentoTextBox.Enabled = false;
+                documentoTextBox.BackColor = Color.LightGray;
             }
         }
 

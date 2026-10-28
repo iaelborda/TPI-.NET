@@ -35,12 +35,21 @@
 
                         <div class="mb-3">
                             <label class="form-label">Tipo Documento *</label>
-                            <InputSelect @bind-Value="currentCliente.TipoDocumento" class="form-select">
-                                @foreach (var tipo in Enum.GetValues<TipoDocumento>())
-                                {
-                                    <option value="@tipo">@tipo</option>
-                                }
-                            </InputSelect>
+                            @if (mode == FormMode.Add)
+                            {
+                                <InputSelect @bind-Value="currentCliente.TipoDocumento" class="form-select">
+                                    @foreach (var tipo in Enum.GetValues<TipoDocumento>())
+                                    {
+                                        <option value="@tipo">@tipo</option>
+                                    }
+                                </InputSelect>
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" value="@currentCliente.TipoDocumento" readonly />
+
+                            }
+
                             @if (validationErrors.ContainsKey("TipoDocumento"))
                             {
                                 <div class="text-danger small">@validationErrors["TipoDocumento"]</div>
