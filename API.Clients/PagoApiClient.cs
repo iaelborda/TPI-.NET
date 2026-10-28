@@ -13,23 +13,21 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync($"pagos/{id}");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<PagoDTO>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se encontró el pago. Verifique si el Id existe.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al obtener pago con Id {id}. Status: {response.StatusCode}");
-                }
+
+                return await response.Content.ReadAsAsync<PagoDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al obtener pago: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al obtener el pago: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al obtener pago: {ex.Message}", ex);
+                throw new Exception($"Timeout al obtener el pago: {ex.Message}", ex);
             }
         }
 
@@ -40,27 +38,26 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync($"pagos/alquiler/{alquilerId}");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsAsync<PagoDTO>();
-                }
-                else if (response.StatusCode == HttpStatusCode.NotFound)
+                if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return null;
                 }
-                else
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al obtener pago del alquiler con Id {alquilerId}. Status: {response.StatusCode}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo obtener el pago del alquiler.");
+                    throw new Exception(mensaje);
                 }
+
+                return await response.Content.ReadAsAsync<PagoDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al obtener pago del alquiler: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al obtener el pago del alquiler: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al obtener pago del alquiler: {ex.Message}", ex);
+                throw new Exception($"Timeout al obtener el pago del alquiler: {ex.Message}", ex);
             }
         }
 
@@ -71,23 +68,21 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync("pagos");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<IEnumerable<PagoDTO>>() ?? new List<PagoDTO>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudieron obtener los pagos.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al obtener lista de pagos. Status: {response.StatusCode}");
-                }
+
+                return await response.Content.ReadAsAsync<IEnumerable<PagoDTO>>() ?? new List<PagoDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al obtener pagos: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al obtener los pagos: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al obtener pagos: {ex.Message}", ex);
+                throw new Exception($"Timeout al obtener los pagos: {ex.Message}", ex);
             }
         }
 
@@ -100,17 +95,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al crear pago. Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo registrar el pago. Verifique los datos ingresados.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al crear pago: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al crear el pago: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al crear pago: {ex.Message}", ex);
+                throw new Exception($"Timeout al crear el pago: {ex.Message}", ex);
             }
         }
 
@@ -123,17 +118,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al actualizar pago. Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo actualizar el pago. Verifique los datos ingresados.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al actualizar pago: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al actualizar el pago: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al actualizar pago: {ex.Message}", ex);
+                throw new Exception($"Timeout al actualizar el pago: {ex.Message}", ex);
             }
         }
 
@@ -146,17 +141,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al eliminar pago con Id {id}. Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo eliminar el pago. Verifique si el Id existe.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al eliminar pago con Id {id}: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al eliminar el pago con Id {id}: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al eliminar pago con Id {id}: {ex.Message}", ex);
+                throw new Exception($"Timeout al eliminar el pago con Id {id}: {ex.Message}", ex);
             }
         }
     }

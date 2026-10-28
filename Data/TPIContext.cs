@@ -532,33 +532,29 @@ namespace Data
 
                 entity.HasIndex(e => e.Email)
                     .IsUnique();
-
                 // Usuarios iniciales
-                var adminUser = new Domain.Model.Usuario(1, "admin", "admin@tpi.com", "admin123", DateTime.Now, RolUsuario.Administrador);
-                var empleadoUser = new Domain.Model.Usuario(2, "empleado", "empleado@tpi.com", "empleado123", DateTime.Now, RolUsuario.Usuario);
-
                 entity.HasData(
                     new
                     {
-                        Id = adminUser.Id,
-                        Username = adminUser.Username,
-                        Email = adminUser.Email,
-                        PasswordHash = adminUser.PasswordHash,
-                        Salt = adminUser.Salt,
-                        FechaCreacion = adminUser.FechaCreacion,
+                        Id = 1,
+                        Username = "admin",
+                        Email = "admin@tpi.com",
+                        PasswordHash = "t0CsZB4gNrdk4jfMtIKamEVRH3tJdMvDLPvUXObxx4U=",
+                        Salt = "86uVVoCfMxCiz2a4vacAVNjoSDE3bu7udcVHWFTxvlM=",
+                        FechaCreacion = new DateTime(2026, 1, 1),
                         Rol = RolUsuario.Administrador,
-                        Activo = adminUser.Activo
+                        Activo = true
                     },
                     new
                     {
-                        Id = empleadoUser.Id,
-                        Username = empleadoUser.Username,
-                        Email = empleadoUser.Email,
-                        PasswordHash = empleadoUser.PasswordHash,
-                        Salt = empleadoUser.Salt,
-                        FechaCreacion = empleadoUser.FechaCreacion,
+                        Id = 2,
+                        Username = "empleado",
+                        Email = "empleado@tpi.com",
+                        PasswordHash = "6JVKH2BWRFvRztp+4eeFf8mfPmft4cmejR8wO9Vy3cs=",
+                        Salt = "4hwB3CKniFaVByltL9svY2EP7bbmBWjij34QAMN3LUY=",
+                        FechaCreacion = new DateTime(2026, 1, 1),
                         Rol = RolUsuario.Usuario,
-                        Activo = empleadoUser.Activo
+                        Activo = true
                     }
                 );
             });

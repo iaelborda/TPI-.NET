@@ -12,14 +12,13 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync($"bicicletas/{id}");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<BicicletaDTO>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se encontró la bicicleta. Verifique si el Id existe.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    throw new Exception($"Error al obtener bicicleta con Id {id}. Status: {response.StatusCode}");
-                }
+
+                return await response.Content.ReadAsAsync<BicicletaDTO>();
             }
             catch (HttpRequestException ex)
             {
@@ -38,14 +37,13 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync("bicicletas");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<IEnumerable<BicicletaDTO>>() ?? new List<BicicletaDTO>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudieron obtener las bicicletas.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    throw new Exception("Error al obtener bicicletas. Status: " + response.StatusCode);
-                }
+
+                return await response.Content.ReadAsAsync<IEnumerable<BicicletaDTO>>() ?? new List<BicicletaDTO>();
             }
             catch (HttpRequestException ex)
             {
@@ -63,19 +61,18 @@ namespace API.Clients
             {
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.PostAsJsonAsync("bicicletas/buscar", dto);
-                if (response.IsSuccessStatusCode)
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<IEnumerable<BicicletaDTO>>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudieron buscar las bicicletas. Revise los filtros e intente nuevamente.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al buscar bicicletas. Status: {response.StatusCode}, Detalle: {errorContent}");
-                }
+
+                return await response.Content.ReadAsAsync<IEnumerable<BicicletaDTO>>() ?? new List<BicicletaDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexion: {ex.Message}", ex);
+                throw new Exception($"Error de conexión: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
@@ -92,7 +89,9 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("No se puede asignar la bicicleta porque la sucursal alcanzó su capacidad máxima. Status: " + response.StatusCode);
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo crear la bicicleta. Verifique los datos ingresados.");
+
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
@@ -114,7 +113,9 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception("No se puede asignar la bicicleta porque la sucursal alcanzó su capacidad máxima. Status: " + response.StatusCode);
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo actualizar la bicicleta. Verifique los datos ingresados.");
+
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
@@ -136,8 +137,9 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al eliminar bicicleta con Id {id}. Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo eliminar la bicicleta. Verifique que no tenga operaciones asociadas.");
+
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)

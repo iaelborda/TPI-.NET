@@ -101,6 +101,7 @@ namespace Application.Services
                 permisos.Add("pagos.agregar");
                 permisos.Add("pagos.actualizar");
                 permisos.Remove("reportes.leer");
+                permisos.Remove("usuarios.leer");
             }
 
             return permisos.Select(p => new Claim("permission", p)).ToList();

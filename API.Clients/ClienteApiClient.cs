@@ -12,23 +12,21 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync($"clientes/{id}");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<ClienteDTO>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se encontró el cliente. Verifique si el Id existe.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al obtener cliente con Id {id}. Status: {response.StatusCode}");
-                }
+
+                return await response.Content.ReadAsAsync<ClienteDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al obtener cliente: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al obtener el cliente: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al obtener cliente: {ex.Message}", ex);
+                throw new Exception($"Timeout al obtener el cliente: {ex.Message}", ex);
             }
         }
 
@@ -39,23 +37,21 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync("clientes");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<IEnumerable<ClienteDTO>>() ?? new List<ClienteDTO>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudieron obtener los clientes.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al obtener lista de clientes. Status: {response.StatusCode}");
-                }
+
+                return await response.Content.ReadAsAsync<IEnumerable<ClienteDTO>>() ?? new List<ClienteDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al obtener clientes: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al obtener los clientes: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al obtener clientes: {ex.Message}", ex);
+                throw new Exception($"Timeout al obtener los clientes: {ex.Message}", ex);
             }
         }
 
@@ -68,17 +64,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al crear cliente. Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo crear el cliente. Verifique los datos ingresados.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al crear cliente: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al crear el cliente: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al crear cliente: {ex.Message}", ex);
+                throw new Exception($"Timeout al crear el cliente: {ex.Message}", ex);
             }
         }
 
@@ -91,17 +87,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al actualizar cliente. Status: {response.StatusCode}, Detalle: {response.Content}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo actualizar el cliente. Verifique los datos ingresados.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al actualizar cliente: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al actualizar el cliente: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al actualizar cliente: {ex.Message}", ex);
+                throw new Exception($"Timeout al actualizar el cliente: {ex.Message}", ex);
             }
         }
 
@@ -114,17 +110,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al eliminar cliente con Id {id}. Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo eliminar el cliente. Verifique si tiene operaciones asociadas.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al eliminar cliente: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al eliminar el cliente: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al eliminar cliente: {ex.Message}", ex);
+                throw new Exception($"Timeout al eliminar el cliente: {ex.Message}", ex);
             }
         }
     }

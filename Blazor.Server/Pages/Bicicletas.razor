@@ -31,15 +31,26 @@
             }
 
             <!-- Botones superiores -->
-            <div class="d-flex gap-2 mb-3">
+            <div class="d-flex gap-2 mb-3 align-items-end">
                 @if (canAdd)
                 {
                     <button class="btn btn-primary" @onclick="OpenAddModal">
                         <i class="fas fa-plus"></i> Agregar
                     </button>
                 }
+
                 @if (canReport)
                 {
+                    <div>
+                        <label class="form-label mb-1">Año del reporte</label>
+                        <select class="form-select" @bind="anioReporte" disabled="@generandoReporte">
+                            @for (int anio = DateTime.Today.Year; anio >= 2000; anio--)
+                            {
+                                <option value="@anio">@anio</option>
+                            }
+                        </select>
+                    </div>
+
                     <button class="btn btn-success" @onclick="GenerarReporte" disabled="@generandoReporte">
                         <i class="fas fa-file-pdf me-1"></i>
                         @(generandoReporte ? "Generando..." : "Reporte Top 10")
@@ -177,7 +188,7 @@
             <div class="modal-content" style="height: 85vh;">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        <i class="fas fa-file-pdf text-danger me-2"></i>Reporte Top 10 Bicicletas (@DateTime.Now.Year)
+                        <i class="fas fa-file-pdf text-danger me-2"></i>Reporte Top 10 Bicicletas (@anioReporte)
                     </h5>
                     <button type="button" class="btn-close" @onclick="CerrarVisorModal"></button>
                 </div>
@@ -199,6 +210,7 @@
 
 @code {
     private List<BicicletaDTO>? bicicletas;
+    private int anioReporte = DateTime.Today.Year;
     private bool loading = true;
     private string errorMessage = string.Empty;
     private string successMessage = string.Empty;
@@ -369,10 +381,17 @@
     private async Task GenerarReporte()
     {
         if (!canReport) return;
+
         try
         {
             generandoReporte = true;
-            pdfBytes = await ReporteApiClient.GetTop10BicicletasAnioAsync();
+
+            var criteria = new ReporteRankingBicicletaCriteriaDTO
+            {
+                Anio = anioReporte
+            };
+
+            pdfBytes = await ReporteApiClient.GetTop10BicicletasAnioAsync(criteria);
             pdfBase64Url = $"data:application/pdf;base64,{Convert.ToBase64String(pdfBytes)}";
             mostrarVisorModal = true;
         }
@@ -398,7 +417,7 @@
 
         await JSRuntime.InvokeVoidAsync(
             "descargarArchivo",
-            $"Top10Bicicletas_{DateTime.Now.Year}_{DateTime.Now:yyyyMMdd_HHmm}.pdf",
+            $"Top10Bicicletas_{anioReporte}_{DateTime.Now:yyyyMMdd_HHmm}.pdf",
             "application/pdf",
             Convert.ToBase64String(pdfBytes));
     }

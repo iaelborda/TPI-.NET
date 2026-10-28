@@ -30,7 +30,7 @@ namespace Application.Services
             }
 
             Tarifa.ValidarPrecioHora(dto.PrecioHoraInicial.Value);
-            
+
             Categoria categoria = new Categoria(dto.Descripcion);
             await categoriaRepository.AddAsync(categoria);
             var tarifaInicial = new Tarifa(

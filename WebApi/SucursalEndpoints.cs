@@ -59,7 +59,8 @@ namespace WebApi
                         return Results.NotFound();
                     }
                     return Results.NoContent();
-                }catch(InvalidOperationException ex)
+                }
+                catch (InvalidOperationException ex)
                 {
                     return Results.BadRequest(new { error = ex.Message });
                 }

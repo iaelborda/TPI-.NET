@@ -63,14 +63,15 @@ namespace Application.Services
             }
             var fechaAlquiler = DateTime.Now;
             var alquiler = new Alquiler(0, dto.ClienteId, dto.EmpleadoId, fechaAlquiler);
-            foreach(var (bicicleta, precioHora) in bicicletasValidadas){
+            foreach (var (bicicleta, precioHora) in bicicletasValidadas)
+            {
                 var detalle = new DetalleAlquiler(0, bicicleta.Id);
                 detalle.SetHoraInicio(fechaAlquiler);
                 detalle.SetPrecioHora(precioHora);
                 detalle.SetSubtotal(0);
                 alquiler.AddDetalle(detalle);
                 bicicleta.SetEstado(EstadoBicicleta.EnUso);
-            } 
+            }
             await alquilerRepository.AddAsync(alquiler);
             dto.Id = alquiler.Id;
             dto.FechaAlquiler = alquiler.FechaAlquiler;

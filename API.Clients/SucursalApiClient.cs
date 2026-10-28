@@ -12,22 +12,21 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync($"sucursales/{id}");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<SucursalDTO>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se encontró la sucursal. Verifique si el Id existe.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    throw new Exception($"Error al obtener sucursal con Id {id}. Status: {response.StatusCode}");
-                }
+
+                return await response.Content.ReadAsAsync<SucursalDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al obtener la sucursal: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout: {ex.Message}", ex);
+                throw new Exception($"Timeout al obtener la sucursal: {ex.Message}", ex);
             }
         }
 
@@ -38,22 +37,21 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync("sucursales");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<IEnumerable<SucursalDTO>>() ?? new List<SucursalDTO>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudieron obtener las sucursales.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    throw new Exception("Error al obtener sucursales. Status: " + response.StatusCode);
-                }
+
+                return await response.Content.ReadAsAsync<IEnumerable<SucursalDTO>>() ?? new List<SucursalDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al obtener las sucursales: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout: {ex.Message}", ex);
+                throw new Exception($"Timeout al obtener las sucursales: {ex.Message}", ex);
             }
         }
 
@@ -66,17 +64,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al crear sucursal. Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo crear la sucursal. Verifique los datos ingresados.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al crear la sucursal: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout: {ex.Message}", ex);
+                throw new Exception($"Timeout al crear la sucursal: {ex.Message}", ex);
             }
         }
 
@@ -89,17 +87,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al actualizar sucursal. Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo actualizar la sucursal. Verifique los datos ingresados.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al actualizar la sucursal: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout: {ex.Message}", ex);
+                throw new Exception($"Timeout al actualizar la sucursal: {ex.Message}", ex);
             }
         }
 
@@ -112,16 +110,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new Exception($"La sucursal {id} tiene bicicletas asociadas. Status: {response.StatusCode}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, $"No se pudo eliminar la sucursal con Id {id}. Verifique si tiene bicicletas asociadas.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al eliminar la sucursal con Id {id}: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout: {ex.Message}", ex);
+                throw new Exception($"Timeout al eliminar la sucursal con Id {id}: {ex.Message}", ex);
             }
         }
     }

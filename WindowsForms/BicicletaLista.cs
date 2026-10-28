@@ -226,11 +226,20 @@ namespace WindowsForms
             try
             {
                 generarReporteButton.Enabled = false;
-                byte[] pdf = await ReporteApiClient.GetTop10BicicletasAnioAsync();
+
+                int anio = anioDateTimePicker.Value.Year;
+
+                var criteria = new ReporteRankingBicicletaCriteriaDTO
+                {
+                    Anio = anio
+                };
+
+                byte[] pdf = await ReporteApiClient.GetTop10BicicletasAnioAsync(criteria);
+
                 using var dialogo = new SaveFileDialog
                 {
                     Filter = "Archivos PDF|*.pdf",
-                    FileName = $"Top10Bicicletas_{DateTime.Now:yyyyMMdd_HHmm}.pdf",
+                    FileName = $"Top10Bicicletas_{anio}.pdf",
                     Title = "Guardar Top 10 Bicicletas"
                 };
 
@@ -248,7 +257,6 @@ namespace WindowsForms
             {
                 generarReporteButton.Enabled = true;
             }
-
         }
 
         private async void limpiarButton_Click(object sender, EventArgs e)
