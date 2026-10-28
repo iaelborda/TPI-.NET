@@ -40,8 +40,7 @@ namespace Application.Services
             if (await empleadoRepository.GetAsync(dto.EmpleadoId) == null)
                 throw new ArgumentException("El empleado indicado no existe.");
 
-            var fechaAlquiler = DateTime.Now;
-            var alquiler = new Alquiler(0, dto.ClienteId, dto.EmpleadoId, fechaAlquiler);
+            var bicicletasValidadas = new List<(Bicicleta Bicicleta, decimal PrecioHora)>();
 
             foreach (var detalleDto in dto.Detalles)
             {
@@ -60,20 +59,19 @@ namespace Application.Services
 
                 if (tarifa == null)
                     throw new ArgumentException($"No hay una tarifa vigente para la bicicleta {bicicleta.Id}.");
-
+                bicicletasValidadas.Add((bicicleta, tarifa.PrecioHora));
+            }
+            var fechaAlquiler = DateTime.Now;
+            var alquiler = new Alquiler(0, dto.ClienteId, dto.EmpleadoId, fechaAlquiler);
+            foreach(var (bicicleta, precioHora) in bicicletasValidadas){
                 var detalle = new DetalleAlquiler(0, bicicleta.Id);
                 detalle.SetHoraInicio(fechaAlquiler);
-                detalle.SetPrecioHora(tarifa.PrecioHora);
+                detalle.SetPrecioHora(precioHora);
                 detalle.SetSubtotal(0);
-
                 alquiler.AddDetalle(detalle);
-
                 bicicleta.SetEstado(EstadoBicicleta.EnUso);
-                await bicicletaRepository.UpdateAsync(bicicleta);
-            }
-
+            } 
             await alquilerRepository.AddAsync(alquiler);
-
             dto.Id = alquiler.Id;
             dto.FechaAlquiler = alquiler.FechaAlquiler;
 
@@ -190,6 +188,21 @@ namespace Application.Services
             if (alquilerExistente == null)
                 return false;
 
+
+            var bicisAnteriores = alquilerExistente.DetallesAlquiler.Select(d => d.BicicletaId).ToList();
+            var bicisNuevas = dto.Detalles.Select(d => d.BicicletaId).ToList();
+            var bicisQuitadas = bicisAnteriores.Except(bicisNuevas).ToList();
+
+            foreach (var biciId in bicisQuitadas)
+            {
+                var biciQuitada = await bicicletaRepository.GetAsync(biciId);
+                if (biciQuitada != null && biciQuitada.Estado == EstadoBicicleta.EnUso)
+                {
+                    biciQuitada.SetEstado(EstadoBicicleta.Disponible);
+                    await bicicletaRepository.UpdateAsync(biciQuitada);
+                }
+            }
+
             var alquiler = new Alquiler(dto.Id, dto.ClienteId, dto.EmpleadoId, alquilerExistente.FechaAlquiler);
 
             if (dto.EstadoAlquiler == EstadoDeAlquiler.Cancelado)
@@ -204,11 +217,22 @@ namespace Application.Services
                 if (bicicleta == null)
                     throw new ArgumentException($"No existe la bicicleta con Id {detalleDto.BicicletaId}.");
 
+                if (!bicisAnteriores.Contains(detalleDto.BicicletaId) && bicicleta.Estado != EstadoBicicleta.Disponible)
+                    throw new InvalidOperationException($"La bicicleta #{bicicleta.Id} ({bicicleta.Marca}) no se encuentra disponible.");
+
                 if (await alquilerRepository.BicicletaEnAlquilerActivoAsync(bicicleta.Id, dto.Id))
                     throw new ArgumentException($"La bicicleta {bicicleta.Id} ya está en otro alquiler activo.");
 
-                decimal precioHora = detalleDto.PrecioHora;
-                if (precioHora <= 0)
+
+                var existingDetalle = alquilerExistente.DetallesAlquiler
+                    .FirstOrDefault(d => d.BicicletaId == detalleDto.BicicletaId);
+
+                decimal precioHora;
+                if (existingDetalle != null && existingDetalle.PrecioHora > 0)
+                {
+                    precioHora = existingDetalle.PrecioHora;
+                }
+                else
                 {
                     var tarifa = await tarifaRepository.GetTarifaVigenteAsync(bicicleta.CategoriaId);
                     if (tarifa == null)
@@ -249,6 +273,7 @@ namespace Application.Services
             }
             return await alquilerRepository.UpdateAsync(alquiler);
         }
+
         public async Task<IEnumerable<AlquilerDTO>> GetByCriteriaAsync(ReporteAlquileresCriteriaDTO criteria)
         {
             if (criteria.FechaDesde.Date > criteria.FechaHasta.Date)

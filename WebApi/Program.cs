@@ -70,6 +70,7 @@ builder.Services.AddScoped<AlquilerService>();
 
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 builder.Services.AddScoped<IPagoService, PagoService>();
@@ -103,37 +104,37 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // Add Authorization Policies
 builder.Services.AddAuthorization(options =>
 {
-    // Políticas para Clientes
+    // Polï¿½ticas para Clientes
     options.AddPolicy("ClientesLeer", policy => policy.RequireClaim("permission", "clientes.leer"));
     options.AddPolicy("ClientesAgregar", policy => policy.RequireClaim("permission", "clientes.agregar"));
     options.AddPolicy("ClientesActualizar", policy => policy.RequireClaim("permission", "clientes.actualizar"));
     options.AddPolicy("ClientesEliminar", policy => policy.RequireClaim("permission", "clientes.eliminar"));
 
-    // Políticas para Bicicletas
+    // Polï¿½ticas para Bicicletas
     options.AddPolicy("BicicletasLeer", policy => policy.RequireClaim("permission", "bicicletas.leer"));
     options.AddPolicy("BicicletasAgregar", policy => policy.RequireClaim("permission", "bicicletas.agregar"));
     options.AddPolicy("BicicletasActualizar", policy => policy.RequireClaim("permission", "bicicletas.actualizar"));
     options.AddPolicy("BicicletasEliminar", policy => policy.RequireClaim("permission", "bicicletas.eliminar"));
 
-    // Políticas para Sucursales
+    // Polï¿½ticas para Sucursales
     options.AddPolicy("SucursalesLeer", policy => policy.RequireClaim("permission", "sucursales.leer"));
     options.AddPolicy("SucursalesAgregar", policy => policy.RequireClaim("permission", "sucursales.agregar"));
     options.AddPolicy("SucursalesActualizar", policy => policy.RequireClaim("permission", "sucursales.actualizar"));
     options.AddPolicy("SucursalesEliminar", policy => policy.RequireClaim("permission", "sucursales.eliminar"));
 
-    // Políticas para Categorías
+    // Polï¿½ticas para Categorï¿½as
     options.AddPolicy("CategoriasLeer", policy => policy.RequireClaim("permission", "categorias.leer"));
     options.AddPolicy("CategoriasAgregar", policy => policy.RequireClaim("permission", "categorias.agregar"));
     options.AddPolicy("CategoriasActualizar", policy => policy.RequireClaim("permission", "categorias.actualizar"));
     options.AddPolicy("CategoriasEliminar", policy => policy.RequireClaim("permission", "categorias.eliminar"));
 
-    // Políticas para Empleados
+    // Polï¿½ticas para Empleados
     options.AddPolicy("EmpleadosLeer", policy => policy.RequireClaim("permission", "empleados.leer"));
     options.AddPolicy("EmpleadosAgregar", policy => policy.RequireClaim("permission", "empleados.agregar"));
     options.AddPolicy("EmpleadosActualizar", policy => policy.RequireClaim("permission", "empleados.actualizar"));
     options.AddPolicy("EmpleadosEliminar", policy => policy.RequireClaim("permission", "empleados.eliminar"));
 
-    // Políticas para Alquileres
+    // Polï¿½ticas para Alquileres
     options.AddPolicy("AlquileresLeer", policy => policy.RequireClaim("permission", "alquileres.leer"));
     options.AddPolicy("AlquileresAgregar", policy => policy.RequireClaim("permission", "alquileres.agregar"));
     options.AddPolicy("AlquileresActualizar", policy => policy.RequireClaim("permission", "alquileres.actualizar"));
@@ -145,13 +146,13 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("TarifasActualizar", policy => policy.RequireClaim("permission", "tarifas.actualizar"));
     options.AddPolicy("TarifasEliminar", policy => policy.RequireClaim("permission", "tarifas.eliminar"));
 
-    // Políticas para Usuarios
+    // Polï¿½ticas para Usuarios
     options.AddPolicy("UsuariosLeer", policy => policy.RequireClaim("permission", "usuarios.leer"));
     options.AddPolicy("UsuariosAgregar", policy => policy.RequireClaim("permission", "usuarios.agregar"));
     options.AddPolicy("UsuariosActualizar", policy => policy.RequireClaim("permission", "usuarios.actualizar"));
     options.AddPolicy("UsuariosEliminar", policy => policy.RequireClaim("permission", "usuarios.eliminar"));
 
-    // Políticas para Pagos
+    // Polï¿½ticas para Pagos
     options.AddPolicy("PagosLeer", policy => policy.RequireClaim("permission", "pagos.leer"));
     options.AddPolicy("PagosAgregar", policy => policy.RequireClaim("permission", "pagos.agregar"));
     options.AddPolicy("PagosActualizar", policy => policy.RequireClaim("permission", "pagos.actualizar"));
