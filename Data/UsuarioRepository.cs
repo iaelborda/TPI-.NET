@@ -7,10 +7,6 @@ namespace Data
     {
         private readonly TPIContext context;
 
-        public UsuarioRepository() : this(new TPIContext())
-        {
-        }
-
         public UsuarioRepository(TPIContext context)
         {
             this.context = context;
