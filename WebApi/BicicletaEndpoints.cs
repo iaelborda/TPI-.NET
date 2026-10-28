@@ -1,7 +1,6 @@
 using Application.Services;
 using DTOs;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace WebApi
 {

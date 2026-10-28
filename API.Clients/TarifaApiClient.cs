@@ -1,4 +1,5 @@
 ﻿using DTOs;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace API.Clients
@@ -10,13 +11,13 @@ namespace API.Clients
             using var client = await CreateHttpClientAsync();
             HttpResponseMessage response = await client.GetAsync("tarifas");
 
-            if (response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadAsAsync<IEnumerable<TarifaDTO>>();
+                string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudieron obtener las tarifas.");
+                throw new Exception(mensaje);
             }
 
-            string errorContent = await response.Content.ReadAsStringAsync();
-            throw new Exception($"Error al obtener tarifas. Status: {response.StatusCode}, Detalle: {errorContent}");
+            return await response.Content.ReadAsAsync<IEnumerable<TarifaDTO>>() ?? new List<TarifaDTO>();
         }
 
         public static async Task<TarifaDTO?> GetAsync(int id)
@@ -24,18 +25,18 @@ namespace API.Clients
             using var client = await CreateHttpClientAsync();
             HttpResponseMessage response = await client.GetAsync($"tarifas/{id}");
 
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadAsAsync<TarifaDTO>();
-            }
-
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 return null;
             }
 
-            string errorContent = await response.Content.ReadAsStringAsync();
-            throw new Exception($"Error al obtener tarifa {id}. Status: {response.StatusCode}, Detalle: {errorContent}");
+            if (!response.IsSuccessStatusCode)
+            {
+                string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo obtener la tarifa. Verifique si el Id existe.");
+                throw new Exception(mensaje);
+            }
+
+            return await response.Content.ReadAsAsync<TarifaDTO>();
         }
 
         public static async Task<bool> DeleteAsync(int id)
@@ -43,18 +44,18 @@ namespace API.Clients
             using var client = await CreateHttpClientAsync();
             HttpResponseMessage response = await client.DeleteAsync($"tarifas/{id}");
 
-            if (response.IsSuccessStatusCode)
-            {
-                return true;
-            }
-
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 return false;
             }
 
-            string errorContent = await response.Content.ReadAsStringAsync();
-            throw new Exception($"Error al eliminar tarifa {id}. Status: {response.StatusCode}, Detalle: {errorContent}");
+            if (!response.IsSuccessStatusCode)
+            {
+                string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo eliminar la tarifa. Verifique si tiene operaciones asociadas.");
+                throw new Exception(mensaje);
+            }
+
+            return true;
         }
 
         public static async Task<TarifaDTO?> GetTarifaVigenteAsync(int categoriaId)
@@ -62,19 +63,20 @@ namespace API.Clients
             using var client = await CreateHttpClientAsync();
             HttpResponseMessage response = await client.GetAsync($"tarifas/categoria/{categoriaId}/vigente");
 
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadAsAsync<TarifaDTO>();
-            }
-
-            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 return null;
             }
 
-            string errorContent = await response.Content.ReadAsStringAsync();
-            throw new Exception($"Error al obtener tarifa vigente de la categoría {categoriaId}. Status: {response.StatusCode}, Detalle: {errorContent}");
+            if (!response.IsSuccessStatusCode)
+            {
+                string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo obtener la tarifa vigente de la categoría.");
+                throw new Exception(mensaje);
+            }
+
+            return await response.Content.ReadAsAsync<TarifaDTO>();
         }
+
         public static async Task AddAsync(TarifaDTO tarifa)
         {
             using var client = await CreateHttpClientAsync();
@@ -82,8 +84,8 @@ namespace API.Clients
 
             if (!response.IsSuccessStatusCode)
             {
-                string errorContent = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Error al crear tarifa. Status: {response.StatusCode}, Detalle: {errorContent}");
+                string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo crear la tarifa. Verifique los datos ingresados.");
+                throw new Exception(mensaje);
             }
         }
 
@@ -94,8 +96,8 @@ namespace API.Clients
 
             if (!response.IsSuccessStatusCode)
             {
-                string errorContent = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Error al actualizar tarifa. Status: {response.StatusCode}, Detalle: {errorContent}");
+                string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo actualizar la tarifa. Verifique los datos ingresados.");
+                throw new Exception(mensaje);
             }
         }
     }

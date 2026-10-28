@@ -68,5 +68,103 @@ namespace API.Clients
                     new AuthenticationHeaderValue("Bearer", token);
             }
         }
+        protected static async Task<string> ObtenerMensajeErrorAsync(HttpResponseMessage response, string mensajePredeterminado)
+        {
+            string contenido = await response.Content.ReadAsStringAsync();
+
+            try
+            {
+                using var documento = System.Text.Json.JsonDocument.Parse(contenido);
+                var datos = documento.RootElement;
+
+                if (datos.ValueKind == System.Text.Json.JsonValueKind.Object)
+                {
+                    if (datos.TryGetProperty("message", out var mensaje) &&
+                        mensaje.ValueKind == System.Text.Json.JsonValueKind.String)
+                    {
+                        return mensaje.GetString() ?? mensajePredeterminado;
+                    }
+
+                    if (datos.TryGetProperty("detail", out var detalle) &&
+                        detalle.ValueKind == System.Text.Json.JsonValueKind.String)
+                    {
+                        return detalle.GetString() ?? mensajePredeterminado;
+                    }
+
+                    if (datos.TryGetProperty("errors", out var errores))
+                    {
+                        var mensajes = new List<string>();
+
+                        if (errores.ValueKind == System.Text.Json.JsonValueKind.String)
+                        {
+                            string? texto = errores.GetString();
+
+                            if (!string.IsNullOrWhiteSpace(texto))
+                            {
+                                mensajes.Add(texto);
+                            }
+                        }
+                        else if (errores.ValueKind == System.Text.Json.JsonValueKind.Object)
+                        {
+                            foreach (var error in errores.EnumerateObject())
+                            {
+                                if (error.Value.ValueKind == System.Text.Json.JsonValueKind.Array)
+                                {
+                                    foreach (var item in error.Value.EnumerateArray())
+                                    {
+                                        if (item.ValueKind == System.Text.Json.JsonValueKind.String)
+                                        {
+                                            string? texto = item.GetString();
+
+                                            if (!string.IsNullOrWhiteSpace(texto))
+                                            {
+                                                mensajes.Add(texto);
+                                            }
+                                        }
+                                    }
+                                }
+                                else if (error.Value.ValueKind == System.Text.Json.JsonValueKind.String)
+                                {
+                                    string? texto = error.Value.GetString();
+
+                                    if (!string.IsNullOrWhiteSpace(texto))
+                                    {
+                                        mensajes.Add(texto);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (mensajes.Count > 0)
+                        {
+                            return string.Join(" ", mensajes);
+                        }
+                    }
+
+                    if (datos.ValueKind == System.Text.Json.JsonValueKind.Object &&
+                        datos.TryGetProperty("title", out var titulo) &&
+                        titulo.ValueKind == System.Text.Json.JsonValueKind.String)
+                    {
+                        return titulo.GetString() ?? mensajePredeterminado;
+                    }
+                }
+                else if (datos.ValueKind == System.Text.Json.JsonValueKind.String)
+                {
+                    return datos.GetString() ?? mensajePredeterminado;
+                }
+            }
+            catch (System.Text.Json.JsonException)
+            {
+            }
+
+            return response.StatusCode switch
+            {
+                System.Net.HttpStatusCode.NotFound => "No se encontró el registro solicitado.",
+                System.Net.HttpStatusCode.Unauthorized => "La sesión no es válida. Iniciá sesión nuevamente.",
+                System.Net.HttpStatusCode.Forbidden => "No tenés permisos para realizar esta operación.",
+                System.Net.HttpStatusCode.Conflict => "No se puede realizar la operación porque existe un conflicto con los datos.",
+                _ => mensajePredeterminado
+            };
+        }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Data;
 using Domain.Model;
 using DTOs;
-using Microsoft.Identity.Client;
-using System.Xml;
 
 namespace Application.Services
 {
@@ -19,7 +17,7 @@ namespace Application.Services
 
         public async Task<EmpleadoDTO> AddAsync(EmpleadoDTO dto)
         {
-            if(await sucursalRepository.GetAsync(dto.SucursalId) == null)
+            if (await sucursalRepository.GetAsync(dto.SucursalId) == null)
             {
                 throw new ArgumentException($"La sucursal con Id {dto.SucursalId} no existe.");
             }
@@ -95,7 +93,7 @@ namespace Application.Services
 
         public async Task<bool> UpdateAsync(EmpleadoDTO dto)
         {
-            if(await sucursalRepository.GetAsync(dto.SucursalId) == null)
+            if (await sucursalRepository.GetAsync(dto.SucursalId) == null)
             {
                 throw new ArgumentException($"La sucursal con el Id {dto.SucursalId} no existe.");
             }

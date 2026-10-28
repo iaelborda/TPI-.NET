@@ -13,24 +13,21 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync("alquileres/" + id);
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<AlquilerDTO>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se encontró el alquiler. Verifique si el Id existe.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    string errorContent = await response.Content.ReadAsStringAsync();
 
-                    throw new Exception($"Error al obtener alquiler con Id {id}. " + $"Status: {response.StatusCode}, Detalle: {errorContent}");
-                }
+                return await response.Content.ReadAsAsync<AlquilerDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al obtener alquiler con Id {id}: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al obtener el alquiler: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al obtener alquiler con Id {id}: {ex.Message}", ex);
+                throw new Exception($"Timeout al obtener el alquiler: {ex.Message}", ex);
             }
         }
 
@@ -41,24 +38,21 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync("alquileres");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<IEnumerable<AlquilerDTO>>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudieron obtener los alquileres.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    string errorContent = await response.Content.ReadAsStringAsync();
 
-                    throw new Exception($"Error al obtener lista de alquileres. " + $"Status: {response.StatusCode}, Detalle: {errorContent}");
-                }
+                return await response.Content.ReadAsAsync<IEnumerable<AlquilerDTO>>() ?? new List<AlquilerDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al obtener lista de alquileres: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al obtener los alquileres: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al obtener lista de alquileres: {ex.Message}", ex);
+                throw new Exception($"Timeout al obtener los alquileres: {ex.Message}", ex);
             }
         }
 
@@ -67,24 +61,21 @@ namespace API.Clients
             try
             {
                 using var client = await CreateHttpClientAsync();
-
                 HttpResponseMessage response = await client.PostAsJsonAsync("alquileres", alquiler);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al crear alquiler. Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo registrar el alquiler. Verifique los datos ingresados.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al crear alquiler: {ex.Message}", ex
-                );
+                throw new Exception($"Error de conexión al crear el alquiler: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al crear alquiler: {ex.Message}", ex
-                );
+                throw new Exception($"Timeout al crear el alquiler: {ex.Message}", ex);
             }
         }
 
@@ -93,24 +84,21 @@ namespace API.Clients
             try
             {
                 using var client = await CreateHttpClientAsync();
-
                 HttpResponseMessage response = await client.DeleteAsync("alquileres/" + id);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-
-                    throw new Exception($"Error al eliminar alquiler con Id {id}. " + $"Status: {response.StatusCode}, Detalle: {errorContent}"
-                    );
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo eliminar el alquiler. Verifique si tiene operaciones asociadas.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al eliminar alquiler con Id {id}: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al eliminar el alquiler: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al eliminar alquiler con Id {id}: {ex.Message}", ex);
+                throw new Exception($"Timeout al eliminar el alquiler: {ex.Message}", ex);
             }
         }
 
@@ -119,25 +107,24 @@ namespace API.Clients
             try
             {
                 using var client = await CreateHttpClientAsync();
-
                 HttpResponseMessage response = await client.PutAsJsonAsync("alquileres", alquiler);
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al actualizar alquiler con Id {alquiler.Id}. Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo actualizar el alquiler. Verifique los datos ingresados.");
+                    throw new Exception(mensaje);
                 }
-
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al actualizar alquiler con Id {alquiler.Id}: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al actualizar el alquiler: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al actualizar alquiler con Id {alquiler.Id}: {ex.Message}", ex);
+                throw new Exception($"Timeout al actualizar el alquiler: {ex.Message}", ex);
             }
         }
+
         public static async Task<IEnumerable<AlquilerDTO>> GetByCriteriaAsync(DateTime desde, DateTime hasta, int? sucursalId)
         {
             try
@@ -152,24 +139,21 @@ namespace API.Clients
 
                 HttpResponseMessage response = await client.GetAsync(url);
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<IEnumerable<AlquilerDTO>>();
-                }
-                else
-                {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al filtrar alquileres. Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudieron filtrar los alquileres. Revise los filtros e intente nuevamente.");
+                    throw new Exception(mensaje);
                 }
 
+                return await response.Content.ReadAsAsync<IEnumerable<AlquilerDTO>>() ?? new List<AlquilerDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al filtrar alquileres: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al filtrar los alquileres: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al filtrar alquileres: {ex.Message}", ex);
+                throw new Exception($"Timeout al filtrar los alquileres: {ex.Message}", ex);
             }
         }
     }

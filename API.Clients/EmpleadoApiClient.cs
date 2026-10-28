@@ -12,23 +12,21 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync("empleados/" + id);
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<EmpleadoDTO>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se encontró el empleado. Verifique si el Id existe.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al obtener empleado con Id {id}. " + $"Status: {response.StatusCode}, Detalle: {errorContent}");
-                }
+
+                return await response.Content.ReadAsAsync<EmpleadoDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al obtener empleado con Id {id}: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al obtener el empleado con Id {id}: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al obtener empleado con Id {id}: {ex.Message}", ex);
+                throw new Exception($"Timeout al obtener el empleado con Id {id}: {ex.Message}", ex);
             }
         }
 
@@ -39,23 +37,21 @@ namespace API.Clients
                 using var client = await CreateHttpClientAsync();
                 HttpResponseMessage response = await client.GetAsync("empleados");
 
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<IEnumerable<EmpleadoDTO>>();
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudieron obtener los empleados.");
+                    throw new Exception(mensaje);
                 }
-                else
-                {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al obtener lista de empleados. " + $"Status: {response.StatusCode}, Detalle: {errorContent}");
-                }
+
+                return await response.Content.ReadAsAsync<IEnumerable<EmpleadoDTO>>() ?? new List<EmpleadoDTO>();
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al obtener lista de empleados: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al obtener los empleados: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al obtener lista de empleados: {ex.Message}", ex);
+                throw new Exception($"Timeout al obtener los empleados: {ex.Message}", ex);
             }
         }
 
@@ -68,17 +64,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al crear empleado. " + $"Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo crear el empleado. Verifique los datos ingresados.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al crear empleado: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al crear el empleado: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al crear empleado: {ex.Message}", ex);
+                throw new Exception($"Timeout al crear el empleado: {ex.Message}", ex);
             }
         }
 
@@ -91,17 +87,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al actualizar empleado con Id {empleado.Id}. " + $"Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo actualizar el empleado. Verifique los datos ingresados.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al actualizar empleado con Id {empleado.Id}: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al actualizar el empleado con Id {empleado.Id}: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al actualizar empleado con Id {empleado.Id}: {ex.Message}", ex);
+                throw new Exception($"Timeout al actualizar el empleado con Id {empleado.Id}: {ex.Message}", ex);
             }
         }
 
@@ -114,17 +110,17 @@ namespace API.Clients
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    string errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Error al eliminar empleado con Id {id}. " + $"Status: {response.StatusCode}, Detalle: {errorContent}");
+                    string mensaje = await ObtenerMensajeErrorAsync(response, "No se pudo eliminar el empleado. Verifique si tiene operaciones asociadas.");
+                    throw new Exception(mensaje);
                 }
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception($"Error de conexión al eliminar empleado con Id {id}: {ex.Message}", ex);
+                throw new Exception($"Error de conexión al eliminar el empleado con Id {id}: {ex.Message}", ex);
             }
             catch (TaskCanceledException ex)
             {
-                throw new Exception($"Timeout al eliminar empleado con Id {id}: {ex.Message}", ex);
+                throw new Exception($"Timeout al eliminar el empleado con Id {id}: {ex.Message}", ex);
             }
         }
     }

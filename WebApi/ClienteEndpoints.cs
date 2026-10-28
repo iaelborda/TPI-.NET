@@ -91,11 +91,12 @@ namespace WebApi
                     }
 
                     return Results.NoContent();
-                }catch(DbUpdateException)
+                }
+                catch (DbUpdateException)
                 {
                     return Results.BadRequest(new { error = "No se puede eliminar el cliente porque tiene alquileres asociados" });
                 }
- 
+
             })
             .WithName("DeleteCliente")
             .Produces(StatusCodes.Status204NoContent)

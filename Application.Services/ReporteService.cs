@@ -64,10 +64,12 @@ namespace Application.Services
 
             return resultado;
         }
-        public async Task<List<ReporteRankingBicicletaDTO>> ObtenerTop10BicicletasAnioAsync()
+        public async Task<List<ReporteRankingBicicletaDTO>> ObtenerTop10BicicletasAnioAsync(int anio)
         {
-            int anioActual = DateTime.Today.Year;
-            var datos = await _alquilerRepository.GetTop10BicicletasAnioAsync(anioActual);
+            if (anio < 2000 || anio > DateTime.Today.Year)
+                throw new ArgumentException("El año debe estar entre 2000 y el año actual.");
+
+            var datos = await _alquilerRepository.GetTop10BicicletasAnioAsync(anio);
 
             return datos.Select((item, indice) => new ReporteRankingBicicletaDTO
             {

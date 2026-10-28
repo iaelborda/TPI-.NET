@@ -39,6 +39,8 @@
             sucursalComboBox = new ComboBox();
             estadoComboBox = new ComboBox();
             limpiarButton = new Button();
+            anioDateTimePicker = new DateTimePicker();
+            anioReporte = new Label();
             ((System.ComponentModel.ISupportInitialize)bicicletasDataGridView).BeginInit();
             SuspendLayout();
             // 
@@ -114,7 +116,7 @@
             // generarReporteButton
             // 
             generarReporteButton.BackColor = Color.YellowGreen;
-            generarReporteButton.Location = new Point(38, 504);
+            generarReporteButton.Location = new Point(355, 504);
             generarReporteButton.Margin = new Padding(2);
             generarReporteButton.Name = "generarReporteButton";
             generarReporteButton.Size = new Size(174, 34);
@@ -128,7 +130,7 @@
             categoriaComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             categoriaComboBox.FormattingEnabled = true;
             categoriaComboBox.Location = new Point(389, 34);
-            categoriaComboBox.Margin = new Padding(4, 4, 4, 4);
+            categoriaComboBox.Margin = new Padding(4);
             categoriaComboBox.Name = "categoriaComboBox";
             categoriaComboBox.Size = new Size(188, 33);
             categoriaComboBox.TabIndex = 14;
@@ -138,7 +140,7 @@
             sucursalComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             sucursalComboBox.FormattingEnabled = true;
             sucursalComboBox.Location = new Point(585, 34);
-            sucursalComboBox.Margin = new Padding(4, 4, 4, 4);
+            sucursalComboBox.Margin = new Padding(4);
             sucursalComboBox.Name = "sucursalComboBox";
             sucursalComboBox.Size = new Size(188, 33);
             sucursalComboBox.TabIndex = 15;
@@ -148,7 +150,7 @@
             estadoComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             estadoComboBox.FormattingEnabled = true;
             estadoComboBox.Location = new Point(781, 34);
-            estadoComboBox.Margin = new Padding(4, 4, 4, 4);
+            estadoComboBox.Margin = new Padding(4);
             estadoComboBox.Name = "estadoComboBox";
             estadoComboBox.Size = new Size(188, 33);
             estadoComboBox.TabIndex = 16;
@@ -164,11 +166,35 @@
             limpiarButton.UseVisualStyleBackColor = true;
             limpiarButton.Click += limpiarButton_Click;
             // 
+            // anioDateTimePicker
+            // 
+            anioDateTimePicker.Format = DateTimePickerFormat.Custom;
+            anioDateTimePicker.Location = new Point(156, 505);
+            anioDateTimePicker.Name = "anioDateTimePicker";
+            anioDateTimePicker.Size = new Size(171, 31);
+            anioDateTimePicker.TabIndex = 18;
+            anioDateTimePicker.CustomFormat = "yyyy";
+            anioDateTimePicker.ShowUpDown = true;
+            anioDateTimePicker.Value = DateTime.Today;
+            anioDateTimePicker.MinDate = new DateTime(2000, 1, 1);
+            anioDateTimePicker.MaxDate = DateTime.Today;
+            // 
+            // anioReporte
+            // 
+            anioReporte.AutoSize = true;
+            anioReporte.Location = new Point(38, 505);
+            anioReporte.Name = "anioReporte";
+            anioReporte.Size = new Size(112, 25);
+            anioReporte.TabIndex = 19;
+            anioReporte.Text = "Año Reporte";
+            // 
             // BicicletaLista
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1245, 566);
+            Controls.Add(anioReporte);
+            Controls.Add(anioDateTimePicker);
             Controls.Add(limpiarButton);
             Controls.Add(estadoComboBox);
             Controls.Add(sucursalComboBox);
@@ -205,5 +231,7 @@
         private ComboBox sucursalComboBox;
         private ComboBox estadoComboBox;
         private Button limpiarButton;
+        private DateTimePicker anioDateTimePicker;
+        private Label anioReporte;
     }
 }

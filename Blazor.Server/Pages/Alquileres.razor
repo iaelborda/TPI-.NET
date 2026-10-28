@@ -9,154 +9,185 @@
 
 <PageTitle>Alquileres</PageTitle>
 
-<div class="container-fluid py-3">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
             <h3>Alquileres</h3>
-            <p class="text-muted mb-0">Administración de alquileres de bicicletas</p>
-        </div>
 
-        @if (canAdd)
-        {
-            <button class="btn btn-primary" @onclick="NuevoAlquiler">
-                <i class="fas fa-plus me-1"></i> Nuevo alquiler
-            </button>
-        }
-    </div>
-
-    @if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <div class="alert alert-danger">@errorMessage</div>
-    }
-
-    @if (canRead)
-    {
-        <div class="row g-3 align-items-end mb-4">
-            <div class="col-md-3">
-                <label class="form-label">Fecha desde</label>
-                <input type="date" class="form-control"
-                       min="2000-01-01"
-                       max="@DateTime.Today.ToString("yyyy-MM-dd")"
-                       @bind="fechaDesde"
-                       @bind:after="CargarAlquileres" />
-            </div>
-
-            <div class="col-md-3">
-                <label class="form-label">Fecha hasta</label>
-                <input type="date" class="form-control"
-                       min="2000-01-01"
-                       max="@DateTime.Today.ToString("yyyy-MM-dd")"
-                       @bind="fechaHasta"
-                       @bind:after="CargarAlquileres" />
-            </div>
-
-            <div class="col-md-3">
-                <label class="form-label">Sucursal</label>
-                <select class="form-select" @bind="sucursalId" @bind:after="CargarAlquileres">
-                    <option value="0">Todas</option>
-                    @foreach (var suc in sucursales)
-                    {
-                        <option value="@suc.Id">@suc.Nombre</option>
-                    }
-                </select>
-            </div>
-
-            @if (canReport)
+            @if (!string.IsNullOrEmpty(errorMessage))
             {
-                <div class="col-md-3">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @errorMessage
+                    <button type="button" class="btn-close" @onclick="() => errorMessage = string.Empty"></button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @successMessage
+                    <button type="button" class="btn-close" @onclick="() => successMessage = string.Empty"></button>
+                </div>
+            }
+
+            <div class="d-flex flex-wrap gap-2 mb-3 align-items-end">
+                @if (canAdd)
+                {
+                    <button class="btn btn-primary" @onclick="NuevoAlquiler">
+                        <i class="fas fa-plus"></i> Agregar
+                    </button>
+                }
+
+                @if (canReport)
+                {
                     <button class="btn btn-success"
                             @onclick="GenerarReporte"
                             disabled="@generandoReporte">
                         <i class="fas fa-file-pdf me-1"></i>
-                        @(generandoReporte ? "Generando..." : "Generar reporte")
+                        @(generandoReporte ? "Generando..." : "Reporte de Alquileres")
                     </button>
+                }
+            </div>
+
+            @if (canRead)
+            {
+                <div class="card mb-3 p-3 bg-light">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label small">Fecha desde</label>
+                            <input type="date" class="form-control"
+                                   min="2000-01-01"
+                                   max="@DateTime.Today.ToString("yyyy-MM-dd")"
+                                   @bind="fechaDesde" />
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label small">Fecha hasta</label>
+                            <input type="date" class="form-control"
+                                   min="2000-01-01"
+                                   max="@DateTime.Today.ToString("yyyy-MM-dd")"
+                                   @bind="fechaHasta" />
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label small">Sucursal</label>
+                            <select class="form-select" @bind="sucursalId">
+                                <option value="0">Todas</option>
+                                @foreach (var sucursal in sucursales)
+                                {
+                                    <option value="@sucursal.Id">@sucursal.Nombre</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 d-flex gap-2">
+                            <button class="btn btn-outline-secondary" @onclick="LimpiarFiltros" disabled="@loading">
+                                <i class="fas fa-undo me-1"></i> Limpiar
+                            </button>
+                            <button class="btn btn-primary" @onclick="CargarAlquileres" disabled="@loading">
+                                <i class="fas fa-search me-1"></i> Filtrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (loading)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            }
+            else if (canRead)
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Id</th>
+                                <th>Cliente</th>
+                                <th>Empleado</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (alquileres.Any())
+                            {
+                                @foreach (var alquiler in alquileres)
+                                {
+                                    <tr @key="alquiler.Id">
+                                        <td>@alquiler.Id</td>
+                                        <td>@alquiler.ClienteNombre @alquiler.ClienteApellido</td>
+                                        <td>@alquiler.EmpleadoApellido - Legajo: @alquiler.EmpleadoLegajo</td>
+                                        <td>@alquiler.FechaAlquiler.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>
+                                            @if (alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo)
+                                            {
+                                                <span class="badge bg-success">Activo</span>
+                                            }
+                                            else if (alquiler.EstadoAlquiler == EstadoDeAlquiler.Finalizado)
+                                            {
+                                                <span class="badge bg-secondary">Finalizado</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Cancelado</span>
+                                            }
+                                        </td>
+                                        <td>@(alquiler.Detalles?.Sum(d => d.Subtotal).ToString("C2") ?? "$0,00")</td>
+                                        <td class="text-nowrap">
+                                            @if (canRead)
+                                            {
+                                                <button class="btn btn-sm btn-outline-primary me-1"
+                                                        @onclick="() => EditarAlquiler(alquiler.Id)">
+                                                    <i class="fas fa-edit"></i>
+                                                    @(canUpdate ? "Ver / Editar" : "Ver")
+                                                </button>
+                                            }
+
+                                            @if (canUpdate &&
+                                                 alquiler.EstadoAlquiler != EstadoDeAlquiler.Cancelado &&
+                                                 alquiler.Detalles != null &&
+                                                 alquiler.Detalles.Count > 0 &&
+                                                 alquiler.Detalles.All(d => d.HoraFin.HasValue) &&
+                                                 !alquileresConPago.Contains(alquiler.Id))
+                                            {
+                                                <a class="btn btn-sm btn-success me-1"
+                                                   href="@($"pagos?alquilerId={alquiler.Id}")">
+                                                    <i class="fas fa-dollar-sign"></i> Cobrar
+                                                </a>
+                                            }
+
+                                            @if (canDelete)
+                                            {
+                                                <button class="btn btn-sm btn-outline-danger"
+                                                        @onclick="() => EliminarAlquiler(alquiler.Id)">
+                                                    <i class="fas fa-trash"></i> Eliminar
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-3">
+                                        No hay alquileres para los filtros seleccionados.
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             }
         </div>
-    }
-
-    @if (loading)
-    {
-        <div class="d-flex justify-content-center">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Cargando...</span>
-            </div>
-        </div>
-    }
-    else if (canRead && alquileres.Count == 0)
-    {
-        <div class="alert alert-info">No hay alquileres para los filtros seleccionados.</div>
-    }
-    else if (canRead)
-    {
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Id</th>
-                        <th>Cliente</th>
-                        <th>Empleado</th>
-                        <th>Fecha</th>
-                        <th>Estado</th>
-                        <th>Total</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var alquiler in alquileres)
-                    {
-                        <tr @key="alquiler.Id">
-                            <td>@alquiler.Id</td>
-                            <td>@alquiler.ClienteNombre @alquiler.ClienteApellido</td>
-                            <td>@alquiler.EmpleadoApellido - Legajo: @alquiler.EmpleadoLegajo</td>
-                            <td>@alquiler.FechaAlquiler.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>
-                                @if (alquiler.EstadoAlquiler == EstadoDeAlquiler.Activo)
-                                {
-                                    <span class="badge bg-success">Activo</span>
-                                }
-                                else if (alquiler.EstadoAlquiler == EstadoDeAlquiler.Finalizado)
-                                {
-                                    <span class="badge bg-secondary">Finalizado</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-danger">Cancelado</span>
-                                }
-                            </td>
-                            <td>@(alquiler.Detalles?.Sum(d => d.Subtotal).ToString("C2") ?? "$0,00")</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary me-1"
-                                        @onclick="() => EditarAlquiler(alquiler.Id)">
-                                    @(canUpdate ? "Ver / Editar" : "Ver")
-                                </button>
-
-                                @if (canUpdate &&
-                                                        alquiler.EstadoAlquiler != EstadoDeAlquiler.Cancelado &&
-                                                        alquiler.Detalles != null &&
-                                                        alquiler.Detalles.Count > 0 &&
-                                                        alquiler.Detalles.All(d => d.HoraFin.HasValue) &&
-                                                        !alquileresConPago.Contains(alquiler.Id))
-                                {
-                                    <a class="btn btn-sm btn-success me-1" href="@($"pagos?alquilerId={alquiler.Id}")">
-                                        <i class="fas fa-dollar-sign me-1"></i> Cobrar
-                                    </a>
-                                }
-
-                                @if (canDelete)
-                                {
-                                    <button class="btn btn-sm btn-danger ms-1"
-                                            @onclick="() => EliminarAlquiler(alquiler.Id)">
-                                        Eliminar
-                                    </button>
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
+    </div>
 </div>
 
 @if (mostrarModal)
@@ -164,17 +195,19 @@
     <AlquilerModal @key="alquilerSeleccionado"
                    AlquilerId="alquilerSeleccionado"
                    OnCerrar="CerrarModal"
-                   OnGuardado="CargarAlquileres" />
+                   OnGuardado="AlquilerGuardado" />
 }
 
 @code {
     private List<AlquilerDTO> alquileres = new();
     private List<SucursalDTO> sucursales = new();
+
     private bool loading = true;
     private bool mostrarModal;
     private bool generandoReporte;
     private int? alquilerSeleccionado;
     private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
 
     private DateTime fechaDesde = DateTime.Today.AddMonths(-2);
     private DateTime fechaHasta = DateTime.Today;
@@ -190,24 +223,33 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (!await AuthService.IsAuthenticatedAsync())
+        try
         {
-            Navigation.NavigateTo("/login");
-            return;
+            if (!await AuthService.IsAuthenticatedAsync())
+            {
+                Navigation.NavigateTo("/login");
+                return;
+            }
+
+            await LoadPermissions();
+
+            if (!canRead)
+            {
+                errorMessage = "No tiene permisos para ver alquileres.";
+                return;
+            }
+
+            sucursales = (await SucursalApiClient.GetAllAsync()).ToList();
+            await CargarAlquileres();
         }
-
-        await LoadPermissions();
-
-        if (!canRead)
+        catch (Exception ex)
         {
-            errorMessage = "No tiene permisos para ver alquileres.";
+            errorMessage = $"No se pudo inicializar la página: {ex.Message}";
+        }
+        finally
+        {
             loading = false;
-            return;
         }
-
-        sucursales = (await SucursalApiClient.GetAllAsync()).ToList();
-
-        await CargarAlquileres();
     }
 
     private async Task LoadPermissions()
@@ -233,6 +275,7 @@
         {
             loading = true;
             errorMessage = string.Empty;
+
             alquileres = (await AlquilerApiClient.GetByCriteriaAsync(
                 fechaDesde.Date,
                 fechaHasta.Date,
@@ -290,6 +333,7 @@
         try
         {
             generandoReporte = true;
+            errorMessage = string.Empty;
 
             var criteria = new ReporteAlquileresCriteriaDTO
             {
@@ -305,6 +349,8 @@
                 $"ReporteAlquileres_{DateTime.Now:yyyyMMdd_HHmm}.pdf",
                 "application/pdf",
                 Convert.ToBase64String(pdf));
+
+            successMessage = "El reporte se generó y descargó correctamente.";
         }
         catch (Exception ex)
         {
@@ -320,6 +366,8 @@
     {
         if (!canAdd) return;
 
+        errorMessage = string.Empty;
+        successMessage = string.Empty;
         alquilerSeleccionado = null;
         mostrarModal = true;
     }
@@ -328,6 +376,7 @@
     {
         if (!canRead) return;
 
+        errorMessage = string.Empty;
         alquilerSeleccionado = id;
         mostrarModal = true;
     }
@@ -336,6 +385,20 @@
     {
         mostrarModal = false;
         alquilerSeleccionado = null;
+    }
+
+    private async Task AlquilerGuardado()
+    {
+        await CargarAlquileres();
+        successMessage = "El alquiler se guardó correctamente.";
+    }
+
+    private async Task LimpiarFiltros()
+    {
+        fechaDesde = DateTime.Today.AddMonths(-2);
+        fechaHasta = DateTime.Today;
+        sucursalId = 0;
+        await CargarAlquileres();
     }
 
     private async Task CancelarAlquiler(AlquilerDTO alquiler)
@@ -362,8 +425,8 @@
             }
 
             alquilerCompleto.EstadoAlquiler = EstadoDeAlquiler.Cancelado;
-
             await AlquilerApiClient.UpdateAsync(alquilerCompleto);
+            successMessage = $"El alquiler #{alquiler.Id} se canceló correctamente.";
             await CargarAlquileres();
         }
         catch (Exception ex)
@@ -385,6 +448,7 @@
         {
             errorMessage = string.Empty;
             await AlquilerApiClient.DeleteAsync(id);
+            successMessage = $"El alquiler #{id} se eliminó correctamente.";
             await CargarAlquileres();
         }
         catch (Exception ex)
